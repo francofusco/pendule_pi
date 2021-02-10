@@ -1,6 +1,6 @@
 /** @file encoder.hpp
-    @brief Header file for the Encoder class.
-*/
+  * @brief Header file for the Encoder class.
+  */
 #pragma once
 
 namespace pendule_pi {
@@ -22,17 +22,21 @@ public:
   inline const int& steps() const { return steps_; }
 
 private:
-  int pin_a_;
-  int pin_b_;
-  int level_a_;
-  int level_b_;
-  int last_triggered_;
-  int steps_;
+  int pin_a_; ///< Pin the first wire of the encoder is connected to.
+  int pin_b_; ///< Pin the second wire of the encoder is connected to.
+  int level_a_; ///< Current voltage level on pin_a_.
+  int level_b_; ///< Current voltage level on pin_b_.
+  int last_triggered_; ///< The last pin that triggered a GPIO hardware interrupt.
+  int steps_; ///< Current number of encoder steps.
 
   /// Function called whenever one of the pins changes level.
   /** TODO
     */
-  void pulse(int gpio, int level, unsigned int tick);
+  void pulse(
+    int gpio,
+    int level,
+    unsigned int tick
+  );
 
   /// Static wrapper to call pulse.
   /** This method is required since the GPIO library allows to execute a
@@ -48,7 +52,12 @@ private:
     * @param THIS a pointer to an Encoder. Named `THIS` simply because it
     *   tries to mimic the `this` pointer.
     */
-  static void pulseStatic(int gpio, int level, unsigned int tick, void* THIS);
+  static void pulseStatic(
+    int gpio,
+    int level,
+    unsigned int tick,
+    void* THIS
+  );
 
 };
 

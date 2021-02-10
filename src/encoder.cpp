@@ -1,5 +1,7 @@
 #include "pendule_pi/encoder.hpp"
+#include "pendule_pi/pigpio.hpp"
 #include <pigpio.h>
+
 
 
 namespace pendule_pi {
@@ -12,29 +14,26 @@ Encoder::Encoder(
 : pin_a_(gpioA)
 , pin_b_(gpioB)
 {
-   mygpioA = gpioA;
-   mygpioB = gpioB;
-
-   mycallback = callback;
-
-   // TEMP TODO: read current value!!!
+   // TODO: Should I init the value in a better way?
    level_a_ = 0;
    level_b_ = 0;
-
+   // TODO: check if the following is a good initialization
    last_triggered_ = -1;
 
-   gpioSetMode(gpioA, PI_INPUT);
-   gpioSetMode(gpioB, PI_INPUT);
+   // Try configuring the pins using pigpio
+   gpioSetMode(pin_a_, PI_INPUT);
+   gpioSetMode(pin_b_, PI_INPUT);
 
    /* pull up is needed as encoder common is grounded */
 
-   gpioSetPullUpDown(gpioA, PI_PUD_UP);
-   gpioSetPullUpDown(gpioB, PI_PUD_UP);
+   gpioSetPullUpDown(pin_a_, PI_PUD_UP);
+   gpioSetPullUpDown(pin_b_, PI_PUD_UP);
 
    /* monitor encoder level changes */
 
-   gpioSetAlertFuncEx(gpioA, _pulseEx, this);
-   gpioSetAlertFuncEx(gpioB, _pulseEx, this);
+   gpioSetAlertFuncEx(pin_a_, Encoder::pulseStatic, this);
+   gpioSetAlertFuncEx(pin_b_, Encoder::pulseStatic, this);
+
 }
 
 
