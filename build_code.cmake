@@ -67,3 +67,12 @@ add_executable(test_encoder
 target_link_libraries(test_encoder
   pendule_pi
 )
+
+
+add_executable(test_encoder_homing
+  test/test_encoder_homing.cpp
+)
+
+target_link_libraries(test_encoder_homing
+  pendule_pi
+)

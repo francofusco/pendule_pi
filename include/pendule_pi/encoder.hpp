@@ -25,7 +25,8 @@ public:
   virtual ~Encoder();
 
   /// Access the current step counter.
-  inline const int& steps() const { return steps_; }
+  inline const volatile int& steps() const { return steps_; }
+  inline const volatile int& direction() const { return direction_; }
 
 private:
   /// "Table" that allows to tell the direction of rotation.
@@ -76,10 +77,20 @@ private:
   bool b_current_; ///< Current voltage level on pin_b_.
   bool a_past_; ///< Past voltage level on pin_a_.
   bool b_past_; ///< Past voltage level on pin_b_.
-  int steps_; ///< Current number of encoder steps.
-
+  volatile int steps_; ///< Current number of encoder steps.
+  volatile int direction_;
 
   /// Function called whenever one of the pins changes level.
+  /** @param gpio the pin that just changed its level.
+    * @param level the current pin level.
+    * @param tick time elapsed since boot (in microseconds). Note that it
+    *   overflows every ~72 minutes (technically, every 2^32 microseconds).
+    *   Remember that, due to integer arithmetics, it is still safe to get
+    *   elasped times doing `tick_now-tick_previous` even if `tick_now`
+    *   overflowed.
+    * @todo Perhaps remove the internal pin check that throws an exception?
+    * @todo Perhaps change ENCODER_TABLE.at(i) for ENCODER_TABLE[i]?
+    */
   void pulse(
     int gpio,
     int level,

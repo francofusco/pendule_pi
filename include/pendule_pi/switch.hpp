@@ -74,6 +74,15 @@ private:
   std::function<void(void)> callback_; ///< A custom callback that can be executed when the switch is activated.
 
   /// Internal callback to be executed everytime the switch changes state.
+  /** @param gpio the pin that just changed its level.
+    * @param level the current pin level.
+    * @param tick time elapsed since boot (in microseconds). Note that it
+    *   overflows every ~72 minutes (technically, every 2^32 microseconds).
+    *   Remember that, due to integer arithmetics, it is still safe to get
+    *   elasped times doing `tick_now-tick_previous` even if `tick_now`
+    *   overflowed.
+    * @todo Perhaps remove the internal pin check that throws an exception?
+    */
   void onChange(
     int gpio,
     int level,

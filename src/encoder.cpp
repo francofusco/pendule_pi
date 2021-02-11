@@ -1,6 +1,7 @@
 #include "pendule_pi/encoder.hpp"
 #include "pendule_pi/pigpio.hpp"
 #include <pigpio.h>
+#include <iostream>
 
 
 
@@ -11,10 +12,10 @@ const std::vector<int> Encoder::ENCODER_TABLE = {0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1
 
 
 int Encoder::encode(
-  bool a,
-  bool b,
   bool past_a,
-  bool past_b
+  bool past_b,
+  bool a,
+  bool b
 )
 {
   return (past_a<<3) | (past_b<<2) | (a<<1) | (b);
@@ -44,6 +45,12 @@ Encoder::Encoder(
   // Setup interrupts so that we handle the rotation without polling.
   PiGPIO_RUN_VOID(gpioSetAlertFuncEx, pin_a_, Encoder::pulseStatic, this);
   PiGPIO_RUN_VOID(gpioSetAlertFuncEx, pin_b_, Encoder::pulseStatic, this);
+
+  // initialize properly the pin reading
+  PiGPIO_RUN(a_past_, gpioRead, pin_a_);
+  PiGPIO_RUN(b_past_, gpioRead, pin_b_);
+  a_current_ = a_past_;
+  b_current_ = b_past_;
 }
 
 
@@ -61,16 +68,8 @@ Encoder::~Encoder() {
 
 void Encoder::pulse(int gpio, int level, unsigned int tick)
 {
-  // shift the pin levels as needed, depending on the pin that fired the interrupt
-  if(gpio == pin_a_) {
-    a_past_ = a_current_;
-    a_current_ = level;
-  }
-  else if(gpio == pin_b_) {
-    b_past_ = b_current_;
-    b_current_ = level;
-  }
-  else {
+  // This is more for debug purposes. I guess this condition should never pass.
+  if(gpio != pin_a_ && gpio != pin_b_) {
     throw std::runtime_error(
       "Expected Encoder interrupt on pins " + std::to_string(pin_a_) + " or "
       + std::to_string(pin_b_) + ", however an interrupt was fired for pin "
@@ -78,8 +77,15 @@ void Encoder::pulse(int gpio, int level, unsigned int tick)
     );
   }
 
+  // "Shift in time" the pin states
+  a_past_ = a_current_;
+  b_past_ = b_current_;
+  // update the pint state that caused the interrupt
+  (gpio == pin_a_ ? a_current_ : b_current_) = level;
+
   // Update the current step count
-  steps_ += ENCODER_TABLE.at(encode(a_current_, b_current_, a_past_, b_past_));
+  direction_ = ENCODER_TABLE.at(encode(a_past_, b_past_, a_current_, b_current_));
+  steps_ += direction_;
 }
 
 
