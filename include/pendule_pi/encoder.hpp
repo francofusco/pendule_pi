@@ -3,34 +3,93 @@
   */
 #pragma once
 
+#include <vector>
+
 namespace pendule_pi {
 
-/// Class that handles a simple rotatory encoder.
+/// Class that handles a simple two-phases rotatory encoder.
 class Encoder {
 public:
-  /// Constructor, requires the 2 signal pins of the encoder.
-  /** TODO
+  /// Constructor, performs the setup of the gpio.
+  /** This class allows to handle a rotatory encoder, assuming that it uses two
+    * phases in phase quadrature.
+    * @param gpioA the pin connected to the first phase.
+    * @param gpioB the pin connected to the second phase.
     */
-  Encoder(int gpioA, int gpioB);
+  Encoder(
+    int gpioA,
+    int gpioB
+  );
 
   /// Destructor.
-  /** TODO
-    */
   virtual ~Encoder();
 
   /// Access the current step counter.
-  inline const int& steps() const { return steps_; }
+  inline const volatile int& steps() const { return steps_; }
+  inline const volatile int& direction() const { return direction_; }
 
 private:
+  /// "Table" that allows to tell the direction of rotation.
+  /** The table is the following:
+    * a'b'a b dir
+    * -------------
+    * 0 0 0 0  0
+    * 0 0 0 1 +1
+    * 0 0 1 0 -1
+    * 0 0 1 1  0
+    * 0 1 0 0 -1
+    * 0 1 0 1  0
+    * 0 1 1 0  0
+    * 0 1 1 1 +1
+    * 1 0 0 0 +1
+    * 1 0 0 1  0
+    * 1 0 1 0  0
+    * 1 0 1 1 -1
+    * 1 1 0 0  0
+    * 1 1 0 1 -1
+    * 1 1 1 0 +1
+    * 1 1 1 1  0
+    *
+    * Note that the direction is 0 whenver the (a,b) pair is equal to (a',b')
+    * or opposite to it.
+    * @todo Formatting the table in the proper way!
+    */
+  static const std::vector<int> ENCODER_TABLE;
+
+  /// Convert pin levels into the correct index to be passed to ENCODER_TABLE.
+  /** @param a current level of the first phase.
+    * @param b current level of the second phase.
+    * @param past_a past level of the first phase.
+    * @param past_b past level of the second phase.
+    * @return an index to be used inside ENCODER_TABLE which tells in which
+    *   direction the encoder is rotating.
+    */
+  static int encode(
+    bool a,
+    bool b,
+    bool past_a,
+    bool past_b
+  );
+
   int pin_a_; ///< Pin the first wire of the encoder is connected to.
   int pin_b_; ///< Pin the second wire of the encoder is connected to.
-  int level_a_; ///< Current voltage level on pin_a_.
-  int level_b_; ///< Current voltage level on pin_b_.
-  int last_triggered_; ///< The last pin that triggered a GPIO hardware interrupt.
-  int steps_; ///< Current number of encoder steps.
+  bool a_current_; ///< Current voltage level on pin_a_.
+  bool b_current_; ///< Current voltage level on pin_b_.
+  bool a_past_; ///< Past voltage level on pin_a_.
+  bool b_past_; ///< Past voltage level on pin_b_.
+  volatile int steps_; ///< Current number of encoder steps.
+  volatile int direction_;
 
   /// Function called whenever one of the pins changes level.
-  /** TODO
+  /** @param gpio the pin that just changed its level.
+    * @param level the current pin level.
+    * @param tick time elapsed since boot (in microseconds). Note that it
+    *   overflows every ~72 minutes (technically, every 2^32 microseconds).
+    *   Remember that, due to integer arithmetics, it is still safe to get
+    *   elasped times doing `tick_now-tick_previous` even if `tick_now`
+    *   overflowed.
+    * @todo Perhaps remove the internal pin check that throws an exception?
+    * @todo Perhaps change ENCODER_TABLE.at(i) for ENCODER_TABLE[i]?
     */
   void pulse(
     int gpio,

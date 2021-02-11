@@ -1,10 +1,25 @@
 #include "pendule_pi/encoder.hpp"
 #include "pendule_pi/pigpio.hpp"
 #include <pigpio.h>
+#include <iostream>
 
 
 
 namespace pendule_pi {
+
+
+const std::vector<int> Encoder::ENCODER_TABLE = {0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0};
+
+
+int Encoder::encode(
+  bool past_a,
+  bool past_b,
+  bool a,
+  bool b
+)
+{
+  return (past_a<<3) | (past_b<<2) | (a<<1) | (b);
+}
 
 
 Encoder::Encoder(
@@ -13,54 +28,66 @@ Encoder::Encoder(
 )
 : pin_a_(gpioA)
 , pin_b_(gpioB)
+, a_current_(0)
+, b_current_(0)
+, a_past_(0)
+, b_past_(0)
+, steps_(0)
 {
-   // TODO: Should I init the value in a better way?
-   level_a_ = 0;
-   level_b_ = 0;
-   // TODO: check if the following is a good initialization
-   last_triggered_ = -1;
+  // Configure the pins using pigpio
+  PiGPIO_RUN_VOID(gpioSetMode, pin_a_, PI_INPUT);
+  PiGPIO_RUN_VOID(gpioSetMode, pin_b_, PI_INPUT);
 
-   // Try configuring the pins using pigpio
-   gpioSetMode(pin_a_, PI_INPUT);
-   gpioSetMode(pin_b_, PI_INPUT);
+  // This assumes that the phases are common grounded.
+  PiGPIO_RUN_VOID(gpioSetPullUpDown, pin_a_, PI_PUD_UP);
+  PiGPIO_RUN_VOID(gpioSetPullUpDown, pin_b_, PI_PUD_UP);
 
-   /* pull up is needed as encoder common is grounded */
+  // Setup interrupts so that we handle the rotation without polling.
+  PiGPIO_RUN_VOID(gpioSetAlertFuncEx, pin_a_, Encoder::pulseStatic, this);
+  PiGPIO_RUN_VOID(gpioSetAlertFuncEx, pin_b_, Encoder::pulseStatic, this);
 
-   gpioSetPullUpDown(pin_a_, PI_PUD_UP);
-   gpioSetPullUpDown(pin_b_, PI_PUD_UP);
-
-   /* monitor encoder level changes */
-
-   gpioSetAlertFuncEx(pin_a_, Encoder::pulseStatic, this);
-   gpioSetAlertFuncEx(pin_b_, Encoder::pulseStatic, this);
-
+  // initialize properly the pin reading
+  PiGPIO_RUN(a_past_, gpioRead, pin_a_);
+  PiGPIO_RUN(b_past_, gpioRead, pin_b_);
+  a_current_ = a_past_;
+  b_current_ = b_past_;
 }
 
 
 Encoder::~Encoder() {
-  // gpioSetAlertFuncEx(mygpioB, nullptr, nullptr);
-  // gpioSetAlertFuncEx(mygpioA, nullptr, nullptr);
+  // Disable interrupts
+  gpioSetAlertFuncEx(pin_a_, nullptr, nullptr);
+  gpioSetAlertFuncEx(pin_b_, nullptr, nullptr);
+  // Set all pins in high impedance, just in case
+  gpioSetPullUpDown(pin_a_, PI_PUD_OFF);
+  gpioSetPullUpDown(pin_b_, PI_PUD_OFF);
+  gpioSetMode(pin_a_, PI_INPUT);
+  gpioSetMode(pin_b_, PI_INPUT);
 }
+
 
 void Encoder::pulse(int gpio, int level, unsigned int tick)
 {
-  throw 0;
-   // if (gpio == mygpioA) levA = level; else levB = level;
-   //
-   // if (gpio != lastGpio) /* debounce */
-   // {
-   //    lastGpio = gpio;
-   //
-   //    if ((gpio == mygpioA) && (level == 1))
-   //    {
-   //       if (levB) (mycallback)(1);
-   //    }
-   //    else if ((gpio == mygpioB) && (level == 1))
-   //    {
-   //       if (levA) (mycallback)(-1);
-   //    }
-   // }
+  // This is more for debug purposes. I guess this condition should never pass.
+  if(gpio != pin_a_ && gpio != pin_b_) {
+    throw std::runtime_error(
+      "Expected Encoder interrupt on pins " + std::to_string(pin_a_) + " or "
+      + std::to_string(pin_b_) + ", however an interrupt was fired for pin "
+      + std::to_string(gpio)
+    );
+  }
+
+  // "Shift in time" the pin states
+  a_past_ = a_current_;
+  b_past_ = b_current_;
+  // update the pint state that caused the interrupt
+  (gpio == pin_a_ ? a_current_ : b_current_) = level;
+
+  // Update the current step count
+  direction_ = ENCODER_TABLE.at(encode(a_past_, b_past_, a_current_, b_current_));
+  steps_ += direction_;
 }
+
 
 void Encoder::pulseStatic(
   int gpio,

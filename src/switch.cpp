@@ -59,12 +59,12 @@ bool Switch::atRest(
 ) const
 {
   if(force_read || !with_interrupts_) {
-    return at_rest_;
-  }
-  else {
     int val;
     PiGPIO_RUN(val, gpioRead, pin_);
     return val == at_rest_;
+  }
+  else {
+    return at_rest_;
   }
 }
 

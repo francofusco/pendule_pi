@@ -24,15 +24,6 @@ target_link_libraries(pendule_pi
 # BUILD TEST CODE #
 ###################
 
-add_executable(test_pigpio_exceptions
-  test/test_pigpio_exceptions.cpp
-)
-
-target_link_libraries(test_pigpio_exceptions
-  pendule_pi
-)
-
-
 add_executable(test_pigpio_read
   test/test_pigpio_read.cpp
 )
@@ -65,5 +56,23 @@ add_executable(test_switching_motor
 )
 
 target_link_libraries(test_switching_motor
+  pendule_pi
+)
+
+
+add_executable(test_encoder
+  test/test_encoder.cpp
+)
+
+target_link_libraries(test_encoder
+  pendule_pi
+)
+
+
+add_executable(test_encoder_homing
+  test/test_encoder_homing.cpp
+)
+
+target_link_libraries(test_encoder_homing
   pendule_pi
 )

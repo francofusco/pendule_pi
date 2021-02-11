@@ -14,6 +14,11 @@ find_package(pigpio)
 # BUILD SOURCE CODE #
 #####################
 
+string(ASCII 27 Esc)
+set(ColourReset "${Esc}[m")
+set(Yellow      "${Esc}[33m")
+message(WARNING "${Yellow}TODO: Fix bug related to exceptions inside ISRs${ColourReset}")
+
 if(${pigpio_FOUND})
   include(build_code.cmake)
 else(${pigpio_FOUND})
