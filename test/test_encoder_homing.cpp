@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
     while(std::abs(encoder.steps()) > 50)
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
-  catch(const pigpio::ActivationToken::Terminate&) { }
+  catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
   return 0;

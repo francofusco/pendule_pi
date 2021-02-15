@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     }
     std::cout << "Max wait-time elapsed, exiting" << std::endl;
   }
-  catch(const pigpio::ActivationToken::Terminate&) { }
+  catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
   return 0;

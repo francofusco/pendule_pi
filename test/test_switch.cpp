@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     std::cout << "Max wait-time elapsed, exiting" << std::endl;
   }
-  catch(const pigpio::ActivationToken::Terminate&) { }
+  catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
   return 0;

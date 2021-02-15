@@ -20,37 +20,71 @@ std::string Exception::makeMessage(
   int return_code
 )
 {
-  auto code_it = ERROR_CODES.find(return_code);
-  std::string code_name =
-    code_it == ERROR_CODES.end() ?
-    std::string("UNKNOWN ERROR CODE") :
-    code_it->second;
   return "pigpio::Exception encountered while running '" + caller + "'. Return "
-         "code: " + code_name;
+         "code: " + error2msg(return_code);
+}
+
+
+std::string Exception::error2msg(
+  int error_code
+)
+{
+  auto code_it = ERROR_CODES.find(error_code);
+  if(code_it == ERROR_CODES.end())
+    return "UNKNOWN ERROR CODE " + std::to_string(error_code);
+  else
+    return code_it->second;
 }
 
 
 ActivationToken::ActivationToken() {
   PENDULE_PI_DBG("ActivationToken: initializing");
   PiGPIO_RUN_VOID(gpioInitialise);
-  std::signal(SIGINT, ActivationToken::terminate);
+  // NOTE: it is VERY important that the signal handlers are assigned after
+  // attempting to call gpioInitialise()!
+  std::signal(SIGINT, ActivationToken::pleaseStop);
   #warning "Find a way to handle SIGABRT here"
-  // std::signal(SIGABRT, ActivationToken::terminate);
-}
-
-
-void ActivationToken::terminate(int s) {
-  std::string signame = std::to_string(s);
-  if(s == SIGINT)
-    signame = "SIGINT";
-  PENDULE_PI_DBG("ActivationToken: executing 'terminate(" << signame << ")'");
-  throw Terminate();
+  std::signal(SIGABRT, ActivationToken::abort);
 }
 
 
 ActivationToken::~ActivationToken() {
-  PENDULE_PI_DBG("ActivationToken: calling gpioTerminate() upon token destruction");
+  PENDULE_PI_DBG("ActivationToken: calling resetPins() upon token destruction");
+  resetPins();
+}
+
+
+void ActivationToken::resetPins() {
+  PENDULE_PI_DBG("ActivationToken: putting all pins into high impedance mode");
+  #warning "TODO: put all pins in high impedance mode"
+  for(int pin=0; pin<=26; pin++) {
+    auto retval = gpioSetPullUpDown(pin, PI_PUD_OFF);
+    if(retval < 0) {
+      PENDULE_PI_DBG("ActivationToken: while disabling resistors on pin " << \
+        pin << ", gpioSetPullUpDown() returned " << Exception::error2msg(retval));
+    }
+    retval = gpioSetMode(pin, PI_INPUT);
+    if(retval < 0) {
+      PENDULE_PI_DBG("ActivationToken: while setting pin " << pin << " as " \
+        "input, gpioSetMode() returned " << Exception::error2msg(retval));
+    }
+  }
+  PENDULE_PI_DBG("ActivationToken: calling gpioTerminate()");
   gpioTerminate();
+}
+
+
+void ActivationToken::pleaseStop(int s) {
+  PENDULE_PI_DBG("ActivationToken: executing 'pleaseStop(" << (s==SIGINT?std::string("SIGINT"):std::to_string(s)) << ")'");
+  throw PleaseStop();
+}
+
+
+void ActivationToken::abort(int s) {
+  PENDULE_PI_DBG("ActivationToken: executing 'abort(" << (s==SIGABRT?std::string("SIGABRT"):std::to_string(s)) << ")'");
+  resetPins();
+  PENDULE_PI_DBG("ActivationToken: calling std::terminate()");
+  std::terminate();
 }
 
 

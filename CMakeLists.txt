@@ -47,8 +47,6 @@ if(${pigpio_FOUND})
     pthread
   )
 
-  message(STATUS "BUILD AS ${CMAKE_BUILD_TYPE}")
-
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")

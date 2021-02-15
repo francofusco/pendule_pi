@@ -70,3 +70,13 @@ add_executable(test_callback_exception
 target_link_libraries(test_callback_exception
   pendule_pi
 )
+
+
+# Test if the Encoder class allows to return to the initial position
+add_executable(test_reset_pins
+  test_reset_pins.cpp
+)
+
+target_link_libraries(test_reset_pins
+  pendule_pi
+)
