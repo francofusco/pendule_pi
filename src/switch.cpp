@@ -2,9 +2,6 @@
 #include "pendule_pi/pigpio.hpp"
 #include <pigpio.h>
 
-#warning "REMOVE IOSTREAM"
-#include <iostream>
-
 
 namespace pendule_pi {
 

@@ -13,6 +13,7 @@ you should be able to install them via:
 ```
 apt install doxygen doxygen-gui graphviz
 ```
+(you might need privileges for this!)
 
 ## How to compile
 
@@ -26,3 +27,27 @@ cmake --build .
 ```
 
 To view the documentation, open in your browser the file `doc/html/index.html`.
+
+
+### Enable debug mode
+
+```
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+cmake --build .
+```
+
+
+### Disable documentation
+
+```
+cmake .. -DBUILD_DOC=OFF
+cmake --build .
+```
+
+
+### Documentation only
+
+```
+cmake ..
+cmake --build . --target doc
+```

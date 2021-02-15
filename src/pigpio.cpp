@@ -1,6 +1,6 @@
 #include "pendule_pi/pigpio.hpp"
+#include "pendule_pi/debug.hpp"
 #include <csignal>
-#include <iostream>
 
 
 namespace pigpio {
@@ -21,25 +21,35 @@ std::string Exception::makeMessage(
 )
 {
   auto code_it = ERROR_CODES.find(return_code);
-  std::string code_name = code_it == ERROR_CODES.end() ? std::string("UNKNOWN ERROR CODE") : code_it->second;
+  std::string code_name =
+    code_it == ERROR_CODES.end() ?
+    std::string("UNKNOWN ERROR CODE") :
+    code_it->second;
   return "pigpio::Exception encountered while running '" + caller + "'. Return "
          "code: " + code_name;
 }
 
 
 ActivationToken::ActivationToken() {
+  PENDULE_PI_DBG("ActivationToken: initializing");
   PiGPIO_RUN_VOID(gpioInitialise);
   std::signal(SIGINT, ActivationToken::terminate);
+  #warning "Find a way to handle SIGABRT here"
+  // std::signal(SIGABRT, ActivationToken::terminate);
 }
 
 
-void ActivationToken::terminate(int) {
+void ActivationToken::terminate(int s) {
+  std::string signame = std::to_string(s);
+  if(s == SIGINT)
+    signame = "SIGINT";
+  PENDULE_PI_DBG("ActivationToken: executing 'terminate(" << signame << ")'");
   throw Terminate();
 }
 
 
 ActivationToken::~ActivationToken() {
-  std::cout << "Calling gpioTerminate()" << std::endl;
+  PENDULE_PI_DBG("ActivationToken: calling gpioTerminate() upon token destruction");
   gpioTerminate();
 }
 
