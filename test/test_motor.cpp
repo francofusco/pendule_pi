@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     // stop moving
     motor.setPWM(0);
   }
-  catch(const pigpio::ActivationToken::Terminate&) { }
+  catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
   return 0;

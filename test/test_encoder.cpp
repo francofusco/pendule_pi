@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
       std::cout << "Direction: " << direction.at(dir) << " / Position: " << encoder.steps() << std::endl;
     }
   }
-  catch(const pigpio::ActivationToken::Terminate&) { }
+  catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
   return 0;

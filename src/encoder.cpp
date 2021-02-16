@@ -33,6 +33,10 @@ Encoder::Encoder(
 , a_past_(0)
 , b_past_(0)
 , steps_(0)
+, lower_threshold_(0)
+, upper_threshold_(0)
+, lower_cb_(nullptr)
+, upper_cb_(nullptr)
 {
   // Configure the pins using pigpio
   PiGPIO_RUN_VOID(gpioSetMode, pin_a_, PI_INPUT);
@@ -66,6 +70,20 @@ Encoder::~Encoder() {
 }
 
 
+void Encoder::setSafetyCallbacks(
+  int lower_threshold,
+  int upper_threshold,
+  std::function<void(void)> lower_cb,
+  std::function<void(void)> upper_cb
+)
+{
+  lower_threshold_ = lower_threshold;
+  upper_threshold_ = upper_threshold;
+  lower_cb_ = lower_cb;
+  upper_cb_ = upper_cb;
+}
+
+
 void Encoder::pulse(int gpio, int level, unsigned int tick)
 {
   // This is more for debug purposes. I guess this condition should never pass.
@@ -86,6 +104,12 @@ void Encoder::pulse(int gpio, int level, unsigned int tick)
   // Update the current step count
   direction_ = ENCODER_TABLE.at(encode(a_past_, b_past_, a_current_, b_current_));
   steps_ += direction_;
+
+  // execute safety callbacks if needed
+  if(steps_ <= lower_threshold_ && lower_cb_ != nullptr)
+    lower_cb_();
+  if(steps_ >= upper_threshold_ && upper_cb_ != nullptr)
+    upper_cb_();
 }
 
 

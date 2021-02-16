@@ -54,6 +54,14 @@ public:
     int return_code
   );
 
+  /// Returns a human-readable description of the given error code.
+  /** @param error_code an error code that can be produced by one of pigpio's
+    *   functions.
+    * @return The human-readable correspondant of error_code, or a dummy text
+    *   if the code is unknown.
+    */
+  static std::string error2msg(int error_code);
+
 private:
   /// Auxiliary static method that creates exception messages.
   /** @param caller the name of the pigpio function that caused the error.
@@ -93,24 +101,65 @@ private:
 class ActivationToken {
 public:
   /// Forwards a call to gpioInitialise().
-  /** The constructor also registers the static method terminate() as handler
-    * for SIGINT (the one sent when CTRL+C is pressed on the keyboard).
+  /** The constructor also registers the following signal handlers:
+    * - pleaseStop() as handler for SIGINT (the one sent when CTRL+C is
+    *   pressed on the keyboard).
+    * - abort() as a handler for SIGABRT (to be executed upon "catastrophic
+    *   failure").
     */
   ActivationToken();
-  /// Forwards a call to gpioTerminate().
+  /// Ensures that all GPIO pins are changed to high impedance mode.
   ~ActivationToken();
 
-  /// Auxiliary exception class to be thrown when a SIGINT is reeived.
-  class Terminate : public std::runtime_error {
-    public: Terminate() : std::runtime_error("SIGINT received, throwing this exception to terminate excution") {}
+  /// Auxiliary exception class to be thrown when a SIGINT is received.
+  class PleaseStop : public std::runtime_error {
+    public:
+      /// Fill-in the exception message.
+      PleaseStop() : std::runtime_error("SIGINT received, throwing this exception to stop excution") {}
+  };
+
+  /// Auxiliary exception class to be thrown when multiple tokens are generated.
+  class MultpleTokensCreated : public std::runtime_error {
+    public:
+      /// Fill-in the exception message.
+      /** @param during_ctor If true, it means that this exception is being
+        *   thrown from the constructor of ActivationToken. If false, it is
+        *   being thrown from the destructor instead. It is merely used to
+        *   properly fill the exception message.
+        */
+      MultpleTokensCreated(
+        bool during_ctor
+      )
+      : std::runtime_error(during_ctor
+          ? "Attempting to create multiple ActivationToken instances. This is forbidden, sorry."
+          : "While destroying an ActivationToken, another registered token was found. This is a bug, please contact the maintainer."
+        )
+      {}
   };
 private:
+  static ActivationToken* active_token; ///< Pointer to the currently active token.
+
+  /// Puts all GPIO pins in high impedance mode.
+  /** This method allows to "disconnect" all GPIO pins, by putting them into
+    * high impedance mode (inputs with no pull-up/pull-down resistors).
+    * Additionally, this method calls `gpioTerminate()` so that further
+    * GPIO operations will not happen.
+    */
+  static void resetPins();
+
   /// Static method that can be registered as handler for SIGINT (CTRL+C).
-  /** This method simply throws a Terminate exception to halt execution.
+  /** This method simply throws a PleaseStop exception to halt execution.
     * @param sig signal to be handled. Ignored in this method, but required
     *   by the syntax of std::signal.
     */
-  static void terminate(int sig);
+  static void pleaseStop(int sig);
+
+  /// Static method that can be registered as handler for SIGABRT.
+  /** This method calls .
+    * @param sig signal to be handled. Ignored in this method, but required
+    *   by the syntax of std::signal.
+    */
+  static void abort(int sig);
 };
 
 } // end of namespace pigpio

@@ -2,9 +2,6 @@
 #include "pendule_pi/pigpio.hpp"
 #include <pigpio.h>
 
-#warning "REMOVE IOSTREAM"
-#include <iostream>
-
 
 namespace pendule_pi {
 
@@ -54,18 +51,19 @@ void Switch::disableInterrupts() {
 }
 
 
-bool Switch::atRest(
-  bool force_read
-) const
+bool Switch::atRest() const
 {
-  if(force_read || !with_interrupts_) {
-    int val;
-    PiGPIO_RUN(val, gpioRead, pin_);
-    return val == at_rest_;
-  }
-  else {
-    return at_rest_;
-  }
+  int val;
+  PiGPIO_RUN(val, gpioRead, pin_);
+  return val == at_rest_;
+}
+
+
+bool Switch::atRestCached() const
+{
+  if(!with_interrupts_)
+    throw InterruptsAreDisabled();
+  return at_rest_;
 }
 
 
