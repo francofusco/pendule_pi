@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 namespace pendule_pi {
 
@@ -25,9 +26,53 @@ public:
   virtual ~Encoder();
 
   /// Access the current step counter.
-  inline const volatile int& steps() const { return steps_; }
+  inline const int& steps() const { return steps_; }
   /// Access the current motor direction.
-  inline const volatile int& direction() const { return direction_; }
+  inline const int& direction() const { return direction_; }
+
+  /// Add callbacks to be executed when reaching safety thresholds.
+  /** @param lower_threshold lower safety threshold below which lower_cb should
+    *   be called.
+    * @param upper_threshold upper safety threshold beyond which upper_cb
+    *   should be called.
+    * @param lower_cb function to be executed when the position becomes smaller
+    *   or equal to lower_threshold. It can be nullptr, in which case no
+    *   callback is executed.
+    * @param upper_cb function to be executed when the position becomes greater
+    *   or equal to upper_threshold. It can be nullptr, in which case no
+    *   callback is executed.
+    * @warning The thresholds upper_threshold and lower_threshold are
+    *   absolutely arbitrary. As an example, there is no need for the lower
+    *   threshold to be smaller than the upper one. But be careful: with great
+    *   power comes great responsibility!
+    */
+  void setSafetyCallbacks(
+    int lower_threshold,
+    int upper_threshold,
+    std::function<void(void)> lower_cb,
+    std::function<void(void)> upper_cb
+  );
+
+  /// Add callbacks to be executed when reaching safety thresholds.
+  /** Like
+    * setSafetyCallbacks(int,int,std::function<void(void)>,std::function<void(void)>)
+    * but using the same callback for both the lower and the upper thresholds.
+    * @param lower_threshold lower safety threshold below which cb should be
+    *   called.
+    * @param upper_threshold upper safety threshold beyond which cb should be
+    *   called.
+    * @param cb function to be executed when the position becomes either smaller
+    *   (or equal) to lower_threshold or  greater (or equal) to upper_threshold.
+    *   It can be nullptr, in which case no callback is executed.
+    */
+  inline void setSafetyCallbacks(
+    int lower_threshold,
+    int upper_threshold,
+    std::function<void(void)> cb
+  )
+  {
+    setSafetyCallbacks(lower_threshold, upper_threshold, cb, cb);
+  }
 
 private:
   /// "Table" that allows to tell the direction of rotation.
@@ -94,8 +139,12 @@ private:
   bool b_current_; ///< Current voltage level on pin_b_.
   bool a_past_; ///< Past voltage level on pin_a_.
   bool b_past_; ///< Past voltage level on pin_b_.
-  volatile int steps_; ///< Current number of encoder steps.
-  volatile int direction_; ///< Current rotation direction.
+  int steps_; ///< Current number of encoder steps.
+  int direction_; ///< Current rotation direction.
+  int lower_threshold_; ///< Lower threshold below which lower_cb_ should be executed.
+  int upper_threshold_; ///< Upper threshold beyond which upper_cb_ should be executed.
+  std::function<void(void)> lower_cb_; ///< Callback to be executed whenver the position becomes less than lower_threshold_.
+  std::function<void(void)> upper_cb_; ///< Callback to be executed whenver the position becomes more than upper_threshold_.
 
   /// Function called whenever one of the pins changes level.
   /** @param gpio the pin that just changed its level.
