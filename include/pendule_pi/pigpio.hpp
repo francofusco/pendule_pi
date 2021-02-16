@@ -101,18 +101,44 @@ private:
 class ActivationToken {
 public:
   /// Forwards a call to gpioInitialise().
-  /** The constructor also registers the static method terminate() as handler
-    * for SIGINT (the one sent when CTRL+C is pressed on the keyboard).
+  /** The constructor also registers the following signal handlers:
+    * - pleaseStop() as handler for SIGINT (the one sent when CTRL+C is
+    *   pressed on the keyboard).
+    * - abort() as a handler for SIGABRT (to be executed upon "catastrophic
+    *   failure").
     */
   ActivationToken();
-  /// Forwards a call to gpioTerminate().
+  /// Ensures that all GPIO pins are changed to high impedance mode.
   ~ActivationToken();
 
   /// Auxiliary exception class to be thrown when a SIGINT is received.
   class PleaseStop : public std::runtime_error {
-    public: PleaseStop() : std::runtime_error("SIGINT received, throwing this exception to stop excution") {}
+    public:
+      /// Fill-in the exception message.
+      PleaseStop() : std::runtime_error("SIGINT received, throwing this exception to stop excution") {}
+  };
+
+  /// Auxiliary exception class to be thrown when multiple tokens are generated.
+  class MultpleTokensCreated : public std::runtime_error {
+    public:
+      /// Fill-in the exception message.
+      /** @param during_ctor If true, it means that this exception is being
+        *   thrown from the constructor of ActivationToken. If false, it is
+        *   being thrown from the destructor instead. It is merely used to
+        *   properly fill the exception message.
+        */
+      MultpleTokensCreated(
+        bool during_ctor
+      )
+      : std::runtime_error(during_ctor
+          ? "Attempting to create multiple ActivationToken instances. This is forbidden, sorry."
+          : "While destroying an ActivationToken, another registered token was found. This is a bug, please contact the maintainer."
+        )
+      {}
   };
 private:
+  static ActivationToken* active_token; ///< Pointer to the currently active token.
+
   /// Puts all GPIO pins in high impedance mode.
   /** This method allows to "disconnect" all GPIO pins, by putting them into
     * high impedance mode (inputs with no pull-up/pull-down resistors).

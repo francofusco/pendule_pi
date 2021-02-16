@@ -37,13 +37,23 @@ std::string Exception::error2msg(
 }
 
 
+ActivationToken* ActivationToken::active_token = nullptr;
+
+
 ActivationToken::ActivationToken() {
+  PENDULE_PI_DBG("ActivationToken: checking that no other token exists");
+  // Make sure that no other active token exists
+  if(active_token != nullptr) {
+    throw MultpleTokensCreated(true);
+  }
+  // "register" this object as the active token
+  active_token = this;
+  // Initialize the pigpio library
   PENDULE_PI_DBG("ActivationToken: initializing");
   PiGPIO_RUN_VOID(gpioInitialise);
   // NOTE: it is VERY important that the signal handlers are assigned after
   // attempting to call gpioInitialise()!
   std::signal(SIGINT, ActivationToken::pleaseStop);
-  #warning "Find a way to handle SIGABRT here"
   std::signal(SIGABRT, ActivationToken::abort);
 }
 
@@ -51,12 +61,17 @@ ActivationToken::ActivationToken() {
 ActivationToken::~ActivationToken() {
   PENDULE_PI_DBG("ActivationToken: calling resetPins() upon token destruction");
   resetPins();
+  // If there is no registered token, or another one is registered, bad things might happen!
+  if(active_token != this) {
+    throw MultpleTokensCreated(false);
+  }
+  // "unregister" this token.
+  active_token = nullptr;
 }
 
 
 void ActivationToken::resetPins() {
   PENDULE_PI_DBG("ActivationToken: putting all pins into high impedance mode");
-  #warning "TODO: put all pins in high impedance mode"
   for(int pin=0; pin<=26; pin++) {
     auto retval = gpioSetPullUpDown(pin, PI_PUD_OFF);
     if(retval < 0) {
@@ -69,8 +84,10 @@ void ActivationToken::resetPins() {
         "input, gpioSetMode() returned " << Exception::error2msg(retval));
     }
   }
-  PENDULE_PI_DBG("ActivationToken: calling gpioTerminate()");
-  gpioTerminate();
+  #warning "Calling gpioTerminate() kills the process, which is NOT a good thing. Check if there is a workaround this."
+  // PENDULE_PI_DBG("ActivationToken: calling gpioTerminate()");
+  // gpioTerminate();
+  PENDULE_PI_DBG("ActivationToken: GPIO reset completed");
 }
 
 
@@ -83,8 +100,8 @@ void ActivationToken::pleaseStop(int s) {
 void ActivationToken::abort(int s) {
   PENDULE_PI_DBG("ActivationToken: executing 'abort(" << (s==SIGABRT?std::string("SIGABRT"):std::to_string(s)) << ")'");
   resetPins();
-  PENDULE_PI_DBG("ActivationToken: calling std::terminate()");
-  std::terminate();
+  PENDULE_PI_DBG("ActivationToken: calling std::_Exit(EXIT_FAILURE)");
+  std::_Exit(EXIT_FAILURE);
 }
 
 
