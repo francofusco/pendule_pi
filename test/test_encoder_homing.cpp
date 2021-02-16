@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     // Create the encoder
     pp::Encoder encoder(20, 21);
     // If both switches are pressed, exit
-    if(!right.atRest(true) && !left.atRest(true)) {
+    if(!right.atRest() && !left.atRest()) {
       std::cout << "Both switches are active, I do not know how to choose my initial direction..." << std::endl;
       return 0;
     }
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     left.enableInterrupts([&](){motor.setPWM(HOMING_SPEED); switched=true;});
     right.enableInterrupts([&](){motor.setPWM(-HOMING_SPEED); switched=true;});
     // Set the initial PWM
-    motor.setPWM( right.atRest(true) ? INITIAL_SPEED : -INITIAL_SPEED );
+    motor.setPWM( right.atRest() ? INITIAL_SPEED : -INITIAL_SPEED );
     // Dummy loop that waits until a switch is hit
     while(!switched)
       std::this_thread::sleep_for(std::chrono::milliseconds(100));

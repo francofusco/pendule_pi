@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <stdexcept>
 
 namespace pendule_pi {
 
@@ -52,16 +53,28 @@ public:
   void disableInterrupts();
 
   /// Get the current state of the switch.
-  /** @param force_read if false and interrupts are being used, this method
-    *   will use the "cached" state of the pin. If the parameter is true and
-    *   interrupts are being used, this method will perform a "direct" GPIO
-    *   read. If interrupts are not being used, the parameter is ignored and
-    *   a "direct" GPIO read will be performed.
+  /** This method performs a "direct" GPIO read, *i.e.*, it does not use the
+    * "cached" state (obtained using interrupts).
     * @return true if the switch is at rest and false otherwise.
     */
-  bool atRest(
-    bool force_read = false
-  ) const;
+  bool atRest() const;
+
+  /// Get the current state of the switch.
+  /** This method returns the "cached" state of the pin, which should have been
+    * updated using GPIO interrupts.
+    * @return true if the switch is at rest and false otherwise.
+    * @note You must have called enableInterrupts() to ensure that the cached
+    *   state is updated. An exception will be thrown if interrupts are not
+    *   enabled.
+    */
+  bool atRestCached() const;
+
+  /// Auxiliary exception class to be thrown when reading the cached state with disabled interrupts.
+  class InterruptsAreDisabled : public std::runtime_error {
+    public:
+      /// Fill-in the exception message.
+      InterruptsAreDisabled() : std::runtime_error("A call to Switch::atRestCached() was performed, but interrupts are disabled.") {}
+  };
 
 private:
   const int pin_; ///< Pin the switch is connected to.
