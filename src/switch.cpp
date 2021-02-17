@@ -47,12 +47,14 @@ void Switch::enableInterrupts(
   // set the callback to change the state of the Switch.
   gpioSetAlertFuncEx(pin_, Switch::onChangeStatic, this);
   callback_ = user_callback;
+  with_interrupts_ = true;
 }
 
 
 void Switch::disableInterrupts() {
   gpioSetAlertFuncEx(pin_, nullptr, nullptr);
   callback_ = nullptr;
+  with_interrupts_ = false;
 }
 
 
