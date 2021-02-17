@@ -2,7 +2,7 @@
 #include "pendule_pi/pigpio.hpp"
 #include "pendule_pi/debug.hpp"
 #include <pigpio.h>
-#include <iostream>
+#include <limits>
 
 
 
@@ -92,6 +92,8 @@ void Encoder::setSafetyCallbacks(
 void Encoder::removeSafetyCallbacks() {
   lower_cb_ = nullptr;
   upper_cb_ = nullptr;
+  lower_threshold_ = std::numeric_limits<int>::min();
+  upper_threshold_ = std::numeric_limits<int>::max();
 }
 
 
