@@ -11,17 +11,22 @@ namespace pendule_pi {
 /// Class that handles a simple mechanical switch.
 class Switch {
 public:
+  static bool constexpr NORMALLY_UP = true; ///< Alias for the constructor parameter `normally_up`.
+  static bool constexpr NORMALLY_DOWN = false; ///< Alias for the constructor parameter `normally_up`.
+  static bool constexpr WITH_PULL_RESISTOR = true; ///< Alias for the constructor parameter `use_internal_pull_resistor`.
+  static bool constexpr WITHOUT_PULL_RESISTOR = false; ///< Alias for the constructor parameter `use_internal_pull_resistor`.
+
   /// Constructor, initialized the associated GPIO pin.
   /** @param pin number of the pin used by the switch.
     * @param normally_up if true, when the switch is at rest the pin should be
     *   in a logical HIGH. If false, when the switch is at rest the pin should
     *   be in a logical HIGH.
-    * @param with_pull_up_down if true, the GPIO pin will be configured so that
-    *   it uses the pull-up or a pull-down resistor. If false, no additional
-    *   resistor is used.
-    * @warning If you pass `with_pull_up_down=true`, then the type of resistor
-    *   (pull-up vs pull-down) is decided via the `normally_up` parameter. In
-    *   particular:
+    * @param use_internal_pull_resistor if true, the GPIO pin will be
+    *   configured so that it uses the pull-up or a pull-down resistor. If
+    *   false, no additional resistor is used.
+    * @warning If you pass `use_internal_pull_resistor=true`, then the type
+    *   of resistor (pull-up vs pull-down) is decided via the `normally_up`
+    *   parameter. In particular:
     *   - if `normally_up=true` then the pull-up resistor is enabled;
     *   - if `normally_up=false` then the pull-down resistor is enabled.
     *   Make sure that your circuitry coupled with these choices does not damage
@@ -30,7 +35,7 @@ public:
   Switch(
     int pin,
     bool normally_up,
-    bool with_pull_up_down=true
+    bool use_internal_pull_resistor=true
   );
 
   /// Destructor, disconnects the GPIO callback.

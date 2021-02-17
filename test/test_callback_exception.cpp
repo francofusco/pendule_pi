@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     // Let the token manage the pigpio library
     pigpio::ActivationToken token;
     // create a Switch object
-    pp::Switch sw(17, true);
+    pp::Switch sw(17, pp::Switch::NORMALLY_UP, pp::Switch::WITH_PULL_RESISTOR);
     // create a motor
     pp::Motor motor(24, 16);
     if(start_motor)
