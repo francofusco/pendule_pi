@@ -38,6 +38,10 @@ public:
     bool use_internal_pull_resistor=true
   );
 
+  // Prevent the user from making copies of a Switch.
+  Switch(const Switch&) = delete;
+  Switch& operator=(const Switch&) = delete;
+
   /// Destructor, disconnects the GPIO callback.
   virtual ~Switch();
 

@@ -1,5 +1,6 @@
 #include "pendule_pi/encoder.hpp"
 #include "pendule_pi/pigpio.hpp"
+#include "pendule_pi/debug.hpp"
 #include <pigpio.h>
 #include <iostream>
 
@@ -38,6 +39,7 @@ Encoder::Encoder(
 , lower_cb_(nullptr)
 , upper_cb_(nullptr)
 {
+  PENDULE_PI_DBG("Creating Encoder on pins " << pin_a_ << " and " << pin_b_);
   // Configure the pins using pigpio
   PiGPIO_RUN_VOID(gpioSetMode, pin_a_, PI_INPUT);
   PiGPIO_RUN_VOID(gpioSetMode, pin_b_, PI_INPUT);
@@ -55,10 +57,12 @@ Encoder::Encoder(
   PiGPIO_RUN(b_past_, gpioRead, pin_b_);
   a_current_ = a_past_;
   b_current_ = b_past_;
+  PENDULE_PI_DBG("Encoder created successfully");
 }
 
 
 Encoder::~Encoder() {
+  PENDULE_PI_DBG("Destroying Encoder on pins " << pin_a_ << " and " << pin_b_);
   // Disable interrupts
   gpioSetAlertFuncEx(pin_a_, nullptr, nullptr);
   gpioSetAlertFuncEx(pin_b_, nullptr, nullptr);
@@ -67,6 +71,7 @@ Encoder::~Encoder() {
   gpioSetPullUpDown(pin_b_, PI_PUD_OFF);
   gpioSetMode(pin_a_, PI_INPUT);
   gpioSetMode(pin_b_, PI_INPUT);
+  PENDULE_PI_DBG("Encoder destroyed successfully");
 }
 
 
@@ -81,6 +86,12 @@ void Encoder::setSafetyCallbacks(
   upper_threshold_ = upper_threshold;
   lower_cb_ = lower_cb;
   upper_cb_ = upper_cb;
+}
+
+
+void Encoder::removeSafetyCallbacks() {
+  lower_cb_ = nullptr;
+  upper_cb_ = nullptr;
 }
 
 
