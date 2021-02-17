@@ -100,3 +100,23 @@ add_executable(test_reset_pins
 target_link_libraries(test_reset_pins
   pendule_pi
 )
+
+
+# Test the calibration procedure of the pendulum
+add_executable(test_pendule_calibration
+  test_pendule_calibration.cpp
+)
+
+target_link_libraries(test_pendule_calibration
+  pendule_pi
+)
+
+
+# Move the pendulum around and print its state
+add_executable(test_pendule
+  test_pendule.cpp
+)
+
+target_link_libraries(test_pendule
+  pendule_pi
+)

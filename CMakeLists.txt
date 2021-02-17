@@ -36,6 +36,7 @@ if(${pigpio_FOUND})
     src/switch.cpp
     src/motor.cpp
     src/encoder.cpp
+    src/pendule.cpp
   )
 
   target_include_directories(pendule_pi PUBLIC

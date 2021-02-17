@@ -17,6 +17,10 @@ public:
     int direction_pin
   );
 
+  // Prevent the user from making copies of a Motor.
+  Motor(const Motor&) = delete;
+  Motor& operator=(const Motor&) = delete;
+
   /// Destructor.
   virtual ~Motor();
 

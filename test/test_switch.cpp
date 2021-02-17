@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     // select the pin to be used
     int pin = argc==1 ? 17 : std::atoi(argv[1]);
     // create the Switch object
-    pp::Switch sw(pin, true);
+    pp::Switch sw(pin, pp::Switch::NORMALLY_UP, pp::Switch::WITH_PULL_RESISTOR);
     // Connect a custom callback that will be executed everytime that
     // the switch gets activated. In this case, just print a message.
     sw.enableInterrupts([](){std::cout << "Pressed" << std::endl;});

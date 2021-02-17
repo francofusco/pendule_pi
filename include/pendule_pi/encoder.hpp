@@ -22,10 +22,19 @@ public:
     int gpioB
   );
 
+  // Prevent the user from making copies of an Encoder.
+  Encoder(const Encoder&) = delete;
+  Encoder& operator=(const Encoder&) = delete;
+
   /// Puts the two GPIO pins into high impedance mode.
   virtual ~Encoder();
 
   /// Access the current step counter.
+  /** @note To provide the highest possible resolution, this class counts the
+    * times **any** phase changes state. This means that the number of steps
+    * per revolution will correspond to **four times** those reported on the
+    * datasheet.
+    */
   inline const int& steps() const { return steps_; }
   /// Access the current motor direction.
   inline const int& direction() const { return direction_; }
@@ -73,6 +82,9 @@ public:
   {
     setSafetyCallbacks(lower_threshold, upper_threshold, cb, cb);
   }
+
+  /// Remove previously assigned callbacks.
+  void removeSafetyCallbacks();
 
 private:
   /// "Table" that allows to tell the direction of rotation.

@@ -15,8 +15,8 @@ int main(int argc, char** argv) {
     pigpio::ActivationToken token;
     // Create the Motor and Switch instances
     pp::Motor motor(24, 16);
-    pp::Switch right(18, true);
-    pp::Switch left(17, true);
+    pp::Switch right(18, pp::Switch::NORMALLY_UP, pp::Switch::WITH_PULL_RESISTOR);
+    pp::Switch left(17, pp::Switch::NORMALLY_UP, pp::Switch::WITH_PULL_RESISTOR);
     // If both switches are pressed, exit
     if(!right.atRest() && !left.atRest()) {
       std::cout << "Both switches are active, I do not know how to choose my initial direction..." << std::endl;
