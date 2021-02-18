@@ -32,6 +32,7 @@ if(${pigpio_FOUND})
   # MAIN LIBRARY #
   ################
   add_library(pendule_pi
+    src/joystick.cpp
     src/pigpio.cpp
     src/switch.cpp
     src/motor.cpp

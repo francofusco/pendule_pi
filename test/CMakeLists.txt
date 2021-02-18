@@ -120,3 +120,23 @@ add_executable(test_pendule
 target_link_libraries(test_pendule
   pendule_pi
 )
+
+
+# Test the joystick
+add_executable(test_joystick
+  test_joystick.cpp
+)
+
+target_link_libraries(test_joystick
+  pendule_pi
+)
+
+
+# Test the joystick
+add_executable(test_pendule_joystick
+  test_pendule_joystick.cpp
+)
+
+target_link_libraries(test_pendule_joystick
+  pendule_pi
+)
