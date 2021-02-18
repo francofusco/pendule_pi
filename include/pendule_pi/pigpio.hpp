@@ -4,6 +4,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <csignal>
 #include <map>
 #include <pigpio.h>
 
@@ -107,7 +108,7 @@ public:
     * - abort() as a handler for SIGABRT (to be executed upon "catastrophic
     *   failure").
     */
-  ActivationToken();
+  ActivationToken(bool register_sigint=true);
   /// Ensures that all GPIO pins are changed to high impedance mode.
   ~ActivationToken();
 
@@ -136,6 +137,14 @@ public:
         )
       {}
   };
+
+  /// Static method that can be registered as handler for SIGINT (CTRL+C).
+  /** This method simply throws a PleaseStop exception to halt execution.
+    * @param sig signal to be handled. Ignored in this method, but required
+    *   by the syntax of std::signal.
+    */
+  static void pleaseStop(int sig=SIGINT);
+
 private:
   static ActivationToken* active_token; ///< Pointer to the currently active token.
 
@@ -146,13 +155,6 @@ private:
     * GPIO operations will not happen.
     */
   static void resetPins();
-
-  /// Static method that can be registered as handler for SIGINT (CTRL+C).
-  /** This method simply throws a PleaseStop exception to halt execution.
-    * @param sig signal to be handled. Ignored in this method, but required
-    *   by the syntax of std::signal.
-    */
-  static void pleaseStop(int sig);
 
   /// Static method that can be registered as handler for SIGABRT.
   /** This method calls .

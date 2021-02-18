@@ -185,6 +185,9 @@ public:
   /// Initialize the pendulum.
   void calibrate();
 
+  /// Tells if the pendulum has been calibrated successfully.
+  const inline bool& isCalibrated() const { return calibrated_; }
+
   /// Perform state estimation.
   /** @param dt time (in seconds) that elapsed since the last call to update().
     */

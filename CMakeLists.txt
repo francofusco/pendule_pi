@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 project(pendule_pi VERSION 1.0.0)
-add_definitions(-std=c++17)
 
 
 ###################
@@ -52,6 +51,8 @@ if(${pigpio_FOUND})
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+
+  target_compile_features(pendule_pi PUBLIC cxx_std_17)
 
   ###########
   # INSTALL #

@@ -40,7 +40,7 @@ std::string Exception::error2msg(
 ActivationToken* ActivationToken::active_token = nullptr;
 
 
-ActivationToken::ActivationToken() {
+ActivationToken::ActivationToken(bool register_sigint) {
   PENDULE_PI_DBG("ActivationToken: checking that no other token exists");
   // Make sure that no other active token exists
   if(active_token != nullptr) {
@@ -53,7 +53,8 @@ ActivationToken::ActivationToken() {
   PiGPIO_RUN_VOID(gpioInitialise);
   // NOTE: it is VERY important that the signal handlers are assigned after
   // attempting to call gpioInitialise()!
-  std::signal(SIGINT, ActivationToken::pleaseStop);
+  if(register_sigint)
+    std::signal(SIGINT, ActivationToken::pleaseStop);
   std::signal(SIGABRT, ActivationToken::abort);
 }
 
