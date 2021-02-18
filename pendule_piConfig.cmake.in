@@ -1,0 +1,12 @@
+# Simple config file for the pendule_pi package
+
+get_filename_component(pendule_pi_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+find_dependency(pigpio REQUIRED)
+
+if(NOT TARGET pendule_pi::pendule_pi)
+    include("${pendule_pi_CMAKE_DIR}/pendule_piDepends.cmake")
+endif()
+
+set(pendule_pi_FOUND TRUE)

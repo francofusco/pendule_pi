@@ -53,7 +53,25 @@ if(${pigpio_FOUND})
     target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
   endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
-  # Build test programs
+  ###########
+  # INSTALL #
+  ###########
+
+  # Allow other projects to find and install pendule_pi
+  export(TARGETS pendule_pi
+    NAMESPACE pendule_pi::
+    FILE ${PROJECT_BINARY_DIR}/pendule_piDepends.cmake
+  )
+  configure_file(pendule_piConfig.cmake.in ${PROJECT_BINARY_DIR}/pendule_piConfig.cmake @ONLY)
+  export(PACKAGE pendule_pi)
+
+  message(WARNING "${Yellow}TODO: properly install the required files${ColourReset}")
+  # install(TARGETS pendule_pi DESTINATION lib)
+  # install(FILES ${pendule_pi_HEADERS} DESTINATION include)
+
+  ###########
+  # TESTING #
+  ###########
   add_subdirectory(test)
 else(${pigpio_FOUND})
   message(WARNING "pigpio not found: source code will not be built.")
