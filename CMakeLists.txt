@@ -31,12 +31,12 @@ if(${pigpio_FOUND})
   # MAIN LIBRARY #
   ################
   add_library(pendule_pi
-    src/joystick.cpp
-    src/pigpio.cpp
-    src/switch.cpp
-    src/motor.cpp
-    src/encoder.cpp
-    src/pendule.cpp
+    src/pendule_pi/joystick.cpp
+    src/pendule_pi/pigpio.cpp
+    src/pendule_pi/switch.cpp
+    src/pendule_pi/motor.cpp
+    src/pendule_pi/encoder.cpp
+    src/pendule_pi/pendule.cpp
   )
 
   target_include_directories(pendule_pi PUBLIC
@@ -49,10 +49,27 @@ if(${pigpio_FOUND})
   )
 
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    target_compile_options(pendule_pi PRIVATE -O0)
     target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
-  endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_options(pendule_pi PRIVATE -O2)
+    # When Eigen will be used :P
+    # target_compile_definitions(pendule_pi PRIVATE -DEIGEN_NO_DEBUG)
+  endif()
 
   target_compile_features(pendule_pi PUBLIC cxx_std_17)
+
+  ############
+  # BINARIES #
+  ############
+
+  # Reset all pins in high impedance mode
+  add_executable(reset_gpio src/bin/reset_gpio.cpp)
+  target_link_libraries(reset_gpio pendule_pi)
+
+  # Allows to control the pendulum with a joystick
+  add_executable(manual_control src/bin/manual_control.cpp)
+  target_link_libraries(manual_control pendule_pi)
 
   ###########
   # INSTALL #

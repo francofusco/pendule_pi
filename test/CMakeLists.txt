@@ -92,16 +92,6 @@ target_link_libraries(test_encoder_callbacks
 )
 
 
-# Put all pins in high impedance
-add_executable(test_reset_pins
-  test_reset_pins.cpp
-)
-
-target_link_libraries(test_reset_pins
-  pendule_pi
-)
-
-
 # Test the calibration procedure of the pendulum
 add_executable(test_pendule_calibration
   test_pendule_calibration.cpp
@@ -128,15 +118,5 @@ add_executable(test_joystick
 )
 
 target_link_libraries(test_joystick
-  pendule_pi
-)
-
-
-# Test the joystick
-add_executable(test_pendule_joystick
-  test_pendule_joystick.cpp
-)
-
-target_link_libraries(test_pendule_joystick
   pendule_pi
 )
