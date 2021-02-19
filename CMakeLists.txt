@@ -71,6 +71,18 @@ if(${pigpio_FOUND})
   add_executable(manual_control src/bin/manual_control.cpp)
   target_link_libraries(manual_control pendule_pi)
 
+  # Record angular motions (useful for identification)
+  add_executable(log_rotation src/bin/log_rotation.cpp)
+  target_link_libraries(log_rotation pendule_pi)
+
+  # Record angular motions (useful for identification)
+  add_executable(log_motion src/bin/log_motion.cpp)
+  target_link_libraries(log_motion pendule_pi)
+
+  # Record angular motions (useful for identification)
+  add_executable(log_joystick src/bin/log_joystick.cpp)
+  target_link_libraries(log_joystick pendule_pi)
+
   ###########
   # INSTALL #
   ###########

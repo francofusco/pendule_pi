@@ -30,17 +30,14 @@ int main(int argc, char** argv) {
     pigpio::ActivationToken token;
     // Create the encoder
     pp::Joystick joy;
-    pp::Pendule pendule(1.0, 2*M_PI/1000, 0.0);
+    pp::Pendule pendule(0.846/21200, 2*M_PI/1000, 0.0);
     std::cout << "Calibrating pendulum" << std::endl;
-    pendule.calibrate(2000.0);
+    pendule.calibrate(0.05);
     std::cout << "Calibration completed!" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     bool to_the_right = true;
     const int COMMAND = 75;
-    double MAX_POSITION = pendule.softMinMaxPosition() - 1000.0;
-    if(MAX_POSITION < 1000.0) {
-      throw std::runtime_error("MAX_POSITION is too small, this could cause serious troubles");
-    }
+    double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
     const int SLEEP_MS = 20;
     std::cout << "    POSITION        ANGLE       LIN.VEL.      ANG.VEL.     PWM" << std::endl;
                 //  +000000.0000  +000000.0000  +000000.0000  +000000.0000  +000
