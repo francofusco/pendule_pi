@@ -183,7 +183,9 @@ public:
   );
 
   /// Initialize the pendulum.
-  void calibrate();
+  void calibrate(
+    double safety_margin_meters
+  );
 
   /// Tells if the pendulum has been calibrated successfully.
   const inline bool& isCalibrated() const { return calibrated_; }
@@ -231,6 +233,9 @@ public:
     */
   const int& midPositionSteps() const;
 
+  /// Read the value of the soft position limits (in meters).
+  const double& softMinMaxPosition() const;
+
   /// Emergency stop.
   void eStop(const std::string& why);
 
@@ -252,6 +257,7 @@ private:
   int min_position_steps_; ///< Encoder reading when the base is at the minimum position.
   int max_position_steps_; ///< Encoder reading when the base is at the maximum position.
   int mid_position_steps_; ///< Encoder reading when the base is at the middle position.
+  double soft_minmax_position_meters_; ///< Position (in meters) at which emergency stop is requested.
   const double meters_per_step_; ///< Multiplicative factor to convert from encoder steps to meters.
   const double radians_per_step_; ///< Multiplicative factor to convert from encoder steps to radians.
   const double rest_angle_; ///< Position of the pendulum when it is at rest.

@@ -3,6 +3,7 @@
 #include "pendule_pi/debug.hpp"
 #include <chrono>
 #include <thread>
+#include <cmath>
 
 namespace pendule_pi {
 
@@ -95,8 +96,11 @@ Pendule::Pendule(
 }
 
 
-void Pendule::calibrate()
+void Pendule::calibrate(
+  double safety_margin_meters
+)
 {
+  PENDULE_PI_DBG("Requested calibration via Pendule::calibrate(" << safety_margin_meters << ")");
   // Reset it no matter what!
   calibrated_ = false;
   // Ensure that we are not in emergency stop
@@ -194,16 +198,24 @@ void Pendule::calibrate()
   // Ok, we are in the central position!
   left_switch_->enableInterrupts([&](){ eStop("left switch hit"); });
   right_switch_->enableInterrupts([&](){ eStop("right switch hit"); });
-  int safety_margin = 10000;
-  int soft_min = min_position_steps_ + safety_margin;
-  int soft_max = max_position_steps_ - safety_margin;
+  int safety_margin_steps = std::ceil(std::fabs(safety_margin_meters/meters_per_step_));
+  int soft_min = min_position_steps_ + safety_margin_steps;
+  int soft_max = max_position_steps_ - safety_margin_steps;
   position_encoder_->setSafetyCallbacks(
     soft_min,
     soft_max,
     [&](){ eStop("soft minimum position limit reached"); },
     [&](){ eStop("soft maximum position limit reached"); }
   );
+  soft_minmax_position_meters_ = std::fabs(steps2meters(soft_max));
   calibrated_ = true;
+  PENDULE_PI_DBG("Calibration completed!");
+  PENDULE_PI_DBG("min steps: " << min_position_steps_ << " (in meters: " << steps2meters(min_position_steps_) << ")");
+  PENDULE_PI_DBG("max steps: " << max_position_steps_ << " (in meters: " << steps2meters(max_position_steps_) << ")");
+  PENDULE_PI_DBG("middle steps: " << mid_position_steps_ << " (in meters: " << steps2meters(mid_position_steps_) << ")");
+  PENDULE_PI_DBG("safety_margin_steps: " << safety_margin_steps << " (in meters: " << safety_margin_meters << ")");
+  PENDULE_PI_DBG("soft_min: " << soft_min << " (in meters: " << steps2meters(soft_min) << ")");
+  PENDULE_PI_DBG("soft_max: " << soft_max << " (in meters: " << steps2meters(soft_max) << ")");
 }
 
 
@@ -267,6 +279,13 @@ const int& Pendule::midPositionSteps() const {
   if(!calibrated_)
     throw NotCalibrated("Pendule::midPositionSteps()");
   return mid_position_steps_;
+}
+
+
+const double& Pendule::softMinMaxPosition() const {
+  if(!calibrated_)
+    throw NotCalibrated("Pendule::softMinMaxPosition()");
+  return soft_minmax_position_meters_;
 }
 
 
