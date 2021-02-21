@@ -8,12 +8,10 @@ project(pendule_pi VERSION 1.0.0)
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall -Wpedantic -Wextra -fexceptions")
 
 
-
 #######################
 # LOCATE DEPENDENCIES #
 #######################
-
-find_package(pigpio)
+find_package(pigpio QUIET)
 
 
 #####################
@@ -24,7 +22,8 @@ find_package(pigpio)
 string(ASCII 27 Esc)
 set(ColourReset "${Esc}[m")
 set(Yellow      "${Esc}[33m")
-message(WARNING "${Yellow}TODO: Fix bug related to exceptions inside ISRs${ColourReset}")
+set(Blue      "${Esc}[34m")
+
 
 if(${pigpio_FOUND})
   ################
@@ -95,7 +94,7 @@ if(${pigpio_FOUND})
   configure_file(pendule_piConfig.cmake.in ${PROJECT_BINARY_DIR}/pendule_piConfig.cmake @ONLY)
   export(PACKAGE pendule_pi)
 
-  message(WARNING "${Yellow}TODO: properly install the required files${ColourReset}")
+  message(STATUS "${Blue}TODO: properly install the required files${ColourReset}")
   # install(TARGETS pendule_pi DESTINATION lib)
   # install(FILES ${pendule_pi_HEADERS} DESTINATION include)
 
@@ -104,7 +103,7 @@ if(${pigpio_FOUND})
   ###########
   add_subdirectory(test)
 else(${pigpio_FOUND})
-  message(WARNING "pigpio not found: source code will not be built.")
+  message(STATUS "${Yellow}pigpio not found: source code will not be built.${ColourReset}")
 endif(${pigpio_FOUND})
 
 

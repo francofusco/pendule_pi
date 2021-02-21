@@ -1,5 +1,5 @@
 # Documentation will be optionally built using Doxygen.
-find_package(Doxygen)
+find_package(Doxygen QUIET)
 
 # Provide the option to build the documentation.
 # Defaults to true if Doxygen is installed.

@@ -76,16 +76,16 @@ void ActivationToken::resetPins() {
   for(int pin=0; pin<=26; pin++) {
     auto retval = gpioSetPullUpDown(pin, PI_PUD_OFF);
     if(retval < 0) {
-      PENDULE_PI_DBG("ActivationToken: while disabling resistors on pin " << \
+      PENDULE_PI_WRN("ActivationToken: while disabling resistors on pin " << \
         pin << ", gpioSetPullUpDown() returned " << Exception::error2msg(retval));
     }
     retval = gpioSetMode(pin, PI_INPUT);
     if(retval < 0) {
-      PENDULE_PI_DBG("ActivationToken: while setting pin " << pin << " as " \
+      PENDULE_PI_WRN("ActivationToken: while setting pin " << pin << " as " \
         "input, gpioSetMode() returned " << Exception::error2msg(retval));
     }
   }
-  #warning "Calling gpioTerminate() kills the process, which is NOT a good thing. Check if there is a workaround this."
+  #warning "Calling gpioTerminate() while handling a signal seems to kill the process, which is NOT a good thing. Check if there is a fix for this."
   // PENDULE_PI_DBG("ActivationToken: calling gpioTerminate()");
   // gpioTerminate();
   PENDULE_PI_DBG("ActivationToken: GPIO reset completed");
