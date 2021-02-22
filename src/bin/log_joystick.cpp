@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
         joy.update();
         int ref = joy.axis(axis_num);
         ref = robustZero(ref, 2500);
-        int pwm = (int)(ref*250./32768.);
+        pwm = (int)(ref*250./32768.);
         if(pendule.position() > MAX_POSITION && pwm > 0)
           pwm = 0;
         else if(pendule.position() < -MAX_POSITION && pwm < 0)
