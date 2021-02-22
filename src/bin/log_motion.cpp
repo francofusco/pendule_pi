@@ -9,27 +9,6 @@
 #include <cmath>
 
 
-class Rate {
-public:
-  Rate(unsigned int period_us) {
-    period = period_us;
-    tnow = 0;
-    tpast = 0;
-  }
-
-  unsigned int sleep() {
-    do {
-      tnow = gpioTick();
-    }
-    while(tnow-tpast < period);
-    tpast = tnow;
-    return tnow;
-  }
-private:
-  unsigned int tnow, tpast, period;
-};
-
-
 int robustZero(int val, int zero) {
   if(-zero < val && val < zero)
     return 0;
@@ -76,7 +55,7 @@ int main(int argc, char** argv) {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    Rate rate(PERIOD_US);
+    pigpio::Rate rate(PERIOD_US);
 
     // Go to the left
     pendule.setCommand(-50);

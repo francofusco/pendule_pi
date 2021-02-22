@@ -36,17 +36,17 @@ int main(int argc, char** argv) {
     std::cout << "Calibration completed!" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     bool to_the_right = true;
-    const int COMMAND = 75;
     double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
     const int SLEEP_MS = 20;
+    const double SLEEP_SEC = SLEEP_MS/1000.0;
+    pigpio::Rate rate(SLEEP_MS*1000);
     std::cout << "    POSITION        ANGLE       LIN.VEL.      ANG.VEL.     PWM" << std::endl;
                 //  +000000.0000  +000000.0000  +000000.0000  +000000.0000  +000
     std::cout << std::setfill('0') << std::internal << std::showpos << std::fixed << std::setprecision(4);
-    pendule.setCommand(COMMAND);
     while(true) {
       // state estimation
-      std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_MS));
-      pendule.update(SLEEP_MS/1000.0);
+      rate.sleep();
+      pendule.update(SLEEP_SEC);
       // Compute command
       joy.update();
       int ref = joy.axis(axis_num);

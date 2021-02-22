@@ -164,4 +164,66 @@ private:
   static void abort(int sig);
 };
 
+
+/// Class that allows to execute instructions at a fixed rate.
+/** This class is similar to
+  * <a href="http://wiki.ros.org/roscpp/Overview/Time#Sleeping_and_Rates">ROS Rate objects</a>.
+  * Consider the snippet below:
+  *
+  * ```c++
+  * const unsigned int micros = 100000; // 100ms
+  * pigpio::Rate rate(micros);
+  * while(true) {
+  *   unsigned int now = rate.sleep();
+  *   std::cout << "Current time: " << now << "us" << std::endl;
+  *   // other instructions here
+  * }
+  * ```
+  *
+  * Every time the loop reaches the sleep instruction, the Rate object will
+  * sleep for the amount of time required to obtain the given loop-period
+  * (100 milliseconds in the example). The interesting fact is that the sleep
+  * time is "adaptive": if the instructions following the Rate::sleep() call
+  * require, *e.g.*, 50ms to execute, the thread would be paused for 50ms
+  * when calling sleep(). If the instructions requires 80ms, the thread would
+  * sleep instead for just 20ms. In other words, the first instruction after
+  * the sleep() call should be executed at a fixed rate. In the example above,
+  * you should be able to see an output such as:
+  * ```
+  * Current time: 492306565
+  * Current time: 492406565
+  * Current time: 492506565
+  * Current time: 492606565
+  * Current time: 492706565
+  * Current time: 492806565
+  * Current time: 492906565
+  * Current time: 493006565
+  * Current time: 493106565
+  * ```
+  *
+  * Of course, for this to work properly, the total time required to execute
+  * the instructions after Rate::sleep() must be lower than a Rate's period!
+  */
+class Rate {
+public:
+  /// Create a rate of given period.
+  /** @param period_us desired period in microseconds.
+    */
+  Rate(unsigned int period_us);
+
+  /// Sleep for the required time.
+  /** @return Clock time in microseconds when the thread "wakes up".
+    */
+  unsigned int sleep();
+
+  /// Get the last "wake up" time.
+  /** @return The last value returned by a call to sleep().
+    */
+  inline const unsigned int& lastTick() const { return tpast_; }
+private:
+  unsigned int tnow_; ///< Used inside sleep() to store the current clock time.
+  unsigned int tpast_; ///< Clock time corresponding to the last time sleep() exited.
+  const unsigned int period_; ///< Target period of this Rate.
+};
+
 } // end of namespace pigpio

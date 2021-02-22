@@ -106,6 +106,26 @@ void ActivationToken::abort(int s) {
 }
 
 
+Rate::Rate(
+  unsigned int period_us
+)
+: period_(period_us)
+, tnow_(0)
+, tpast_(0)
+{
+  // nothing else to do here!
+}
+
+
+unsigned int Rate::sleep() {
+  do {
+    tnow_ = gpioTick();
+  }
+  while(tnow_-tpast_ < period_);
+  return tpast_ = tnow_;
+}
+
+
 #define MAKE_CODE_ENTRY(CODE,DESCR) {CODE, #CODE " (" + std::to_string(CODE) + "): '" DESCR "'"}
 const std::map<int,std::string> Exception::ERROR_CODES {
   MAKE_CODE_ENTRY(PI_INIT_FAILED, "gpioInitialise failed"),

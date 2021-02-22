@@ -17,27 +17,6 @@ int robustZero(int val, int zero) {
 }
 
 
-class Rate {
-public:
-  Rate(unsigned int period_us) {
-    period = period_us;
-    tnow = 0;
-    tpast = 0;
-  }
-
-  unsigned int sleep() {
-    do {
-      tnow = gpioTick();
-    }
-    while(tnow-tpast < period);
-    tpast = tnow;
-    return tnow;
-  }
-private:
-  unsigned int tnow, tpast, period;
-};
-
-
 int main(int argc, char** argv) {
   namespace pp = pendule_pi;
   if(argc != 2) {
@@ -70,7 +49,7 @@ int main(int argc, char** argv) {
     double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
     const int SLEEP_US = 10000;
     const double SLEEP_SEC = SLEEP_US / 1000000.0;
-    Rate rate(SLEEP_US);
+    pigpio::Rate rate(SLEEP_US);
 
     while(true) {
       // Wait for joystick input before logging

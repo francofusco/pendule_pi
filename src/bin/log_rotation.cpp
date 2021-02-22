@@ -52,6 +52,9 @@ int main(int argc, char** argv) {
       throw std::runtime_error("The encoder is moving!");
     }
 
+    // Rate used for logging
+    pigpio::Rate rate(PERIOD_US);
+
     // Main loop
     unsigned int packet_id = 0;
     while(true) {
@@ -70,19 +73,13 @@ int main(int argc, char** argv) {
       std::cout << "Logging, please wait... " << std::flush;
 
       // Record data
-      unsigned int tpast = gpioTick();
       unsigned int tnow = 0;
       while(times.size() < DATA_PACKET_SIZE) {
         // Wait for the clock to advance
-        do {
-          tnow = gpioTick();
-        }
-        while(tnow-tpast < PERIOD_US);
+        tnow = rate.sleep();
         // Do logging
         angles.push_back(encoder.steps());
         times.push_back(tnow);
-        // Store time for next iteration
-        tpast = tnow;
       }
       std::cout << "Done!" << std::endl;
 
