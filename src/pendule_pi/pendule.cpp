@@ -73,6 +73,8 @@ Pendule::Pendule(
 , meters_per_step_(meters_per_step/4)
 , radians_per_step_(radians_per_step/4)
 , rest_angle_(rest_angle)
+, offset_up_(0)
+, offset_down_(0)
 , motor_(std::move(motor))
 , left_switch_(std::move(left_switch))
 , right_switch_(std::move(right_switch))
@@ -198,7 +200,7 @@ void Pendule::calibrate(
   // Ok, we are in the central position!
   left_switch_->enableInterrupts([&](){ eStop("left switch hit"); });
   right_switch_->enableInterrupts([&](){ eStop("right switch hit"); });
-  int safety_margin_steps = std::ceil(std::fabs(safety_margin_meters/meters_per_step_));
+  int safety_margin_steps = static_cast<int>(std::ceil(std::fabs(safety_margin_meters/meters_per_step_)));
   int soft_min = min_position_steps_ + safety_margin_steps;
   int soft_max = max_position_steps_ - safety_margin_steps;
   position_encoder_->setSafetyCallbacks(
@@ -248,6 +250,10 @@ bool Pendule::setCommand(
     throw NotCalibrated("Pendule::setCommand()");
   // TODO: a more sophisticated processing of the signal!
   bool retval = true;
+  if(pwm > 0)
+    pwm += offset_up_;
+  if(pwm < 0)
+    pwm -= offset_down_;
   if(pwm > 255) {
     pwm = 255;
     retval = false;
@@ -286,6 +292,16 @@ const double& Pendule::softMinMaxPosition() const {
   if(!calibrated_)
     throw NotCalibrated("Pendule::softMinMaxPosition()");
   return soft_minmax_position_meters_;
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_down,
+  int offset_up
+)
+{
+  offset_up_ = std::max(0, offset_up);
+  offset_down_ = std::max(0, offset_down);
 }
 
 

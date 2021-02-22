@@ -221,9 +221,9 @@ public:
     */
   inline const unsigned int& lastTick() const { return tpast_; }
 private:
+  const unsigned int period_; ///< Target period of this Rate.
   unsigned int tnow_; ///< Used inside sleep() to store the current clock time.
   unsigned int tpast_; ///< Clock time corresponding to the last time sleep() exited.
-  const unsigned int period_; ///< Target period of this Rate.
 };
 
 } // end of namespace pigpio

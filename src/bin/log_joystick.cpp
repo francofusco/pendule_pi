@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
     std::cout << "Calibration completed!" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
+    pendule.setPwmOffsets(20, 30);
     const int SLEEP_US = 10000;
     const double SLEEP_SEC = SLEEP_US / 1000000.0;
     pigpio::Rate rate(SLEEP_US);
@@ -84,7 +85,7 @@ int main(int argc, char** argv) {
         joy.update();
         int ref = joy.axis(axis_num);
         ref = robustZero(ref, 2500);
-        pwm = (int)(ref*250./32768.);
+        pwm = static_cast<int>(ref*250./32768.);
         if(pendule.position() > MAX_POSITION && pwm > 0)
           pwm = 0;
         else if(pendule.position() < -MAX_POSITION && pwm < 0)

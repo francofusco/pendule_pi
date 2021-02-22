@@ -8,7 +8,7 @@
 #include <cassert>
 
 
-int main(int argc, char** argv) {
+int main() {
   namespace pp = pendule_pi;
   try {
     // Let the token manage the pigpio library

@@ -30,7 +30,6 @@ int main(int argc, char** argv) {
 
   // Logging settings
   const unsigned int PERIOD_US = 5000;
-  const unsigned int DATA_PACKET_SIZE = 1000;
   const double PERIOD_SEC = PERIOD_US / 1000000.0;
 
   // Open the log file and write the header
@@ -52,6 +51,7 @@ int main(int argc, char** argv) {
     pendule.calibrate(0.05);
     std::cout << "Calibration completed!" << std::endl;
     double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
+    pendule.setPwmOffsets(20, 30);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
     while(pendule.position() > -MAX_POSITION);
     pendule.setCommand(0);
 
-    const int ESTIM_DATA = (int)(20 * 1000000 / PERIOD_US);
+    const int ESTIM_DATA = static_cast<int>(20 * 1000000 / PERIOD_US);
     std::vector<int> commands = range(50, 250, 10);
     unsigned int t;
 

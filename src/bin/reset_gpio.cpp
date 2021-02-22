@@ -3,7 +3,7 @@
 
 #define RUN_THEN_PRINT(func, ...) { auto retval = func(__VA_ARGS__); std::cout << #func << "(" << #__VA_ARGS__ << ")" << " returned " << retval << std::endl; }
 
-int main(int argc, char** argv) {
+int main() {
   std::cout << "GPIO init: " << gpioInitialise() << std::endl;
 
   for(int i=0; i<=26; i++) {

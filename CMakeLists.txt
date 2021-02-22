@@ -5,7 +5,7 @@ project(pendule_pi VERSION 1.0.0)
 ###################
 # CONFIGURE BUILD #
 ###################
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall -Wpedantic -Wextra -fexceptions")
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall -Wpedantic -Wextra -Wshadow -Wconversion -Wcast-align -Wunnused -Wshadow -Wold-style-cast -Wpointer-arith -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -fexceptions")
 
 
 #######################
@@ -49,6 +49,19 @@ if(${pigpio_FOUND})
 
   if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     target_compile_options(pendule_pi PRIVATE -O0)
+    target_compile_options(pendule_pi PUBLIC -Wall)
+    target_compile_options(pendule_pi PUBLIC -Wpedantic)
+    target_compile_options(pendule_pi PUBLIC -Wextra)
+    target_compile_options(pendule_pi PUBLIC -Wshadow)
+    target_compile_options(pendule_pi PUBLIC -Wconversion)
+    target_compile_options(pendule_pi PUBLIC -Wcast-align)
+    target_compile_options(pendule_pi PUBLIC -Wunused)
+    target_compile_options(pendule_pi PUBLIC -Wshadow)
+    target_compile_options(pendule_pi PUBLIC -Wold-style-cast)
+    target_compile_options(pendule_pi PUBLIC -Wpointer-arith)
+    target_compile_options(pendule_pi PUBLIC -Wcast-qual)
+    target_compile_options(pendule_pi PUBLIC -Wno-missing-braces)
+    target_compile_options(pendule_pi PUBLIC -fexceptions)
     target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
   elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     target_compile_options(pendule_pi PRIVATE -O2)
@@ -69,6 +82,10 @@ if(${pigpio_FOUND})
   # Allows to control the pendulum with a joystick
   add_executable(manual_control src/bin/manual_control.cpp)
   target_link_libraries(manual_control pendule_pi)
+
+  # Can be used to find the pwm threshold required to win static friction.
+  add_executable(calibrate_pwm src/bin/calibrate_pwm.cpp)
+  target_link_libraries(calibrate_pwm pendule_pi)
 
   # Record angular motions (useful for identification)
   add_executable(log_rotation src/bin/log_rotation.cpp)
