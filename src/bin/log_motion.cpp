@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
     std::cout << "ERROR! Could not open file '" << data_file_name << "'" << std::endl;
     return 1;
   }
-  data_file << "pwm, time_us, position, angle" << std::endl;
+  data_file << "pwm, time_us, position" << std::endl;
   data_file.close();
 
   try {
@@ -51,7 +51,7 @@ int main(int argc, char** argv) {
     pendule.calibrate(0.05);
     std::cout << "Calibration completed!" << std::endl;
     double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
-    pendule.setPwmOffsets(20, 30);
+    // pendule.setPwmOffsets(20, 30);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -74,12 +74,10 @@ int main(int argc, char** argv) {
       // Prepare the data
       std::vector<unsigned int> times;
       std::vector<double> positions;
-      std::vector<double> angles;
       times.reserve(ESTIM_DATA);
-      angles.reserve(ESTIM_DATA);
       positions.reserve(ESTIM_DATA);
 
-      std::cout << "PWM: " << pwm << std::endl;
+      std::cout << "Current PWM command: " << pwm << std::endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
       // move to the right
@@ -89,7 +87,6 @@ int main(int argc, char** argv) {
         pendule.update(PERIOD_SEC);
         times.push_back(t);
         positions.push_back(pendule.position());
-        angles.push_back(pendule.angle());
       }
       while(pendule.position() < MAX_POSITION);
       pendule.setCommand(0);
@@ -101,7 +98,7 @@ int main(int argc, char** argv) {
         throw std::runtime_error("Could not open file '" + data_file_name + "'");
       }
       for(unsigned int i=0; i<times.size(); i++) {
-        data_file << pwm << ", " << times[i] << ", " << positions[i] << ", " << angles[i] << std::endl;
+        data_file << pwm << ", " << times[i] << ", " << positions[i] << std::endl;
       }
       data_file.close();
       std::cout << "Written " << times.size() << " samples" << std::endl;
@@ -109,13 +106,11 @@ int main(int argc, char** argv) {
 
       // reset buffers
       times.clear();
-      angles.clear();
       positions.clear();
       times.reserve(ESTIM_DATA);
-      angles.reserve(ESTIM_DATA);
       positions.reserve(ESTIM_DATA);
 
-      std::cout << "PWM: " << -pwm << std::endl;
+      std::cout << "Current PWM command: " << -pwm << std::endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
       // move to the left
@@ -125,7 +120,6 @@ int main(int argc, char** argv) {
         pendule.update(PERIOD_SEC);
         times.push_back(t);
         positions.push_back(pendule.position());
-        angles.push_back(pendule.angle());
       }
       while(pendule.position() > -MAX_POSITION);
       pendule.setCommand(0);
@@ -137,7 +131,7 @@ int main(int argc, char** argv) {
         throw std::runtime_error("Could not open file '" + data_file_name + "'");
       }
       for(unsigned int i=0; i<times.size(); i++) {
-        data_file << -pwm << ", " << times[i] << ", " << positions[i] << ", " << angles[i] << std::endl;
+        data_file << -pwm << ", " << times[i] << ", " << positions[i] << std::endl;
       }
       data_file.close();
       std::cout << "Written " << times.size() << " samples" << std::endl;

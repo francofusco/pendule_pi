@@ -99,6 +99,10 @@ if(${pigpio_FOUND})
   add_executable(log_joystick src/bin/log_joystick.cpp)
   target_link_libraries(log_joystick pendule_pi)
 
+  # Linearized control
+  add_executable(linear_control src/bin/linear_control.cpp)
+  target_link_libraries(linear_control pendule_pi)
+
   ###########
   # INSTALL #
   ###########
