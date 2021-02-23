@@ -53,10 +53,11 @@ Encoder::Encoder(
   PiGPIO_RUN_VOID(gpioSetAlertFuncEx, pin_b_, Encoder::pulseStatic, this);
 
   // initialize properly the pin reading
-  PiGPIO_RUN(a_past_, gpioRead, pin_a_);
-  PiGPIO_RUN(b_past_, gpioRead, pin_b_);
-  a_current_ = a_past_;
-  b_current_ = b_past_;
+  int level; // NOTE: use an int otherwise the comparison 'if(retval<0)' inside PiGPIO_RUN does not make sense!
+  PiGPIO_RUN(level, gpioRead, pin_a_);
+  a_current_ = a_past_ = level;
+  PiGPIO_RUN(level, gpioRead, pin_b_);
+  b_current_ = b_past_ = level;
   PENDULE_PI_DBG("Encoder created successfully");
 }
 
@@ -97,7 +98,7 @@ void Encoder::removeSafetyCallbacks() {
 }
 
 
-void Encoder::pulse(int gpio, int level, unsigned int tick)
+void Encoder::pulse(int gpio, int level, unsigned int/*tick*/)
 {
   // This is more for debug purposes. I guess this condition should never pass.
   if(gpio != pin_a_ && gpio != pin_b_) {

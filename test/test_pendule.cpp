@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-int main(int argc, char** argv) {
+int main() {
   namespace pp = pendule_pi;
   try {
     // Let the token manage the pigpio library
@@ -15,12 +15,15 @@ int main(int argc, char** argv) {
     // Create the encoder
     pp::Pendule pendule(1.0, 2*M_PI/1000, 0.0);
     std::cout << "Calibrating pendulum" << std::endl;
-    pendule.calibrate();
+    pendule.calibrate(2500.0);
     std::cout << "Calibration completed!" << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     bool to_the_right = true;
     const int COMMAND = 75;
-    double MAX_POSITION = 7000.0;
+    double MAX_POSITION = pendule.softMinMaxPosition() - 1000.0;
+    if(MAX_POSITION < 100.0) {
+      throw std::runtime_error("MAX_POSITION is too small, this would cause serious troubles");
+    }
     const int SLEEP_MS = 20;
     std::cout << "    POSITION        ANGLE       LIN.VEL.      ANG.VEL." << std::endl;
                 //  +000000.0000  +000000.0000  +000000.0000  +000000.0000

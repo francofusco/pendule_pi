@@ -40,7 +40,7 @@ std::string Exception::error2msg(
 ActivationToken* ActivationToken::active_token = nullptr;
 
 
-ActivationToken::ActivationToken() {
+ActivationToken::ActivationToken(bool register_sigint) {
   PENDULE_PI_DBG("ActivationToken: checking that no other token exists");
   // Make sure that no other active token exists
   if(active_token != nullptr) {
@@ -53,7 +53,8 @@ ActivationToken::ActivationToken() {
   PiGPIO_RUN_VOID(gpioInitialise);
   // NOTE: it is VERY important that the signal handlers are assigned after
   // attempting to call gpioInitialise()!
-  std::signal(SIGINT, ActivationToken::pleaseStop);
+  if(register_sigint)
+    std::signal(SIGINT, ActivationToken::pleaseStop);
   std::signal(SIGABRT, ActivationToken::abort);
 }
 
@@ -75,16 +76,16 @@ void ActivationToken::resetPins() {
   for(int pin=0; pin<=26; pin++) {
     auto retval = gpioSetPullUpDown(pin, PI_PUD_OFF);
     if(retval < 0) {
-      PENDULE_PI_DBG("ActivationToken: while disabling resistors on pin " << \
+      PENDULE_PI_WRN("ActivationToken: while disabling resistors on pin " << \
         pin << ", gpioSetPullUpDown() returned " << Exception::error2msg(retval));
     }
     retval = gpioSetMode(pin, PI_INPUT);
     if(retval < 0) {
-      PENDULE_PI_DBG("ActivationToken: while setting pin " << pin << " as " \
+      PENDULE_PI_WRN("ActivationToken: while setting pin " << pin << " as " \
         "input, gpioSetMode() returned " << Exception::error2msg(retval));
     }
   }
-  #warning "Calling gpioTerminate() kills the process, which is NOT a good thing. Check if there is a workaround this."
+  #warning "Calling gpioTerminate() while handling a signal seems to kill the process, which is NOT a good thing. Check if there is a fix for this."
   // PENDULE_PI_DBG("ActivationToken: calling gpioTerminate()");
   // gpioTerminate();
   PENDULE_PI_DBG("ActivationToken: GPIO reset completed");
@@ -102,6 +103,26 @@ void ActivationToken::abort(int s) {
   resetPins();
   PENDULE_PI_DBG("ActivationToken: calling std::_Exit(EXIT_FAILURE)");
   std::_Exit(EXIT_FAILURE);
+}
+
+
+Rate::Rate(
+  unsigned int period_us
+)
+: period_(period_us)
+, tnow_(0)
+, tpast_(0)
+{
+  // nothing else to do here!
+}
+
+
+unsigned int Rate::sleep() {
+  do {
+    tnow_ = gpioTick();
+  }
+  while(tnow_-tpast_ < period_);
+  return tpast_ = tnow_;
 }
 
 

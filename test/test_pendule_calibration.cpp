@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-int main(int argc, char** argv) {
+int main() {
   namespace pp = pendule_pi;
   try {
     // Let the token manage the pigpio library
@@ -29,11 +29,13 @@ int main(int argc, char** argv) {
     );
     // calibrate the pendulum, then print some data
     std::cout << "Calibrating pendulum" << std::endl;
-    pendule.calibrate();
+    pendule.calibrate(1000.0);
     std::cout << "Calibration completed!" << std::endl;
     std::cout << "Min steps: " << pendule.minPositionSteps() << std::endl;
     std::cout << "Mid steps: " << pendule.midPositionSteps() << std::endl;
     std::cout << "Max steps: " << pendule.maxPositionSteps() << std::endl;
+    std::cout << "Step range: " << (pendule.maxPositionSteps()-pendule.minPositionSteps()) << std::endl;
+    std::cout << "Soft position limits: " << pendule.softMinMaxPosition() << std::endl;
   }
   catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }

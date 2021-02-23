@@ -3,6 +3,7 @@
 #include "pendule_pi/debug.hpp"
 #include <chrono>
 #include <thread>
+#include <cmath>
 
 namespace pendule_pi {
 
@@ -72,6 +73,9 @@ Pendule::Pendule(
 , meters_per_step_(meters_per_step/4)
 , radians_per_step_(radians_per_step/4)
 , rest_angle_(rest_angle)
+, offset_up_(0)
+, offset_down_(0)
+, offset_static_(0)
 , motor_(std::move(motor))
 , left_switch_(std::move(left_switch))
 , right_switch_(std::move(right_switch))
@@ -95,8 +99,11 @@ Pendule::Pendule(
 }
 
 
-void Pendule::calibrate()
+void Pendule::calibrate(
+  double safety_margin_meters
+)
 {
+  PENDULE_PI_DBG("Requested calibration via Pendule::calibrate(" << safety_margin_meters << ")");
   // Reset it no matter what!
   calibrated_ = false;
   // Ensure that we are not in emergency stop
@@ -194,16 +201,24 @@ void Pendule::calibrate()
   // Ok, we are in the central position!
   left_switch_->enableInterrupts([&](){ eStop("left switch hit"); });
   right_switch_->enableInterrupts([&](){ eStop("right switch hit"); });
-  int safety_margin = 10000;
-  int soft_min = min_position_steps_ + safety_margin;
-  int soft_max = max_position_steps_ - safety_margin;
+  int safety_margin_steps = static_cast<int>(std::ceil(std::fabs(safety_margin_meters/meters_per_step_)));
+  int soft_min = min_position_steps_ + safety_margin_steps;
+  int soft_max = max_position_steps_ - safety_margin_steps;
   position_encoder_->setSafetyCallbacks(
     soft_min,
     soft_max,
     [&](){ eStop("soft minimum position limit reached"); },
     [&](){ eStop("soft maximum position limit reached"); }
   );
+  soft_minmax_position_meters_ = std::fabs(steps2meters(soft_max));
   calibrated_ = true;
+  PENDULE_PI_DBG("Calibration completed!");
+  PENDULE_PI_DBG("min steps: " << min_position_steps_ << " (in meters: " << steps2meters(min_position_steps_) << ")");
+  PENDULE_PI_DBG("max steps: " << max_position_steps_ << " (in meters: " << steps2meters(max_position_steps_) << ")");
+  PENDULE_PI_DBG("middle steps: " << mid_position_steps_ << " (in meters: " << steps2meters(mid_position_steps_) << ")");
+  PENDULE_PI_DBG("safety_margin_steps: " << safety_margin_steps << " (in meters: " << safety_margin_meters << ")");
+  PENDULE_PI_DBG("soft_min: " << soft_min << " (in meters: " << steps2meters(soft_min) << ")");
+  PENDULE_PI_DBG("soft_max: " << soft_max << " (in meters: " << steps2meters(soft_max) << ")");
 }
 
 
@@ -236,13 +251,20 @@ bool Pendule::setCommand(
     throw NotCalibrated("Pendule::setCommand()");
   // TODO: a more sophisticated processing of the signal!
   bool retval = true;
-  if(pwm > 255) {
-    pwm = 255;
-    retval = false;
-  }
-  if(pwm < -255) {
-    pwm = -255;
-    retval = false;
+  if(pwm != 0) {
+    if(pwm > 0)
+      pwm += offset_up_;
+    if(pwm < 0)
+      pwm -= offset_down_;
+    pwm += offset_static_;
+    if(pwm > 255) {
+      pwm = 255;
+      retval = false;
+    }
+    if(pwm < -255) {
+      pwm = -255;
+      retval = false;
+    }
   }
   motor_->setPWM(pwm);
   return retval;
@@ -267,6 +289,45 @@ const int& Pendule::midPositionSteps() const {
   if(!calibrated_)
     throw NotCalibrated("Pendule::midPositionSteps()");
   return mid_position_steps_;
+}
+
+
+const double& Pendule::softMinMaxPosition() const {
+  if(!calibrated_)
+    throw NotCalibrated("Pendule::softMinMaxPosition()");
+  return soft_minmax_position_meters_;
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_down,
+  int offset_up
+)
+{
+  offset_up_ = std::max(0, offset_up);
+  offset_down_ = std::max(0, offset_down);
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_static
+)
+{
+  offset_up_ = 0;
+  offset_down_ = 0;
+  offset_static_ = offset_static;
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_static,
+  int offset_down,
+  int offset_up
+)
+{
+  offset_static_ = offset_static;
+  offset_up_ = std::max(0, offset_up);
+  offset_down_ = std::max(0, offset_down);
 }
 
 

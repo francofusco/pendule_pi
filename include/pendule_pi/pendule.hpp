@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pendule_pi/switch.hpp"
-#include "pendule_pi/encoder.hpp"
-#include "pendule_pi/motor.hpp"
+#include <pendule_pi/switch.hpp>
+#include <pendule_pi/encoder.hpp>
+#include <pendule_pi/motor.hpp>
 #include <memory>
 
 
@@ -183,7 +183,12 @@ public:
   );
 
   /// Initialize the pendulum.
-  void calibrate();
+  void calibrate(
+    double safety_margin_meters
+  );
+
+  /// Tells if the pendulum has been calibrated successfully.
+  const inline bool& isCalibrated() const { return calibrated_; }
 
   /// Perform state estimation.
   /** @param dt time (in seconds) that elapsed since the last call to update().
@@ -194,7 +199,8 @@ public:
   /** Applies the given PWM to the motor.
     * @param pwm the desired command.
     * @return false if the command exceeded the maximum/minimum values and thus
-    *   had to be saturated.
+    *   had to be saturated. Note that the saturation is applied after adding
+    *   the offsets specified via setPwmOffsets().
     */
   bool setCommand(int pwm);
 
@@ -228,18 +234,49 @@ public:
     */
   const int& midPositionSteps() const;
 
+  /// Read the value of the soft position limits (in meters).
+  const double& softMinMaxPosition() const;
+
+  /// Set offsets to compensate for friction.
+  /** This function sets internal offsets that should be applied to the pwm
+    * passed to setCommand(). This should allow to compensate for static
+    * friction. Different offsets are to be given depending on the direction.
+    * Of course, a null pwm signal will not be altered.
+    * @param offset_down value to be subtracted from a negative pwm passed to
+    *   setCommand(pwm). If the desired pwm is negative, then the actual value
+    *   sent to the motor will be pwm-offset_down.
+    * @param offset_up value to be added to a positive pwm passed to
+    *   setCommand(pwm). If the desired pwm is positive, then the actual value
+    *   sent to the motor will be pwm+offset_up.
+    * @note This reduces the range of "feasible" pwm from `[-255,255]` to
+    *   [-255+offset_down,255-offset_up].
+    * @warning Both input parameters should be non-negative. If you provide a
+    *   negative value, 0 will be used instead.
+    */
+  void setPwmOffsets(
+    int offset_down,
+    int offset_up
+  );
+
+
+  #error "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
+  void setPwmOffsets(
+    int offset_static
+  );
+
+
+  void setPwmOffsets(
+    int offset_static,
+    int offset_down,
+    int offset_up
+  );
+
   /// Emergency stop.
   void eStop(const std::string& why);
 
 private:
   bool calibrated_; ///< Variable that is set to true once the pendulum calibration has been completed.
   bool emergency_stopped_; ///< Variable that is set to true when the pendulum has to stop.
-  // Hardware components
-  std::unique_ptr<Motor> motor_; ///< Actuator to move the base of the pendulum.
-  std::unique_ptr<Switch> left_switch_; ///< Left switch (should be near to the motor).
-  std::unique_ptr<Switch> right_switch_; ///< Right switch (should be near to the encoder).
-  std::unique_ptr<Encoder> position_encoder_; ///< Encoder to read the current position of the base.
-  std::unique_ptr<Encoder> angle_encoder_; ///< Encoder to read the current angle of the pendulum.
   // State variables
   double position_; ///< Current position of the moving base.
   double angle_; ///< Current angle of the pendulum.
@@ -249,9 +286,19 @@ private:
   int min_position_steps_; ///< Encoder reading when the base is at the minimum position.
   int max_position_steps_; ///< Encoder reading when the base is at the maximum position.
   int mid_position_steps_; ///< Encoder reading when the base is at the middle position.
+  double soft_minmax_position_meters_; ///< Position (in meters) at which emergency stop is requested.
   const double meters_per_step_; ///< Multiplicative factor to convert from encoder steps to meters.
   const double radians_per_step_; ///< Multiplicative factor to convert from encoder steps to radians.
   const double rest_angle_; ///< Position of the pendulum when it is at rest.
+  int offset_up_; ///< Offset to be applied to positive pwm commands.
+  int offset_down_; ///< Offset to be applied to negative pwm commands.
+  int offset_static_; ///< Static offset to be applied to the command.
+  // Hardware components
+  std::unique_ptr<Motor> motor_; ///< Actuator to move the base of the pendulum.
+  std::unique_ptr<Switch> left_switch_; ///< Left switch (should be near to the motor).
+  std::unique_ptr<Switch> right_switch_; ///< Right switch (should be near to the encoder).
+  std::unique_ptr<Encoder> position_encoder_; ///< Encoder to read the current position of the base.
+  std::unique_ptr<Encoder> angle_encoder_; ///< Encoder to read the current angle of the pendulum.
 
   /// Axuiliary method that converts steps into meters.
   inline double steps2meters(const int& steps) { return meters_per_step_*(steps-mid_position_steps_); }
