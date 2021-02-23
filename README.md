@@ -8,6 +8,8 @@ To build the library, the tests, the examples, *etc.*, you need the
 [pigpio](https://github.com/joan2937/pigpio) library. Its documentation is
 available [here](http://abyz.me.uk/rpi/pigpio/index.html).
 
+In addition, you will need the [iir_filters repository](https://github.com/francofusco/iir_filters).
+
 To build the documentation, you need Doxygen and GraphViz. On Ubuntu/Debian,
 you should be able to install them via:
 ```

@@ -75,6 +75,7 @@ Pendule::Pendule(
 , rest_angle_(rest_angle)
 , offset_up_(0)
 , offset_down_(0)
+, offset_static_(0)
 , motor_(std::move(motor))
 , left_switch_(std::move(left_switch))
 , right_switch_(std::move(right_switch))
@@ -250,17 +251,20 @@ bool Pendule::setCommand(
     throw NotCalibrated("Pendule::setCommand()");
   // TODO: a more sophisticated processing of the signal!
   bool retval = true;
-  if(pwm > 0)
-    pwm += offset_up_;
-  if(pwm < 0)
-    pwm -= offset_down_;
-  if(pwm > 255) {
-    pwm = 255;
-    retval = false;
-  }
-  if(pwm < -255) {
-    pwm = -255;
-    retval = false;
+  if(pwm != 0) {
+    if(pwm > 0)
+      pwm += offset_up_;
+    if(pwm < 0)
+      pwm -= offset_down_;
+    pwm += offset_static_;
+    if(pwm > 255) {
+      pwm = 255;
+      retval = false;
+    }
+    if(pwm < -255) {
+      pwm = -255;
+      retval = false;
+    }
   }
   motor_->setPWM(pwm);
   return retval;
@@ -300,6 +304,28 @@ void Pendule::setPwmOffsets(
   int offset_up
 )
 {
+  offset_up_ = std::max(0, offset_up);
+  offset_down_ = std::max(0, offset_down);
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_static
+)
+{
+  offset_up_ = 0;
+  offset_down_ = 0;
+  offset_static_ = offset_static;
+}
+
+
+void Pendule::setPwmOffsets(
+  int offset_static,
+  int offset_down,
+  int offset_up
+)
+{
+  offset_static_ = offset_static;
   offset_up_ = std::max(0, offset_up);
   offset_down_ = std::max(0, offset_down);
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pendule_pi/switch.hpp"
-#include "pendule_pi/encoder.hpp"
-#include "pendule_pi/motor.hpp"
+#include <pendule_pi/switch.hpp>
+#include <pendule_pi/encoder.hpp>
+#include <pendule_pi/motor.hpp>
 #include <memory>
 
 
@@ -258,6 +258,19 @@ public:
     int offset_up
   );
 
+
+  #error "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
+  void setPwmOffsets(
+    int offset_static
+  );
+
+
+  void setPwmOffsets(
+    int offset_static,
+    int offset_down,
+    int offset_up
+  );
+
   /// Emergency stop.
   void eStop(const std::string& why);
 
@@ -279,6 +292,7 @@ private:
   const double rest_angle_; ///< Position of the pendulum when it is at rest.
   int offset_up_; ///< Offset to be applied to positive pwm commands.
   int offset_down_; ///< Offset to be applied to negative pwm commands.
+  int offset_static_; ///< Static offset to be applied to the command.
   // Hardware components
   std::unique_ptr<Motor> motor_; ///< Actuator to move the base of the pendulum.
   std::unique_ptr<Switch> left_switch_; ///< Left switch (should be near to the motor).

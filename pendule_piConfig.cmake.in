@@ -4,6 +4,7 @@ get_filename_component(pendule_pi_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 include(CMakeFindDependencyMacro)
 
 find_dependency(pigpio REQUIRED)
+find_dependency(iir_filters REQUIRED)
 
 if(NOT TARGET pendule_pi::pendule_pi)
     include("${pendule_pi_CMAKE_DIR}/pendule_piDepends.cmake")

@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.15)
 project(pendule_pi VERSION 1.0.0)
 
+# Define some colors for output formatting
+string(ASCII 27 Esc)
+set(ColourReset "${Esc}[m")
+set(Yellow      "${Esc}[33m")
+set(Blue      "${Esc}[34m")
+
 
 ###################
 # CONFIGURE BUILD #
@@ -12,20 +18,32 @@ set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall -Wpedantic -Wextra -Wshadow -Wconversion -
 # LOCATE DEPENDENCIES #
 #######################
 find_package(pigpio QUIET)
+find_package(iir_filters QUIET)
+
+function(warn_if_not_found pkg)
+  if(${${pkg}_FOUND})
+    message(STATUS "${pkg}: found")
+  else()
+    message(STATUS "${pkg}: ${Yellow}not found${ColourReset}")
+  endif()
+endfunction()
+
+if(${pigpio_FOUND} AND ${iir_filters_FOUND})
+  set(ALL_DEPENDENCIES_FOUND TRUE)
+else()
+  message(STATUS "${Yellow}Some dependecies were not found (see below for details). Source code will not be built${ColourReset}")
+  warn_if_not_found(pigpio)
+  warn_if_not_found(iir_filters)
+  set(ALL_DEPENDENCIES_FOUND FALSE)
+endif()
 
 
 #####################
 # BUILD SOURCE CODE #
 #####################
 
-# Define some colors for output formatting
-string(ASCII 27 Esc)
-set(ColourReset "${Esc}[m")
-set(Yellow      "${Esc}[33m")
-set(Blue      "${Esc}[34m")
 
-
-if(${pigpio_FOUND})
+if(${ALL_DEPENDENCIES_FOUND})
   ################
   # MAIN LIBRARY #
   ################
@@ -101,7 +119,7 @@ if(${pigpio_FOUND})
 
   # Linearized control
   add_executable(linear_control src/bin/linear_control.cpp)
-  target_link_libraries(linear_control pendule_pi)
+  target_link_libraries(linear_control pendule_pi iir_filters::iir_filters)
 
   ###########
   # INSTALL #
@@ -123,9 +141,7 @@ if(${pigpio_FOUND})
   # TESTING #
   ###########
   add_subdirectory(test)
-else(${pigpio_FOUND})
-  message(STATUS "${Yellow}pigpio not found: source code will not be built.${ColourReset}")
-endif(${pigpio_FOUND})
+endif(${ALL_DEPENDENCIES_FOUND})
 
 
 #########################
