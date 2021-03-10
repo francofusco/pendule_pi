@@ -259,7 +259,8 @@ public:
   );
 
 
-  #error "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
+  // #error "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
+  #warning "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
   void setPwmOffsets(
     int offset_static
   );
