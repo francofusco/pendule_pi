@@ -121,6 +121,10 @@ if(${ALL_DEPENDENCIES_FOUND})
   add_executable(linear_control src/bin/linear_control.cpp)
   target_link_libraries(linear_control pendule_pi iir_filters::iir_filters)
 
+  # Swingup + linearized control
+  add_executable(swingup src/bin/swingup.cpp)
+  target_link_libraries(swingup pendule_pi iir_filters::iir_filters)
+
   ###########
   # INSTALL #
   ###########
