@@ -109,13 +109,9 @@ if(${ALL_DEPENDENCIES_FOUND})
   add_executable(log_rotation src/bin/log_rotation.cpp)
   target_link_libraries(log_rotation pendule_pi)
 
-  # Record angular motions (useful for identification)
+  # Record linear motions (useful for identification)
   add_executable(log_motion src/bin/log_motion.cpp)
   target_link_libraries(log_motion pendule_pi)
-
-  # Record angular motions (useful for identification)
-  add_executable(log_joystick src/bin/log_joystick.cpp)
-  target_link_libraries(log_joystick pendule_pi)
 
   # Linearized control
   add_executable(linear_control src/bin/linear_control.cpp)
@@ -124,6 +120,10 @@ if(${ALL_DEPENDENCIES_FOUND})
   # Swingup + linearized control
   add_executable(swingup src/bin/swingup.cpp)
   target_link_libraries(swingup pendule_pi iir_filters::iir_filters)
+
+  # Demonstration program that uses the joystick to control the pendulum
+  add_executable(demo src/bin/demo.cpp)
+  target_link_libraries(demo pendule_pi iir_filters::iir_filters)
 
   ###########
   # INSTALL #
