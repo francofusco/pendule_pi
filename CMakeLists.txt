@@ -125,6 +125,11 @@ if(${ALL_DEPENDENCIES_FOUND})
   add_executable(swingup src/bin/swingup.cpp)
   target_link_libraries(swingup pendule_pi iir_filters::iir_filters)
 
+  # Demo for MIA
+  add_executable(demo src/bin/demo.cpp)
+  target_link_libraries(demo pendule_pi iir_filters::iir_filters)
+
+
   ###########
   # INSTALL #
   ###########
