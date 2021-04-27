@@ -30,7 +30,10 @@ int main(int argc, char** argv) {
     pigpio::ActivationToken token;
     // Create the encoder
     pp::Joystick joy;
-    pp::Pendule pendule(0.846/21200, 2*M_PI/1000, 0.0);
+    const double ANGLE_OFFSET = 0.0;
+    const double POSITION_RATIO_I3S = 0.846/21200;
+    const double POSITION_RATIO_MIA = POSITION_RATIO_I3S*1000.0/600.0;
+    pp::Pendule pendule(POSITION_RATIO_MIA, 2*M_PI/600, ANGLE_OFFSET);
     std::cout << "Calibrating pendulum" << std::endl;
     pendule.calibrate(0.05);
     std::cout << "Calibration completed!" << std::endl;

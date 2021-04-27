@@ -31,8 +31,10 @@ int main() {
     // Let the token manage the pigpio library
     pigpio::ActivationToken token;
     // Create the encoder
-    const double ANGLE_OFFSET = -0.007853981633974483;
-    pp::Pendule pendule(0.846/21200, 2*M_PI/1000, ANGLE_OFFSET);
+    const double ANGLE_OFFSET = -0.0026;
+    const double POSITION_RATIO_I3S = 0.846/21200;
+    const double POSITION_RATIO_MIA = POSITION_RATIO_I3S*1000.0/600.0;
+    pp::Pendule pendule(POSITION_RATIO_MIA, 2*M_PI/600, ANGLE_OFFSET);
     std::cout << "Calibrating pendulum" << std::endl;
     pendule.calibrate(0.05);
     std::cout << "Calibration completed!" << std::endl;
@@ -41,7 +43,7 @@ int main() {
     // pendule.setPwmOffsets(20, 30);
     // pendule.setPwmOffsets(2);
     pendule.setPwmOffsets(2, 15, 15);
-    const int SLEEP_MS = 20;
+    const int SLEEP_MS = 10;
     const double SLEEP_SEC = SLEEP_MS/1000.0;
     pigpio::Rate rate(SLEEP_MS*1000);
     // std::cout << "    POSITION        ANGLE       LIN.VEL.      ANG.VEL.     PWM" << std::endl;
@@ -50,7 +52,7 @@ int main() {
 
     // Filtering
     double Fs = 1.0/SLEEP_SEC; // sampling frequency
-    double Fc = Fs/4; // cutoff frequency
+    double Fc = 0.15*Fs; // cutoff frequency
     auto filter_position = iir_filters::butterworth<double,double>(4, Fc, Fs);
     auto filter_angle = iir_filters::butterworth<double,double>(4, Fc, Fs);
     auto filter_linvel = iir_filters::butterworth<double,double>(4, Fc, Fs);
@@ -65,13 +67,13 @@ int main() {
     filter_angvel.initOutput(0.0);
     double target_pos = 0;
 
-    const double kswing = 100.0;
+    const double kswing = 90.0;
     const double ksx = 0.0;
 
-    const double kp = -127.45880662905581;
-    const double kpd = -822.638944546691;
-    const double kt = 2234.654627319883;
-    const double ktd = 437.1177135919267;
+    const double kp = -135.35;
+    const double kpd = -847.89;
+    const double kt = 2621.19;
+    const double ktd = 597.93;
 
     double filtered_position;
     double filtered_angle;
@@ -92,7 +94,7 @@ int main() {
       // Error into [-pi,+pi]
       e_theta = shiftInCircle(filtered_angle - M_PI);
 
-      if(std::fabs(e_theta) > 0.1) {
+      if(std::fabs(e_theta) > 0.2) {
         pwm = static_cast<int>(
           + kswing * (1-std::cos(e_theta)) * sign(filtered_angvel * std::cos(e_theta))
           - ksx * filtered_position
@@ -100,10 +102,12 @@ int main() {
       }
       else {
         pwm = static_cast<int>(
-          - kp * filtered_position
-          - kpd * filtered_linvel
-          - kt * e_theta
-          - ktd * filtered_angvel
+          std::round(
+            - kp * filtered_position
+            - kpd * filtered_linvel
+            - kt * e_theta
+            - ktd * filtered_angvel
+          )
         );
       }
       if(pendule.position() > MAX_POSITION && pwm > 0)
