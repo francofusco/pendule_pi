@@ -1,150 +1,187 @@
-cmake_minimum_required(VERSION 3.15)
+### This file is an adaptation derived from
+###   github.com/francofusco/template-cmake-project/blob/main/CMakeLists.txt
+### Original Author: Franco FUSCO
+### Source: github.com/francofusco/template-cmake-project
+cmake_minimum_required(VERSION 3.19.4)
 project(pendule_pi VERSION 1.0.0)
 
-# Define some colors for output formatting
-string(ASCII 27 Esc)
-set(ColourReset "${Esc}[m")
-set(Yellow      "${Esc}[33m")
-set(Blue      "${Esc}[34m")
-
-
-###################
-# CONFIGURE BUILD #
-###################
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall -Wpedantic -Wextra -Wshadow -Wconversion -Wcast-align -Wunnused -Wshadow -Wold-style-cast -Wpointer-arith -Wcast-qual -Wmissing-prototypes -Wno-missing-braces -fexceptions")
-
+# Allow using colors in messages. Use with parsimony ;)
+include(cmake/colors.cmake)
 
 #######################
 # LOCATE DEPENDENCIES #
 #######################
-find_package(pigpio QUIET)
-find_package(iir_filters QUIET)
 
-function(warn_if_not_found pkg)
+# locate dependencies with a custom function
+function(find_package_custom pkg)
+  find_package(${pkg} QUIET)
   if(${${pkg}_FOUND})
-    message(STATUS "${pkg}: found")
+    message(STATUS "${pkg}: ${Green}found${ColourReset}")
   else()
+    set(ALL_DEPENDENCIES_FOUND FALSE PARENT_SCOPE)
     message(STATUS "${pkg}: ${Yellow}not found${ColourReset}")
   endif()
 endfunction()
 
-if(${pigpio_FOUND} AND ${iir_filters_FOUND})
-  set(ALL_DEPENDENCIES_FOUND TRUE)
-else()
-  message(STATUS "${Yellow}Some dependecies were not found (see below for details). Source code will not be built${ColourReset}")
-  warn_if_not_found(pigpio)
-  warn_if_not_found(iir_filters)
-  set(ALL_DEPENDENCIES_FOUND FALSE)
+# Scan all dependecies
+set(ALL_DEPENDENCIES_FOUND TRUE)
+message(STATUS "Looking for build dependencies")
+find_package_custom(pigpio)
+find_package_custom(digital_filters)
+
+# warn the user if code will not be built
+if(NOT ${ALL_DEPENDENCIES_FOUND})
+  message(STATUS "${Yellow}Some dependecies were not found. Source code will not be built${ColourReset}")
 endif()
 
 
-#####################
-# BUILD SOURCE CODE #
-#####################
 
 
 if(${ALL_DEPENDENCIES_FOUND})
-  ################
-  # MAIN LIBRARY #
-  ################
-  add_library(pendule_pi
-    src/pendule_pi/joystick.cpp
-    src/pendule_pi/pigpio.cpp
-    src/pendule_pi/switch.cpp
-    src/pendule_pi/motor.cpp
-    src/pendule_pi/encoder.cpp
-    src/pendule_pi/pendule.cpp
-  )
 
-  target_include_directories(pendule_pi PUBLIC
-    include
-  )
+#############
+# LIBRARIES #
+#############
 
-  target_link_libraries(pendule_pi
-    pigpio::pigpio
-    pthread
-  )
+# Main library
+add_library(${PROJECT_NAME}
+  src/pendule_pi/joystick.cpp
+  src/pendule_pi/pigpio.cpp
+  src/pendule_pi/switch.cpp
+  src/pendule_pi/motor.cpp
+  src/pendule_pi/encoder.cpp
+  src/pendule_pi/pendule.cpp
+)
 
-  if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    target_compile_options(pendule_pi PRIVATE -O0)
-    target_compile_options(pendule_pi PUBLIC -Wall)
-    target_compile_options(pendule_pi PUBLIC -Wpedantic)
-    target_compile_options(pendule_pi PUBLIC -Wextra)
-    target_compile_options(pendule_pi PUBLIC -Wshadow)
-    target_compile_options(pendule_pi PUBLIC -Wconversion)
-    target_compile_options(pendule_pi PUBLIC -Wcast-align)
-    target_compile_options(pendule_pi PUBLIC -Wunused)
-    target_compile_options(pendule_pi PUBLIC -Wshadow)
-    target_compile_options(pendule_pi PUBLIC -Wold-style-cast)
-    target_compile_options(pendule_pi PUBLIC -Wpointer-arith)
-    target_compile_options(pendule_pi PUBLIC -Wcast-qual)
-    target_compile_options(pendule_pi PUBLIC -Wno-missing-braces)
-    target_compile_options(pendule_pi PUBLIC -fexceptions)
-    target_compile_definitions(pendule_pi PUBLIC PENDULE_PI_DEBUG_ENABLED)
-  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    target_compile_options(pendule_pi PRIVATE -O2)
-    # When Eigen will be used :P
-    # target_compile_definitions(pendule_pi PRIVATE -DEIGEN_NO_DEBUG)
-  endif()
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
-  target_compile_features(pendule_pi PUBLIC cxx_std_17)
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC pigpio::pigpio
+  PUBLIC pthread
+)
 
-  ############
-  # BINARIES #
-  ############
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  target_compile_options(${PROJECT_NAME} PRIVATE -O0)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE PENDULE_PI_DEBUG_ENABLED)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  target_compile_options(${PROJECT_NAME} PRIVATE -O2)
+  # If and when Eigen will be used :P
+  # target_compile_definitions(${PROJECT_NAME} PRIVATE -DEIGEN_NO_DEBUG)
+endif()
 
-  # Reset all pins in high impedance mode
-  add_executable(reset_gpio src/bin/reset_gpio.cpp)
-  target_link_libraries(reset_gpio pendule_pi)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-  # Allows to control the pendulum with a joystick
-  add_executable(manual_control src/bin/manual_control.cpp)
-  target_link_libraries(manual_control pendule_pi)
 
-  # Can be used to find the pwm threshold required to win static friction.
-  add_executable(calibrate_pwm src/bin/calibrate_pwm.cpp)
-  target_link_libraries(calibrate_pwm pendule_pi)
+############
+# BINARIES #
+############
 
-  # Record angular motions (useful for identification)
-  add_executable(log_rotation src/bin/log_rotation.cpp)
-  target_link_libraries(log_rotation pendule_pi)
+# Reset all pins in high impedance mode
+add_executable(reset_gpio src/bin/reset_gpio.cpp)
+target_link_libraries(reset_gpio ${PROJECT_NAME})
 
-  # Record angular motions (useful for identification)
-  add_executable(log_motion src/bin/log_motion.cpp)
-  target_link_libraries(log_motion pendule_pi)
+# Record linear motions (useful for identification)
+add_executable(log_motion src/bin/log_motion.cpp)
+target_link_libraries(log_motion ${PROJECT_NAME})
 
-  # Record angular motions (useful for identification)
-  add_executable(log_joystick src/bin/log_joystick.cpp)
-  target_link_libraries(log_joystick pendule_pi)
+# Record angular motions (useful for identification)
+add_executable(log_rotation src/bin/log_rotation.cpp)
+target_link_libraries(log_rotation ${PROJECT_NAME})
 
-  # Linearized control
-  add_executable(linear_control src/bin/linear_control.cpp)
-  target_link_libraries(linear_control pendule_pi iir_filters::iir_filters)
+# Swingup + linearized control
+add_executable(demo src/bin/demo.cpp)
+target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
 
-  # Swingup + linearized control
-  add_executable(swingup src/bin/swingup.cpp)
-  target_link_libraries(swingup pendule_pi iir_filters::iir_filters)
+# TEMP
+add_executable(simple_server src/bin/simple_server.cpp)
+target_link_libraries(simple_server zmq zmqpp)
 
-  ###########
-  # INSTALL #
-  ###########
 
-  # Allow other projects to find and install pendule_pi
-  export(TARGETS pendule_pi
-    NAMESPACE pendule_pi::
-    FILE ${PROJECT_BINARY_DIR}/pendule_piDepends.cmake
-  )
-  configure_file(pendule_piConfig.cmake.in ${PROJECT_BINARY_DIR}/pendule_piConfig.cmake @ONLY)
-  export(PACKAGE pendule_pi)
+###########
+# INSTALL #
+###########
 
-  message(STATUS "${Blue}TODO: properly install the required files${ColourReset}")
-  # install(TARGETS pendule_pi DESTINATION lib)
-  # install(FILES ${pendule_pi_HEADERS} DESTINATION include)
+include(GNUInstallDirs)
 
-  ###########
-  # TESTING #
-  ###########
-  add_subdirectory(test)
+# Install binaries
+install(
+  TARGETS
+    reset_gpio
+    log_motion
+    log_rotation
+    demo
+  DESTINATION bin
+)
+
+# Installing the library
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION lib
+  EXPORT ${PROJECT_NAME}Targets
+)
+
+# Copy all headers from the "include" folder
+install(
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}
+  DESTINATION include
+)
+
+# Install the "Targets" file as well.
+install(
+  EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  FILE ${PROJECT_NAME}Targets.cmake
+  DESTINATION lib/cmake/${PROJECT_NAME}
+)
+
+# Helpers to create the "package config" files.
+include(CMakePackageConfigHelpers)
+
+# Create the "Config.cmake" file (to allow "find_package"-ing this project).
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION "lib/cmake/example"
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+# Generate the version file associated to the "Config.cmake" file.
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}"
+  COMPATIBILITY AnyNewerVersion
+)
+
+# Install the configuration file.
+install(
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  DESTINATION lib/cmake/${PROJECT_NAME}
+)
+
+# Make the project usable from the build directory as well.
+export(
+  EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+)
+
+
+# add the possibility tu run 'make uninstall' to remove files added via 'make install'
+# NOTE: this will remove files only, and not their parent directories.
+# WARNING: this will work only if you do not play around the installed targets manually,
+# and if you do not change the install destination.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake
+  IMMEDIATE @ONLY
+)
+add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake")
+
 endif(${ALL_DEPENDENCIES_FOUND})
 
 

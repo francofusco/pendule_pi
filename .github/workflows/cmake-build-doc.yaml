@@ -1,0 +1,41 @@
+name: Documentation
+on: [push]
+jobs:
+  make-docs:
+    # Target OS: Ubuntu.
+    runs-on: ubuntu-latest
+    # Use bash for all commands.
+    defaults:
+      run:
+        shell: bash
+    # Set of commands to be run.
+    steps:
+    # Install CMake and Doxygen.
+    - name: Install dependencies
+      working-directory: ${{github.workspace}}
+      run: sudo apt install cmake doxygen graphviz
+    # Clone the repository.
+    - uses: actions/checkout@v2
+    # Create the build space.
+    - name: Create build directory
+      working-directory: ${{github.workspace}}
+      run: mkdir ${{github.workspace}}/build
+    # Configure CMake.
+    - name: Invoke CMake
+      working-directory: ${{github.workspace}}/build
+      run: cmake .. -DBUILD_DOC=ON -DQUIET_DOXYGEN=NO
+    # Run Doxygen to create the documentation.
+    - name: Build documentation using Doxygen
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build . --target doc
+    # Deploy the documentation to GitHub Pages.
+    # However, we do this only if:
+    # - We are on main (we do not want to deploy doc of unstable versions)
+    # - We are on a public repo (AFAIK, GH Pages are always public for personal repos)
+    - name: Deploy documentation.
+      # Run this action only on the main branch and on public repos
+      if: ${{!github.event.repository.private && contains('refs/heads/main', github.ref)}}
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        publish_dir: ${{github.workspace}}/doc/html

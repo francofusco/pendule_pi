@@ -64,10 +64,12 @@ ActivationToken::~ActivationToken() {
   resetPins();
   // If there is no registered token, or another one is registered, bad things might happen!
   if(active_token != this) {
-    throw MultpleTokensCreated(false);
+    PENDULE_PI_WRN("ActivationToken: during destruction another active token was found");
   }
-  // "unregister" this token.
-  active_token = nullptr;
+  else {
+    // "unregister" this token.
+    active_token = nullptr;
+  }
 }
 
 
@@ -123,6 +125,40 @@ unsigned int Rate::sleep() {
   }
   while(tnow_-tpast_ < period_);
   return tpast_ = tnow_;
+}
+
+
+Timer::Timer(
+  unsigned int period_us,
+  bool auto_reset
+)
+: period_(period_us)
+, auto_reset_(auto_reset)
+, tpast_(0)
+{
+  // nothing else to do here!
+}
+
+
+bool Timer::expired() {
+  // get current time
+  auto tnow = gpioTick();
+  // check if the elapsed time since "tpast_" exceeds the target period
+  if(tnow - tpast_ > period_) {
+    // the timer expired
+    if(auto_reset_)
+      tpast_ = tnow;
+    return true;
+  }
+  else {
+    // the timer did not expire yet
+    return false;
+  }
+}
+
+
+void Timer::reset() {
+  tpast_ = gpioTick();
 }
 
 

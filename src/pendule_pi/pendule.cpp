@@ -249,14 +249,12 @@ bool Pendule::setCommand(
     throw std::runtime_error("Pendule::setCommand(): eStop() has been called");
   if(!calibrated_)
     throw NotCalibrated("Pendule::setCommand()");
-  // TODO: a more sophisticated processing of the signal!
   bool retval = true;
   if(pwm != 0) {
     if(pwm > 0)
       pwm += offset_up_;
     if(pwm < 0)
       pwm -= offset_down_;
-    pwm += offset_static_;
     if(pwm > 255) {
       pwm = 255;
       retval = false;
@@ -304,28 +302,6 @@ void Pendule::setPwmOffsets(
   int offset_up
 )
 {
-  offset_up_ = std::max(0, offset_up);
-  offset_down_ = std::max(0, offset_down);
-}
-
-
-void Pendule::setPwmOffsets(
-  int offset_static
-)
-{
-  offset_up_ = 0;
-  offset_down_ = 0;
-  offset_static_ = offset_static;
-}
-
-
-void Pendule::setPwmOffsets(
-  int offset_static,
-  int offset_down,
-  int offset_up
-)
-{
-  offset_static_ = offset_static;
   offset_up_ = std::max(0, offset_up);
   offset_down_ = std::max(0, offset_down);
 }
