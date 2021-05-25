@@ -7,11 +7,27 @@ C++ utilities to control a pendulum from a Raspberry Pi4
 
 ## Dependencies
 
-To build the library, the tests, the examples, *etc.*, you need the
-[pigpio](https://github.com/joan2937/pigpio) library. Its documentation is
-available [here](http://abyz.me.uk/rpi/pigpio/index.html).
+This project requires [CMake](https://cmake.org/).
+We built and tested the project using version 3.19.4 and thus we specified it
+as the required version. However, it is very likely that earlier versions will
+work as well. Feel free to just change the required version passed to
+`cmake_minimum_required` in `CMakeLists.txt`.
 
-In addition, you will need the [digital_filters repository](https://github.com/francofusco/iir_filters).
+To build the library, the tests, the examples, *etc.*, you need the
+[pigpio](https://github.com/joan2937/pigpio) library.
+Its documentation is available [here](http://abyz.me.uk/rpi/pigpio/index.html).
+As a quick reference, you can build it using CMake via:
+```
+git clone https://github.com/joan2937/pigpio.git
+mkdir pigpio/build
+cd pigpio/build
+cmake ..
+make
+sudo make install
+```
+
+In addition, you will need the [digital_filters repository](https://github.com/francofusco/digital_filters).
+Install instructions are contained inside the README.
 
 
 ## Build the project

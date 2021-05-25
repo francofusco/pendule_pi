@@ -16,7 +16,7 @@ include(cmake/colors.cmake)
 function(find_package_custom pkg)
   find_package(${pkg} QUIET)
   if(${${pkg}_FOUND})
-    message(STATUS "${pkg}: ${Yellow}found${ColourReset}")
+    message(STATUS "${pkg}: ${Green}found${ColourReset}")
   else()
     set(ALL_DEPENDENCIES_FOUND FALSE PARENT_SCOPE)
     message(STATUS "${pkg}: ${Yellow}not found${ColourReset}")
@@ -85,10 +85,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 add_executable(reset_gpio src/bin/reset_gpio.cpp)
 target_link_libraries(reset_gpio ${PROJECT_NAME})
 
-# Allows to control the pendulum with a joystick
-add_executable(manual_control src/bin/manual_control.cpp)
-target_link_libraries(manual_control ${PROJECT_NAME})
-
 # Record linear motions (useful for identification)
 add_executable(log_motion src/bin/log_motion.cpp)
 target_link_libraries(log_motion ${PROJECT_NAME})
@@ -97,13 +93,9 @@ target_link_libraries(log_motion ${PROJECT_NAME})
 add_executable(log_rotation src/bin/log_rotation.cpp)
 target_link_libraries(log_rotation ${PROJECT_NAME})
 
-# Linearized control
-add_executable(lqr_control src/bin/lqr_control.cpp)
-target_link_libraries(lqr_control ${PROJECT_NAME} digital_filters::digital_filters)
-
 # Swingup + linearized control
-add_executable(swingup_and_lqr src/bin/swingup_and_lqr.cpp)
-target_link_libraries(swingup_and_lqr ${PROJECT_NAME} digital_filters::digital_filters)
+add_executable(demo src/bin/demo.cpp)
+target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
 
 
 ###########
@@ -116,11 +108,9 @@ include(GNUInstallDirs)
 install(
   TARGETS
     reset_gpio
-    manual_control
     log_motion
     log_rotation
-    #lqr_control
-    #swingup_and_lqr
+    demo
   DESTINATION bin
 )
 

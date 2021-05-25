@@ -7,22 +7,7 @@
 #include <chrono>
 #include <thread>
 #include <cmath>
-
-
-int robustZero(int val, int zero) {
-  if(-zero < val && val < zero)
-    return 0;
-  else
-    return val;
-}
-
-
-std::vector<int> range(int start, int stop, int step) {
-  std::vector<int> vec;
-  for(int i=start; i<=stop; i+=step)
-    vec.push_back(i);
-  return vec;
-}
+#include "utils.hpp"
 
 
 int main(int argc, char** argv) {

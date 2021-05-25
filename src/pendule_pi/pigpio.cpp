@@ -64,10 +64,12 @@ ActivationToken::~ActivationToken() {
   resetPins();
   // If there is no registered token, or another one is registered, bad things might happen!
   if(active_token != this) {
-    throw MultpleTokensCreated(false);
+    PENDULE_PI_WRN("ActivationToken: during destruction another active token was found");
   }
-  // "unregister" this token.
-  active_token = nullptr;
+  else {
+    // "unregister" this token.
+    active_token = nullptr;
+  }
 }
 
 

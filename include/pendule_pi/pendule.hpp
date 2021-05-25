@@ -258,20 +258,6 @@ public:
     int offset_up
   );
 
-
-  // #error "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
-  #warning "This is not really an error, but rather a STRONG reminder for Franco to fix the 'Pendule::setPwmOffsets' methods!"
-  void setPwmOffsets(
-    int offset_static
-  );
-
-
-  void setPwmOffsets(
-    int offset_static,
-    int offset_down,
-    int offset_up
-  );
-
   /// Emergency stop.
   void eStop(const std::string& why);
 

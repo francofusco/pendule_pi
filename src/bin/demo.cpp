@@ -1,47 +1,13 @@
 #include <pendule_pi/pigpio.hpp>
 #include <pendule_pi/pendule.hpp>
 #include <pendule_pi/joystick.hpp>
-#include <iir_filters/common_filters.hpp>
+#include <digital_filters/filters.hpp>
 #include <iostream>
 #include <iomanip>
 #include <chrono>
 #include <thread>
 #include <cmath>
-
-
-// Simple function that returns zero if |val|<zero and val otherwise.
-int robustZero(int val, int zero) {
-  if(-zero < val && val < zero)
-    return 0;
-  else
-    return val;
-}
-
-int clip(int val, int zero) {
-  if(val > zero)
-    return val - zero;
-  else if(val < -zero)
-    return val + zero;
-  else
-    return 0;
-}
-
-// Simple sign function
-inline double sign(double x) {
-  return x>=0 ? 1.0 : -1.0;
-}
-
-// Modular shift in the unit circle
-double shiftInCircle(double x)
-{
-  double v = std::fmod(x, 2*M_PI);
-  if(v >= M_PI)
-    v -= 2*M_PI;
-  if(v < -M_PI)
-    v += 2*M_PI;
-  return v;
-}
-
+#include "utils.hpp"
 
 enum class ControlMode {
   Manual,
@@ -108,7 +74,7 @@ int main(int argc, char** argv) {
     pp::Pendule pendule(0.846/21200, 2*M_PI/1000, 0.0);
     std::cout << "Calibrating pendulum" << std::endl;
     pendule.calibrate(0.05);
-    pendule.setPwmOffsets(2, 15, 15);
+    pendule.setPwmOffsets(13, 17);
     std::cout << "Calibration completed!" << std::endl;
     // Define soft limits for the pendulum.
     const double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
@@ -130,10 +96,10 @@ int main(int argc, char** argv) {
     // Filters
     double Fs = 1.0/SLEEP_SEC; // sampling frequency
     double Fc = Fs/4; // cutoff frequency
-    auto filter_position = iir_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_angle = iir_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_linvel = iir_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_angvel = iir_filters::butterworth<double,double>(4, Fc, Fs);
+    auto filter_position = digital_filters::butterworth<double,double>(4, Fc, Fs);
+    auto filter_angle = digital_filters::butterworth<double,double>(4, Fc, Fs);
+    auto filter_linvel = digital_filters::butterworth<double,double>(4, Fc, Fs);
+    auto filter_angvel = digital_filters::butterworth<double,double>(4, Fc, Fs);
     filter_position.initInput(pendule.position());
     filter_position.initOutput(pendule.position());
     filter_angle.initInput(pendule.angle());
@@ -142,7 +108,7 @@ int main(int argc, char** argv) {
     filter_linvel.initOutput(0.0);
     filter_angvel.initInput(0.0);
     filter_angvel.initOutput(0.0);
-    auto filter_target_position = iir_filters::butterworth<double,double>(2, Fs/20, Fs);
+    auto filter_target_position = digital_filters::butterworth<double,double>(2, Fs/20, Fs);
     // Target position
     double target_pos = 0;
     const double target_angle = M_PI;

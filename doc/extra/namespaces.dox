@@ -1,4 +1,2 @@
-/// A namespace.
-/** Long description of the namespace.
-  */
-namespace foo {}
+/// Main namespace containing (almost) all provided classes.
+namespace pendule_pi { }
