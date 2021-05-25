@@ -1,0 +1,4 @@
+<map id="pendule_pi::Pendule::CalibrationFailed" name="pendule_pi::Pendule::CalibrationFailed">
+<area shape="rect" id="node1" title="Exception class to be thrown when the calibration fails for any reason." alt="" coords="5,80,159,121"/>
+<area shape="rect" id="node2" title=" " alt="" coords="27,5,137,32"/>
+</map>

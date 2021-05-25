@@ -1,0 +1,10 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,209,116,235"/>
+<area shape="rect" id="node2" href="$classpendule__pi_1_1Pendule_1_1CalibrationFailed.html" title="Exception class to be thrown when the calibration fails for any reason." alt="" coords="175,5,328,47"/>
+<area shape="rect" id="node3" href="$classpendule__pi_1_1Pendule_1_1EmergencyStop.html" title="Exception class to be thrown when emergency stop is requested." alt="" coords="175,71,328,112"/>
+<area shape="rect" id="node4" href="$classpendule__pi_1_1Pendule_1_1NotCalibrated.html" title="Exception class to be thrown when the pendulum has not been calibrated." alt="" coords="175,136,328,177"/>
+<area shape="rect" id="node5" href="$classpendule__pi_1_1Switch_1_1InterruptsAreDisabled.html" title="Auxiliary exception class to be thrown when reading the cached state with disabled interrupts." alt="" coords="165,201,337,243"/>
+<area shape="rect" id="node6" href="$classpigpio_1_1ActivationToken_1_1MultpleTokensCreated.html" title="Auxiliary exception class to be thrown when multiple tokens are generated." alt="" coords="164,267,339,308"/>
+<area shape="rect" id="node7" href="$classpigpio_1_1ActivationToken_1_1PleaseStop.html" title="Auxiliary exception class to be thrown when a SIGINT is received." alt="" coords="165,332,338,373"/>
+<area shape="rect" id="node8" href="$classpigpio_1_1Exception.html" title="Simple exception wrapper over pigpio&#39;s error codes." alt="" coords="184,398,319,425"/>
+</map>
