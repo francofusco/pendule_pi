@@ -126,6 +126,40 @@ unsigned int Rate::sleep() {
 }
 
 
+Timer::Timer(
+  unsigned int period_us,
+  bool auto_reset
+)
+: period_(period_us)
+, auto_reset_(auto_reset)
+, tpast_(0)
+{
+  // nothing else to do here!
+}
+
+
+bool Timer::expired() {
+  // get current time
+  auto tnow = gpioTick();
+  // check if the elapsed time since "tpast_" exceeds the target period
+  if(tnow - tpast_ > period_) {
+    // the timer expired
+    if(auto_reset_)
+      tpast_ = tnow;
+    return true;
+  }
+  else {
+    // the timer did not expire yet
+    return false;
+  }
+}
+
+
+void Timer::reset() {
+  tpast_ = gpioTick();
+}
+
+
 #define MAKE_CODE_ENTRY(CODE,DESCR) {CODE, #CODE " (" + std::to_string(CODE) + "): '" DESCR "'"}
 const std::map<int,std::string> Exception::ERROR_CODES {
   MAKE_CODE_ENTRY(PI_INIT_FAILED, "gpioInitialise failed"),

@@ -108,7 +108,7 @@ public:
     * - abort() as a handler for SIGABRT (to be executed upon "catastrophic
     *   failure").
     */
-  ActivationToken(bool register_sigint=true);
+  explicit ActivationToken(bool register_sigint=true);
   /// Ensures that all GPIO pins are changed to high impedance mode.
   ~ActivationToken();
 
@@ -209,7 +209,7 @@ public:
   /// Create a rate of given period.
   /** @param period_us desired period in microseconds.
     */
-  Rate(unsigned int period_us);
+  explicit Rate(unsigned int period_us);
 
   /// Sleep for the required time.
   /** @return Clock time in microseconds when the thread "wakes up".
@@ -224,6 +224,42 @@ private:
   const unsigned int period_; ///< Target period of this Rate.
   unsigned int tnow_; ///< Used inside sleep() to store the current clock time.
   unsigned int tpast_; ///< Clock time corresponding to the last time sleep() exited.
+};
+
+
+/// Simple timer that can be used to execute instructions at a given rate.
+/** This class is similar to Rate, the main difference being that it does not
+  * blocks the main thread by sleeping. It is meant for executing instructions
+  * at a rate that is lower than that of the control loop.
+  */
+class Timer {
+public:
+  /// Create a timer of given period.
+  /** @param period_us desired period in microseconds.
+    * @param auto_reset if false, the timer is not automatically reset upon
+    *   calling expired().
+    */
+  explicit Timer(
+    unsigned int period_us,
+    bool auto_reset
+  );
+
+  /// Tells if the timer expired.
+  /** This method checks if the timer has expired. If auto_reset=true was
+    * passed to the constructor, a call to reset() is also performed. Otherwise,
+    * the timer is not reset, meaning that further calls to expired() will
+    * keep returning true. In this case, the timer has to be reset manually by
+    * a call to reset().
+    * @return true if the timer expired.
+    */
+  bool expired();
+
+  /// Reset the timer so that it will expire again in the future.
+  void reset();
+private:
+  const unsigned int period_; ///< Target period of this Rate.
+  const bool auto_reset_; ///< If true, this timer automatically resets upon expiration.
+  unsigned int tpast_; ///< Clock time corresponding to the last time reset() was called.
 };
 
 } // end of namespace pigpio
