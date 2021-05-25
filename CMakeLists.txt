@@ -97,6 +97,10 @@ target_link_libraries(log_rotation ${PROJECT_NAME})
 add_executable(demo src/bin/demo.cpp)
 target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
 
+# TEMP
+add_executable(simple_server src/bin/simple_server.cpp)
+target_link_libraries(simple_server zmq zmqpp)
+
 
 ###########
 # INSTALL #

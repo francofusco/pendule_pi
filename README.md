@@ -26,8 +26,41 @@ make
 sudo make install
 ```
 
-In addition, you will need the [digital_filters repository](https://github.com/francofusco/digital_filters).
-Install instructions are contained inside the README.
+In addition, you will need the [digital_filters repository](https://github.com/francofusco/digital_filters). Install instructions are contained inside the README.
+
+Finally, you will need [ZeroMQ](https://zeromq.org/) and the [C++ bindings](https://github.com/zeromq/zmqpp) for inter-process communications. You can install them as follows:
+
+```
+# Install libsodium
+wget https://download.libsodium.org/libsodium/releases/LATEST.tar.gz
+tar -zxvf LATEST.tar.gz
+cd libsodium-stable
+./configure
+make
+make check
+sudo make install
+sudo ldconfig
+```
+
+```
+# Install ZeroMQ
+git clone git://github.com/zeromq/libzmq.git
+cd libzmq
+./autogen.sh
+./configure --with-libsodium
+make
+sudo make install
+sudo ldconfig
+```
+
+```
+# Install C++ bindings
+git clone git://github.com/zeromq/zmqpp.git
+cd zmqpp
+make
+sudo make install
+sudo ldconfig
+```
 
 
 ## Build the project
