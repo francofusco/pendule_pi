@@ -1,0 +1,4 @@
+/// A namespace.
+/** Long description of the namespace.
+  */
+namespace foo {}

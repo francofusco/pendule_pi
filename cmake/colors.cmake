@@ -1,0 +1,21 @@
+# Define some colors for output formatting
+string(ASCII 27 Esc)
+set(ColourReset "${Esc}[m")
+set(Black       "${Esc}[30m")
+set(Red         "${Esc}[31m")
+set(Green       "${Esc}[32m")
+set(Yellow      "${Esc}[33m")
+set(Blue        "${Esc}[34m")
+set(Magenta     "${Esc}[35m")
+set(Cyan        "${Esc}[36m")
+set(White       "${Esc}[37m")
+
+# Examples:
+# message(STATUS "${White}White${ColourReset}")
+# message(STATUS "${Black}Black${ColourReset}")
+# message(STATUS "${Red}Red${ColourReset}")
+# message(STATUS "${Green}Green${ColourReset}")
+# message(STATUS "${Yellow}Yellow${ColourReset}")
+# message(STATUS "${Blue}Blue${ColourReset}")
+# message(STATUS "${Magenta}Magenta${ColourReset}")
+# message(STATUS "${Cyan}Cyan${ColourReset}")
