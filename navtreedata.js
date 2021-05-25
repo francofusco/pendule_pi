@@ -25,14 +25,16 @@ var NAVTREE =
   [ "pendule_pi", "index.html", [
     [ "Main Page", "index.html", null ],
     [ "Installation", "md_doc_extra_Installation.html", [
-      [ "Installation", "md_doc_extra_Installation.html#autotoc_md0", [
-        [ "CMake", "md_doc_extra_Installation.html#autotoc_md1", null ],
-        [ "Python3", "md_doc_extra_Installation.html#autotoc_md2", null ],
-        [ "pigpio", "md_doc_extra_Installation.html#autotoc_md3", null ],
-        [ "Digital Filters", "md_doc_extra_Installation.html#autotoc_md4", null ],
-        [ "ZeroMQ", "md_doc_extra_Installation.html#autotoc_md5", null ],
-        [ "YamlCpp", "md_doc_extra_Installation.html#autotoc_md6", null ]
-      ] ]
+      [ "CMake", "md_doc_extra_Installation.html#autotoc_md0", null ],
+      [ "Python3", "md_doc_extra_Installation.html#autotoc_md1", null ],
+      [ "pigpio", "md_doc_extra_Installation.html#autotoc_md2", null ],
+      [ "Digital Filters", "md_doc_extra_Installation.html#autotoc_md3", null ],
+      [ "ZeroMQ", "md_doc_extra_Installation.html#autotoc_md4", [
+        [ "libsodium", "md_doc_extra_Installation.html#autotoc_md5", null ],
+        [ "ZeroMQ", "md_doc_extra_Installation.html#autotoc_md6", null ]
+      ] ],
+      [ "YamlCpp", "md_doc_extra_Installation.html#autotoc_md7", null ],
+      [ "DoxyGen", "md_doc_extra_Installation.html#autotoc_md8", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
@@ -67,7 +69,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"utils_8hpp_source.html"
+"utils_8hpp.html#a489c6e120cde60aecd7eb345f58374d0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

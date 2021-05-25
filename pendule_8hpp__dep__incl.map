@@ -1,6 +1,7 @@
 <map id="include/pendule_pi/pendule.hpp" name="include/pendule_pi/pendule.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="176,5,320,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="271,5,415,47"/>
 <area shape="rect" id="node2" href="$demo_8cpp.html" title=" " alt="" coords="5,95,139,121"/>
-<area shape="rect" id="node3" href="$log__motion_8cpp.html" title=" " alt="" coords="163,95,333,121"/>
-<area shape="rect" id="node4" href="$pendule_8cpp.html" title=" " alt="" coords="357,95,555,121"/>
+<area shape="rect" id="node3" href="$demo__zmq_8cpp.html" title=" " alt="" coords="163,95,331,121"/>
+<area shape="rect" id="node4" href="$log__motion_8cpp.html" title=" " alt="" coords="355,95,525,121"/>
+<area shape="rect" id="node5" href="$pendule_8cpp.html" title=" " alt="" coords="549,95,747,121"/>
 </map>
