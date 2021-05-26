@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     // Main loop!
     while(true) {
       // Sleep and update the state of the pendulum
-      rate.sleep();
+      double hw_time = 1e-6 * rate.sleep();
       pendule.update(SLEEP_SEC);
       // perform state filtering
       filtered_position = filter_position.filter(pendule.position());
@@ -70,7 +70,8 @@ int main(int argc, char** argv) {
       filtered_angvel = filter_angvel.filter(pendule.angularVelocity());
       // send the current state
       zmqpp::message msg;
-      msg << std::to_string(filtered_position) + " "
+      msg << std::to_string(hw_time) + " "
+           + std::to_string(filtered_position) + " "
            + std::to_string(filtered_angle) + " "
            + std::to_string(filtered_linvel) + " "
            + std::to_string(filtered_angvel);
