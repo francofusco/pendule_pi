@@ -77,7 +77,9 @@ int main(int argc, char** argv) {
       state_pub.send(msg, true);
       // read the current command
       if(command_sub.receive(msg, true)) {
-        msg >> pwm;
+        std::string msg_str;
+        msg >> msg_str;
+        pwm = std::stoi(msg_str);
       }
       // Enforce soft safety limits, then send the command.
       if(pendule.position() > MAX_POSITION && pwm > 0)
