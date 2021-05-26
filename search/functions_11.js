@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['_7eactivationtoken_325',['~ActivationToken',['../classpigpio_1_1ActivationToken.html#a3fbb896517447869994bea601394fcb7',1,'pigpio::ActivationToken']]],
-  ['_7eencoder_326',['~Encoder',['../classpendule__pi_1_1Encoder.html#a39b4ba63d2fb91ca7158d5bd527e8388',1,'pendule_pi::Encoder']]],
-  ['_7ejoystick_327',['~Joystick',['../classpendule__pi_1_1Joystick.html#a4ccd25aa13cceea59ad719a9e3eaccdb',1,'pendule_pi::Joystick']]],
-  ['_7emotor_328',['~Motor',['../classpendule__pi_1_1Motor.html#ad43e414bb1da1d32367fa8034bb67eb4',1,'pendule_pi::Motor']]],
-  ['_7eswitch_329',['~Switch',['../classpendule__pi_1_1Switch.html#a91e6f14f437d20e8499e4ffbe6b0c5d1',1,'pendule_pi::Switch']]]
+  ['update_356',['update',['../classpendule__pi_1_1Joystick.html#ae982fababcc52135096a67511af7b9a8',1,'pendule_pi::Joystick::update()'],['../classpendule__pi_1_1Pendule.html#ae274e5a33c0a212d3c3beafce7e25ecb',1,'pendule_pi::Pendule::update()'],['../classCachedButton.html#a4a5cbb10b98d2f416e0cbc7c41358351',1,'CachedButton::update()']]]
 ];

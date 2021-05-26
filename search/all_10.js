@@ -1,8 +1,17 @@
 var searchData=
 [
-  ['timer_188',['Timer',['../classpigpio_1_1Timer.html',1,'pigpio::Timer'],['../classpigpio_1_1Timer.html#a44c412cbe2578749701cc5285c436c79',1,'pigpio::Timer::Timer()']]],
-  ['tnow_5f_189',['tnow_',['../classpigpio_1_1Rate.html#a2eeed45e3ed42cd69083c977a8f0c35c',1,'pigpio::Rate']]],
-  ['to_5fstring_190',['to_string',['../demo_8cpp.html#a4a3a8f169763f531c07a7e7dd7b8e717',1,'demo.cpp']]],
-  ['todo_20list_191',['Todo List',['../todo.html',1,'']]],
-  ['tpast_5f_192',['tpast_',['../classpigpio_1_1Rate.html#acd1d45317e3a1fb4310a67d12078b49d',1,'pigpio::Rate::tpast_()'],['../classpigpio_1_1Timer.html#a20ab9a2a50564ac713f746e6a2e5c768',1,'pigpio::Timer::tpast_()']]]
+  ['radians_5fper_5fstep_5f_171',['radians_per_step_',['../classpendule__pi_1_1Pendule.html#a2ced1f0ca5eee1381d6585409c1133ee',1,'pendule_pi::Pendule']]],
+  ['range_172',['range',['../utils_8hpp.html#a489c6e120cde60aecd7eb345f58374d0',1,'utils.hpp']]],
+  ['rate_173',['Rate',['../classpigpio_1_1Rate.html',1,'pigpio::Rate'],['../classpigpio_1_1Rate.html#a5631d3ee371be904045693fb2ceaa95d',1,'pigpio::Rate::Rate()']]],
+  ['readstate_174',['readState',['../classpendule__pi_1_1Pendule.html#ad3d7eb2093ccc7f706887641f0960bbb',1,'pendule_pi::Pendule']]],
+  ['released_175',['released',['../classCachedButton.html#acf2e1945afde699589459235dfcbe189',1,'CachedButton']]],
+  ['removesafetycallbacks_176',['removeSafetyCallbacks',['../classpendule__pi_1_1Encoder.html#af71f418eac79ceec05486ad5b87db8d5',1,'pendule_pi::Encoder']]],
+  ['reset_177',['reset',['../classpigpio_1_1Timer.html#a2ad27926f75ef975fe68cf0a111418ef',1,'pigpio::Timer']]],
+  ['reset_5fgpio_2ecpp_178',['reset_gpio.cpp',['../reset__gpio_8cpp.html',1,'']]],
+  ['resetpins_179',['resetPins',['../classpigpio_1_1ActivationToken.html#a651c1da658f08f5e27920d9cbdacb19b',1,'pigpio::ActivationToken']]],
+  ['rest_5fangle_5f_180',['rest_angle_',['../classpendule__pi_1_1Pendule.html#a564a42dc7896438fe1879f81c25e0e6d',1,'pendule_pi::Pendule']]],
+  ['right_5fswitch_181',['right_switch',['../structpendule__pi_1_1Pendule_1_1Pins.html#aeb6e57f8fffbbc6c55294714d6500d5d',1,'pendule_pi::Pendule::Pins']]],
+  ['right_5fswitch_5f_182',['right_switch_',['../classpendule__pi_1_1Pendule.html#a4e9cfcbb3d6149b6e8fdde5c7a2c297e',1,'pendule_pi::Pendule']]],
+  ['robustzero_183',['robustZero',['../utils_8hpp.html#a39c6a3ac281d71156798c71e9f720b22',1,'utils.hpp']]],
+  ['run_5fthen_5fprint_184',['RUN_THEN_PRINT',['../reset__gpio_8cpp.html#adee40e99660099e91a7d3030bc1a32b9',1,'reset_gpio.cpp']]]
 ];

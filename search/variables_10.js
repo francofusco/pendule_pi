@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['with_5finterrupts_5f_412',['with_interrupts_',['../classpendule__pi_1_1Switch.html#aa4a9aa9da376ef0176c1e03d2884d09e',1,'pendule_pi::Switch']]],
-  ['with_5fpull_5fresistor_413',['WITH_PULL_RESISTOR',['../classpendule__pi_1_1Switch.html#aaf4773ecf66e5a033e3e2863fd6d060c',1,'pendule_pi::Switch']]],
-  ['without_5fpull_5fresistor_414',['WITHOUT_PULL_RESISTOR',['../classpendule__pi_1_1Switch.html#a6ace6ef7a4d11b1561c4b3bb2bc6f49c',1,'pendule_pi::Switch']]]
+  ['tnow_5f_451',['tnow_',['../classpigpio_1_1Rate.html#a2eeed45e3ed42cd69083c977a8f0c35c',1,'pigpio::Rate']]],
+  ['tpast_5f_452',['tpast_',['../classpigpio_1_1Rate.html#acd1d45317e3a1fb4310a67d12078b49d',1,'pigpio::Rate::tpast_()'],['../classpigpio_1_1Timer.html#a20ab9a2a50564ac713f746e6a2e5c768',1,'pigpio::Timer::tpast_()']]]
 ];

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['calibrate_259',['calibrate',['../classpendule__pi_1_1Pendule.html#a76f8ad4ed4438981910354fd58f7ffb5',1,'pendule_pi::Pendule']]],
-  ['calibrationfailed_260',['CalibrationFailed',['../classpendule__pi_1_1Pendule_1_1CalibrationFailed.html#a8e0d9dbbe0a45f970e744c4c27b10e50',1,'pendule_pi::Pendule::CalibrationFailed']]],
-  ['clip_261',['clip',['../utils_8hpp.html#a932ee5fa0eaecb87775155db7722934b',1,'utils.hpp']]]
+  ['button_285',['button',['../classpendule__pi_1_1Joystick.html#ae776f22c2416b3401b9bb37fa96edd46',1,'pendule_pi::Joystick']]]
 ];

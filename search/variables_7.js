@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['last_5ftick_5f_362',['last_tick_',['../classpendule__pi_1_1Switch.html#a79c5d818ffeff2eca3c80dfba8f4d939',1,'pendule_pi::Switch']]],
-  ['left_5fswitch_363',['left_switch',['../structpendule__pi_1_1Pendule_1_1Pins.html#a8e3f8bdb31910073d4a1318cb539bdf0',1,'pendule_pi::Pendule::Pins']]],
-  ['left_5fswitch_5f_364',['left_switch_',['../classpendule__pi_1_1Pendule.html#a46d7e47fd909b33a94fde4022655f2b5',1,'pendule_pi::Pendule']]],
-  ['linvel_365',['linvel',['../namespacedemo__zmq.html#a8beda31cd18ad853923112a95523f0a2',1,'demo_zmq']]],
-  ['linvel_5f_366',['linvel_',['../classpendule__pi_1_1Pendule.html#aeab733c10b4c736b8c4c9db6cd42e9fb',1,'pendule_pi::Pendule']]],
-  ['lower_5fcb_5f_367',['lower_cb_',['../classpendule__pi_1_1Encoder.html#ac49e68749aa2d9d255a1d49be2bb98e9',1,'pendule_pi::Encoder']]],
-  ['lower_5fthreshold_5f_368',['lower_threshold_',['../classpendule__pi_1_1Encoder.html#a132ef23f5b589683d363e5ba81850caf',1,'pendule_pi::Encoder']]]
+  ['joy_5fevent_5f_398',['joy_event_',['../classpendule__pi_1_1Joystick.html#aab7a50a9f61b5dbaacb8e2e14e4783cd',1,'pendule_pi::Joystick']]],
+  ['joy_5ffile_5fdescriptor_5f_399',['joy_file_descriptor_',['../classpendule__pi_1_1Joystick.html#a6301171e273b22d319d9f9e8d231f857',1,'pendule_pi::Joystick']]],
+  ['joy_5fname_5f_400',['joy_name_',['../classpendule__pi_1_1Joystick.html#a451716f45073408aa550753d1f96f7e4',1,'pendule_pi::Joystick']]]
 ];

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['upper_5fcb_5f_410',['upper_cb_',['../classpendule__pi_1_1Encoder.html#a660ff374fd75bc6e5562b8134335d2ed',1,'pendule_pi::Encoder']]],
-  ['upper_5fthreshold_5f_411',['upper_threshold_',['../classpendule__pi_1_1Encoder.html#ad5548b42bd34d1ad66f116ac078a8c92',1,'pendule_pi::Encoder']]]
+  ['soft_5fminmax_5fposition_5fmeters_5f_447',['soft_minmax_position_meters_',['../classpendule__pi_1_1Pendule.html#a75a2969a92230cf877e13fd797ec9e4f',1,'pendule_pi::Pendule']]],
+  ['steps_5f_448',['steps_',['../classpendule__pi_1_1Encoder.html#a26a30c201716f1763b7d97448437d220',1,'pendule_pi::Encoder']]],
+  ['sub_449',['sub',['../namespacesimple__client.html#a1b178328269c5e9e2beb52d59783ff93',1,'simple_client']]],
+  ['switch_5fpos_450',['switch_pos',['../namespacedemo__zmq.html#ae2dbe57ace622f987e1182a94e7f8569',1,'demo_zmq']]]
 ];

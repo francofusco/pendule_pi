@@ -1,16 +1,11 @@
 var searchData=
 [
-  ['setcommand_309',['setCommand',['../classpendule__pi_1_1Pendule.html#adb85bcd916bab0d791ca6ea73f464c12',1,'pendule_pi::Pendule']]],
-  ['setpwm_310',['setPWM',['../classpendule__pi_1_1Motor.html#aca7c4e5cae5881ef829dec745b706dd1',1,'pendule_pi::Motor']]],
-  ['setpwmoffsets_311',['setPwmOffsets',['../classpendule__pi_1_1Pendule.html#a19c702510087af40d43f546caad61e91',1,'pendule_pi::Pendule']]],
-  ['setsafetycallbacks_312',['setSafetyCallbacks',['../classpendule__pi_1_1Encoder.html#aca8f54d68fcfcd605ffb31700be24d1c',1,'pendule_pi::Encoder::setSafetyCallbacks(int lower_threshold, int upper_threshold, std::function&lt; void(void)&gt; lower_cb, std::function&lt; void(void)&gt; upper_cb)'],['../classpendule__pi_1_1Encoder.html#a6d168594c70e613b933d2c4e3c4d053e',1,'pendule_pi::Encoder::setSafetyCallbacks(int lower_threshold, int upper_threshold, std::function&lt; void(void)&gt; cb)']]],
-  ['shiftincircle_313',['shiftInCircle',['../utils_8hpp.html#ad246cd680c8f872f0802c2c6ccbe5ee8',1,'utils.hpp']]],
-  ['sign_314',['sign',['../utils_8hpp.html#a8f3cba07aa75b7320ae8bd6c0aeac498',1,'utils.hpp']]],
-  ['sleep_315',['sleep',['../classpigpio_1_1Rate.html#aaae6af9f88462cc48a91836535f95214',1,'pigpio::Rate']]],
-  ['softminmaxposition_316',['softMinMaxPosition',['../classpendule__pi_1_1Pendule.html#ac6c8fe2813f2f9cc13f519893330f158',1,'pendule_pi::Pendule']]],
-  ['steps_317',['steps',['../classpendule__pi_1_1Encoder.html#af51bfe4aeaffc517c3f3e4e8e97503fa',1,'pendule_pi::Encoder']]],
-  ['steps2meters_318',['steps2meters',['../classpendule__pi_1_1Pendule.html#a3d6467d49b5ef4693931bdf8f26fccc8',1,'pendule_pi::Pendule']]],
-  ['steps2radians_319',['steps2radians',['../classpendule__pi_1_1Pendule.html#a2c085978d505cc02100da3a61c607d06',1,'pendule_pi::Pendule']]],
-  ['switch_320',['Switch',['../classpendule__pi_1_1Switch.html#a138e378d0bcf814282a1e2b6614ef017',1,'pendule_pi::Switch::Switch(int pin, bool normally_up, bool use_internal_pull_resistor=true)'],['../classpendule__pi_1_1Switch.html#aef2ec4c4def7c583252840a3bc821523',1,'pendule_pi::Switch::Switch(const Switch &amp;)=delete']]],
-  ['switched_321',['switched',['../classCachedButton.html#a3cae7ed7a7ca9c0af465dfb865a4b9c8',1,'CachedButton']]]
+  ['range_331',['range',['../utils_8hpp.html#a489c6e120cde60aecd7eb345f58374d0',1,'utils.hpp']]],
+  ['rate_332',['Rate',['../classpigpio_1_1Rate.html#a5631d3ee371be904045693fb2ceaa95d',1,'pigpio::Rate']]],
+  ['readstate_333',['readState',['../classpendule__pi_1_1Pendule.html#ad3d7eb2093ccc7f706887641f0960bbb',1,'pendule_pi::Pendule']]],
+  ['released_334',['released',['../classCachedButton.html#acf2e1945afde699589459235dfcbe189',1,'CachedButton']]],
+  ['removesafetycallbacks_335',['removeSafetyCallbacks',['../classpendule__pi_1_1Encoder.html#af71f418eac79ceec05486ad5b87db8d5',1,'pendule_pi::Encoder']]],
+  ['reset_336',['reset',['../classpigpio_1_1Timer.html#a2ad27926f75ef975fe68cf0a111418ef',1,'pigpio::Timer']]],
+  ['resetpins_337',['resetPins',['../classpigpio_1_1ActivationToken.html#a651c1da658f08f5e27920d9cbdacb19b',1,'pigpio::ActivationToken']]],
+  ['robustzero_338',['robustZero',['../utils_8hpp.html#a39c6a3ac281d71156798c71e9f720b22',1,'utils.hpp']]]
 ];
