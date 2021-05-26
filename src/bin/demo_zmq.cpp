@@ -70,14 +70,16 @@ int main(int argc, char** argv) {
       filtered_angvel = filter_angvel.filter(pendule.angularVelocity());
       // send the current state
       zmqpp::message msg;
-      msg << filtered_position << " "
-          << filtered_angle << " "
-          << filtered_linvel << " "
-          << filtered_angvel;
+      msg << std::to_string(filtered_position) + " "
+           + std::to_string(filtered_angle) + " "
+           + std::to_string(filtered_linvel) + " "
+           + std::to_string(filtered_angvel);
       state_pub.send(msg, true);
       // read the current command
       if(command_sub.receive(msg, true)) {
-        msg >> pwm;
+        std::string msg_str;
+        msg >> msg_str;
+        pwm = std::stoi(msg_str);
       }
       // Enforce soft safety limits, then send the command.
       if(pendule.position() > MAX_POSITION && pwm > 0)
