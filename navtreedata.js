@@ -31,7 +31,7 @@ var NAVTREE =
         [ "pigpio", "md_doc_extra_Installation.html#autotoc_md3", null ],
         [ "Digital Filters", "md_doc_extra_Installation.html#autotoc_md4", null ],
         [ "ZeroMQ", "md_doc_extra_Installation.html#autotoc_md5", null ],
-        [ "YamlCpp", "md_doc_extra_Installation.html#autotoc_md6", null ],
+        [ "yaml-cpp", "md_doc_extra_Installation.html#autotoc_md6", null ],
         [ "DoxyGen (optional)", "md_doc_extra_Installation.html#autotoc_md7", null ]
       ] ],
       [ "pendule_pi", "md_doc_extra_Installation.html#autotoc_md8", [

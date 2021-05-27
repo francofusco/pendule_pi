@@ -99,7 +99,7 @@ $(document).ready(function(){initNavTree('md_doc_extra_Installation.html',''); i
 <li class="level2"><a href="#autotoc_md3">pigpio</a></li>
 <li class="level2"><a href="#autotoc_md4">Digital Filters</a></li>
 <li class="level2"><a href="#autotoc_md5">ZeroMQ</a></li>
-<li class="level2"><a href="#autotoc_md6">YamlCpp</a></li>
+<li class="level2"><a href="#autotoc_md6">yaml-cpp</a></li>
 <li class="level2"><a href="#autotoc_md7">DoxyGen (optional)</a></li>
 </ul>
 </li>
@@ -112,6 +112,13 @@ $(document).ready(function(){initNavTree('md_doc_extra_Installation.html',''); i
 </div>
 <div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
 Dependencies</h1>
+<p>In the following you will find a list of all software dependencies needed to compile <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>. Most of them will be built from source, which generally requires three steps:</p>
+<ol type="1">
+<li>Download the code;</li>
+<li>Build the sources;</li>
+<li>Install headers and libraries.</li>
+</ol>
+<p>While you are absolutely free to do as you please, we recommend to create a folder <code>programs</code> in your home and to move there whenever you need to download the sources of a dependency.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
 CMake</h2>
 <p>This project requires <a href="https://cmake.org/">CMake</a>. To obtain the latest version of CMake, you can follow the <a href="https://cmake.org/install/">official instructions</a>. Alternatively, you can install CMake from <code>apt</code> using</p>
@@ -176,9 +183,16 @@ ZeroMQ</h2>
 <div class="fragment"><div class="line">pip3 install pyzmq</div>
 </div><!-- fragment --><p>The command above should install it for the current user only. To install it for all users, prepend <code>sudo</code> in front of the command.</p>
 <h2><a class="anchor" id="autotoc_md6"></a>
-YamlCpp</h2>
-<p>TODO! This library will allow to read yaml so that params can be passed in a more flexible way.</p>
-<h2><a class="anchor" id="autotoc_md7"></a>
+yaml-cpp</h2>
+<p>This library allows to parse YAML files in C++. In this way, parameters can be passed to executables in a more efficient way.</p>
+<p>At the time of writing there was a <a href="https://github.com/jbeder/yaml-cpp/issues/774">small issue</a> in the original yaml-cpp repository. We thus created a fork containing a workaround that (at least for us) solved the problem. The instructions below use our fork rather than the original repository.</p>
+<div class="fragment"><div class="line">git clone --branch fix-cmake https://github.com/francofusco/yaml-cpp.git</div>
+<div class="line">mkdir yaml-cpp/build</div>
+<div class="line">cd yaml-cpp/build</div>
+<div class="line">cmake ..</div>
+<div class="line">cmake --build .</div>
+<div class="line">sudo cmake --install .</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
 DoxyGen (optional)</h2>
 <p><a href="https://www.doxygen.nl/index.html">DoxyGen</a> can be used to generate a local copy of this documentation. If you do not have this tool installed yet, you can do it via:</p>
 <div class="fragment"><div class="line">sudo apt install doxygen graphviz</div>
