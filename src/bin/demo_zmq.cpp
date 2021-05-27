@@ -93,5 +93,5 @@ int main(int argc, char** argv) {
   catch(const pigpio::ActivationToken::PleaseStop&) { }
   catch(...) { throw; }
 
-  return 0;
+  return EXIT_SUCCESS;
 }

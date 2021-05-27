@@ -2,6 +2,15 @@
 
 # Dependencies
 
+In the following you will find a list of all software dependencies needed to compile pendule_pi. Most of them will be built from source, which generally requires three steps:
+
+1. Download the code;
+2. Build the sources;
+3. Install headers and libraries.
+
+While you are absolutely free to do as you please, we recommend to create a folder `programs` in your home and to move there whenever you need to download the sources of a dependency.
+
+
 ## CMake
 
 This project requires [CMake](https://cmake.org/). To obtain the latest version of CMake, you can follow the [official instructions](https://cmake.org/install/). Alternatively, you can install CMake from `apt` using
@@ -117,9 +126,20 @@ pip3 install pyzmq
 The command above should install it for the current user only. To install it for all users, prepend `sudo` in front of the command.
 
 
-## YamlCpp
+## yaml-cpp
 
-TODO! This library will allow to read yaml so that params can be passed in a more flexible way.
+This library allows to parse YAML files in C++. In this way, parameters can be passed to executables in a more efficient way.
+
+At the time of writing there was a [small issue](https://github.com/jbeder/yaml-cpp/issues/774) in the original yaml-cpp repository. We thus created a fork containing a workaround that (at least for us) solved the problem. The instructions below use our fork rather than the original repository.
+
+```
+git clone --branch fix-cmake https://github.com/francofusco/yaml-cpp.git
+mkdir yaml-cpp/build
+cd yaml-cpp/build
+cmake ..
+cmake --build .
+sudo cmake --install .
+```
 
 
 ## DoxyGen (optional)
