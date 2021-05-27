@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from pendule_pi import Pendule
+from pendule_pi import PendulePy
 import math
 
 def normalize(angle):
@@ -12,7 +12,7 @@ def normalize(angle):
 
 if __name__ == '__main__':
   # Connect to the interface.
-  pendulum = Pendule(wait=5)
+  pendulum = PendulePy(wait=5)
 
   MAX_ANGLE = 0.1
   kp = -127.45880662905581
