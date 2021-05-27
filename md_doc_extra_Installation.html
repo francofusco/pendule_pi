@@ -94,29 +94,35 @@ $(document).ready(function(){initNavTree('md_doc_extra_Installation.html',''); i
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md0">CMake</a></li>
-<li class="level1"><a href="#autotoc_md1">Python3</a></li>
-<li class="level1"><a href="#autotoc_md2">pigpio</a></li>
-<li class="level1"><a href="#autotoc_md3">Digital Filters</a></li>
-<li class="level1"><a href="#autotoc_md4">ZeroMQ</a><ul><li class="level2"><a href="#autotoc_md5">libsodium</a></li>
-<li class="level2"><a href="#autotoc_md6">ZeroMQ</a></li>
+<ul><li class="level1"><a href="#autotoc_md0">Dependencies</a><ul><li class="level2"><a href="#autotoc_md1">CMake</a></li>
+<li class="level2"><a href="#autotoc_md2">Python3</a></li>
+<li class="level2"><a href="#autotoc_md3">pigpio</a></li>
+<li class="level2"><a href="#autotoc_md4">Digital Filters</a></li>
+<li class="level2"><a href="#autotoc_md5">ZeroMQ</a></li>
+<li class="level2"><a href="#autotoc_md6">YamlCpp</a></li>
+<li class="level2"><a href="#autotoc_md7">DoxyGen (optional)</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md7">YamlCpp</a></li>
-<li class="level1"><a href="#autotoc_md8">DoxyGen</a></li>
+<li class="level1"><a href="#autotoc_md8">pendule_pi</a><ul><li class="level2"><a href="#autotoc_md9">Building the code</a></li>
+<li class="level2"><a href="#autotoc_md10">Configure pendule_pi for external usage</a></li>
+<li class="level2"><a href="#autotoc_md11">TL;DR</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
-CMake</h1>
+Dependencies</h1>
+<h2><a class="anchor" id="autotoc_md1"></a>
+CMake</h2>
 <p>This project requires <a href="https://cmake.org/">CMake</a>. To obtain the latest version of CMake, you can follow the <a href="https://cmake.org/install/">official instructions</a>. Alternatively, you can install CMake from <code>apt</code> using</p>
 <div class="fragment"><div class="line">sudo apt install cmake</div>
 </div><!-- fragment --><p>Note that we built and tested the project using version 3.19.4 and thus we specified it as the minimum required version. However, it is very likely that earlier versions will work as well. Feel free to just change the required version passed to <code>cmake_minimum_required</code> in <code>CMakeLists.txt</code> and report the result to us.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Python3</h1>
+<h2><a class="anchor" id="autotoc_md2"></a>
+Python3</h2>
 <p>Python3 should be already installed on Raspberry Pi running Raspbian. Nonetheless, you can manually install it using:</p>
 <div class="fragment"><div class="line">sudo apt install python3 python3-dev python3-pip</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
-pigpio</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+pigpio</h2>
 <p>To build the code of this repository, you need the <a href="https://github.com/joan2937/pigpio">pigpio</a> library. Its documentation is available <a href="http://abyz.me.uk/rpi/pigpio/index.html">here</a>. The following is a summary of what you need to write in a console to build pigpio using CMake:</p>
 <div class="fragment"><div class="line">git clone https://github.com/joan2937/pigpio.git</div>
 <div class="line">mkdir pigpio/build</div>
@@ -124,8 +130,8 @@ pigpio</h1>
 <div class="line">cmake ..</div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
-Digital Filters</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+Digital Filters</h2>
 <p>The <a href="https://github.com/francofusco/digital_filters">digital_filters repository</a> can be installed by following the instructions contained inside the README:</p>
 <div class="fragment"><div class="line">git clone https://github.com/francofusco/digital_filters.git</div>
 <div class="line">mkdir digital_filters/build</div>
@@ -133,11 +139,10 @@ Digital Filters</h1>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build .</div>
 <div class="line">echo &quot;export digital_filters_DIR=&quot;`pwd`&quot; &gt;&gt; ~/.bashrc</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
-ZeroMQ</h1>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+ZeroMQ</h2>
 <p>ZeroMQ is the library used here for inter-process communications. You will need to install this library and several other components.</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
-libsodium</h2>
+<h3>libsodium</h3>
 <p>ZeroMQ is built on top of <code>libsodium</code>. To install it, download the latest version from the <a href="https://download.libsodium.org/libsodium/releases">releases page</a> and then run the following instructions:</p>
 <div class="fragment"><div class="line">tar -zxvf LATEST.tar.gz</div>
 <div class="line">cd libsodium-stable</div>
@@ -147,8 +152,7 @@ libsodium</h2>
 <div class="line">sudo make install</div>
 <div class="line">sudo ldconfig</div>
 </div><!-- fragment --><p>Note that the latest version at the time of writing is 1.0.18. If you encounter problems with the current latest release, you might want to revert to this version instead.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
-ZeroMQ</h2>
+<h3>ZeroMQ</h3>
 <p>After a successful installation of <code>libsodium</code>, you can install the latest version of ZeroMQ via:</p>
 <div class="fragment"><div class="line">sudo apt install libtool-bin</div>
 <div class="line">git clone git://github.com/zeromq/libzmq.git</div>
@@ -171,15 +175,72 @@ ZeroMQ</h2>
 <p>The Python module <code>zmq</code> can be installed very easily via <code>pip</code>:</p>
 <div class="fragment"><div class="line">pip3 install pyzmq</div>
 </div><!-- fragment --><p>The command above should install it for the current user only. To install it for all users, prepend <code>sudo</code> in front of the command.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
-YamlCpp</h1>
-<p>TODO!</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
-DoxyGen</h1>
-<p>DoxyGen can be used to generate a copy of this documentation. If you do not hqve this tool instqlled yet, you can do it via:</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+YamlCpp</h2>
+<p>TODO! This library will allow to read yaml so that params can be passed in a more flexible way.</p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+DoxyGen (optional)</h2>
+<p><a href="https://www.doxygen.nl/index.html">DoxyGen</a> can be used to generate a local copy of this documentation. If you do not have this tool installed yet, you can do it via:</p>
 <div class="fragment"><div class="line">sudo apt install doxygen graphviz</div>
-</div><!-- fragment --><p>Additionally, you can consider installing the packages <code>doxygen-gui</code> and/or <code>doxygen-latex</code>. </p>
-</div></div><!-- contents -->
+</div><!-- fragment --><p>Additionally, you can consider installing the packages <code>doxygen-gui</code> and/or <code>doxygen-latex</code>.</p>
+<h1><a class="anchor" id="autotoc_md8"></a>
+pendule_pi</h1>
+<p>The project can be build using CMake. First, create the build directory and move inside it. Assuming that you are in the root directory of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>, run: </p><div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build</div>
+</div><!-- fragment --><p>From now on, all commands are to be run from there.</p>
+<p>Note that the following is a detailed description of the steps required to configure, build and install <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>'s library and executables. For a quick summary of the required steps, refer to the <b>TL;DR</b> section below.</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Building the code</h2>
+<h3>Configuring the build</h3>
+<p>Let's start with the configuration step: </p><div class="fragment"><div class="line">cmake ..</div>
+</div><!-- fragment --><p>which should check for existence of some compilers and dependencies. Options can be passed to CMake during this step to configure the build. Options are to be passed as follows: </p><div class="fragment"><div class="line">cmake .. -DOPTION=VALUE</div>
+</div><!-- fragment --><p>Alternatively, you can build the CMake curses gui or the Qt-based one and change the options there. <b>TODO: put links to the GUIs!</b> The following options are available:</p>
+<ul>
+<li><code>CMAKE_BUILD_TYPE</code>: either <code>Debug</code> or <code>Release</code>. In the first mode, the <code>O0</code> optimization flag is passed to the main library, more warnings are printed during code compilation and at runtime the generated programs will print some debug information about what is being executed. In the <code>Release</code> mode, the <code>O2</code> optimization flag is given instead, less warnings are produced during compilation and debug messages are deactivated.</li>
+<li><code>BUILD_DOC</code>: either <code>ON</code> or <code>OFF</code>. If <code>OFF</code>, documentation will not be generated. If <code>ON</code>, then DoxyGen will be used to build a local copy of this documentation. By default, this option is set to <code>ON</code> if DoxyGen is installed (and found) on your Raspberry, and to <code>OFF</code> otherwise. Note that if you have installed DoxyGen, then you can change this option with no constraints. However, if DoxyGen is not found and you force the option to <code>ON</code>, an error will be sent by CMake.</li>
+<li><code>QUIET_DOXYGEN</code>: either <code>YES</code> or <code>NO</code>. If <code>YES</code> (default), DoxyGen should print only warnings on the console when running. If set to <code>NO</code>, verbose output will be produced instead.</li>
+<li><code>DOXYGEN_MAKE_LATEX</code>: either <code>YES</code> or <code>NO</code>. If <code>YES</code>, then the documentation will be generated also in the form of a "reference manual" (print-friendly pdf) using LaTeX (it requires the <code>doxygen-latex</code> package to be installed, see the DoxyGen installation section above). If the option is set to <code>NO</code> (default) only the HTML version of the documentation will be generated. <br  />
+</li>
+</ul>
+<h3>Building the targets</h3>
+<p>After the configuration step, the code can be built. To do so, run </p><div class="fragment"><div class="line">cmake --build .</div>
+</div><!-- fragment --><p>in the terminal. This should build all targets (libraries, executables, documentation). You can build selected targets using the form: </p><div class="fragment"><div class="line">cmake --build . --target TARGET</div>
+</div><!-- fragment --><p>As an example, the documentation target is called <code>doc</code>, and can be built via: </p><div class="fragment"><div class="line">cmake --build . --target doc</div>
+</div><!-- fragment --><h3>Installing the project</h3>
+<p>There is no need to install the built code since everything can be run from the <code>build</code> folder and a way to locate headers and other files is explained later. However, if you wish to do so, you can install all built products by executing: </p><div class="fragment"><div class="line">cmake --install .</div>
+</div><!-- fragment --><p>By default, the install location should be <code>/usr/local</code> and you might need root privileges to properly copy the files. If you do not have the rights (or if you prefer to install the project somewhere else for any reason) you can change the install location during the configuration step. As an example: </p><div class="fragment"><div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=~/barbaz</div>
+</div><!-- fragment --><p>would install the header and other compiled targets in the <code>barbaz</code> directory in your home.</p>
+<p>If at any point you wish to "uninstall" the project, you can do it thanks to a provided CMake script. In particular, after installing the project, move into the build location and run:</p>
+<div class="fragment"><div class="line">cmake -P uninstall.cmake</div>
+</div><!-- fragment --><p><b>Beware of the following limitations!</b> The <code>uninstall.cmake</code> script is very simple and limited. It reads the <code>install_manifest.txt</code> that is generated during the install step and attempts to remove, one by one, each copied target. This implies that:</p>
+<ul>
+<li>Folders are not removed, but left empty. If you want to remove them, you have to do so manually.</li>
+<li>Since the script reads <code>install_manifest.txt</code>, if you remove the build folder and/or change the installed products, the script might not correctly and completely remove all installed targets.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Configure pendule_pi for external usage</h2>
+<h3>Python</h3>
+<p>To use the Python interface to control the pendulum, you need to make the <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> module available to the Python ecosystem. One way to do so is to extend the <code>PYTHONPATH</code> environment variable. One way to do so is: </p><div class="fragment"><div class="line">echo &quot;export PYTHONPATH=\&quot;PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+</div><!-- fragment --><p>This will append one line to your <code>.bashrc</code>. The command assumes that you are in the build folder and that the build folder is located in the root directory of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>. If this is not the case, just insert manually the line </p><div class="fragment"><div class="line">export PYTHONPATH=&quot;PYTHONPATH:/path/to/pendule_pi/src/python/&quot;</div>
+</div><!-- fragment --><p>to your <code>.bashrc</code>.</p>
+<h3>C++</h3>
+<p>To use the C++ libraries provided by <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> in other executables, you firstly need to make the project "discoverable" by CMake. This can be done in two ways: either install the project as discussed above or set an environment variable as follows: </p><div class="fragment"><div class="line">echo &quot;export pendule_pi_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+</div><!-- fragment --><p>The libraries can now be used in other CMake-based projects by adding one of the following </p><div class="fragment"><div class="line">find_package(pendule_pi)</div>
+<div class="line">find_package(pendule_pi QUIET)</div>
+<div class="line">find_package(pendule_pi REQUIRED)</div>
+</div><!-- fragment --><p>in their <code>CMakeLists.txt</code>. Then, just link the <code>pendule_pi::pendule_pi</code> library to your targets, <em>e.g.</em>, </p><div class="fragment"><div class="line">add_executable(your_program your_source.cpp)</div>
+<div class="line">target_link_libraries(your_program pendule_pi::pendule_pi)</div>
+</div><!-- fragment --><p>Note that headers are "automatically" made visible to your executable, and there is thus no need for any of the following </p><div class="fragment"><div class="line">include_directories(${pendule_pi_INCLUDE_DIRS})</div>
+<div class="line">target_include_directories(your_program ${pendule_pi_INCLUDE_DIRS})</div>
+</div><!-- fragment --><p>Indeed, when you call <code>find_package</code>, no <code>pendule_pi_INCLUDE_DIRS</code> is populated at all!</p>
+<h2><a class="anchor" id="autotoc_md11"></a>
+TL;DR</h2>
+<p>From the root of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> run: </p><div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
+<div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake --build .</div>
+<div class="line">echo &quot;export PYTHONPATH=\&quot;PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+<div class="line">echo &quot;export pendule_pi_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
