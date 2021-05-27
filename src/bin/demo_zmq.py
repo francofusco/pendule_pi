@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from pendule_pi import Pendule
+from pendule_pi import PendulePy
 
 
 if __name__ == '__main__':
   # Connect to the interface.
-  pendulum = Pendule(wait=5)
+  pendulum = PendulePy(wait=5)
 
   pwm = 25
   switch_pos = 0.2

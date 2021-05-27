@@ -3,8 +3,11 @@ import zmq
 import time
 
 
-## Bridge to the low-level interface.
-class Pendule:
+## Python class that provides a bridge to the low-level interface.
+# This Python class allows one to communicate with the low-level interface
+# using two TCP sockets (one to receive the current state of the pendulum,
+# one to send actuation commands).
+class PendulePy:
   ## Number of state coordinates.
   N_STATES = 5
 
