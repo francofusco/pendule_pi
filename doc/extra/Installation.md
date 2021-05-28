@@ -55,7 +55,7 @@ mkdir digital_filters/build
 cd digital_filters/build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build .
-echo "export digital_filters_DIR="`pwd`" >> ~/.bashrc
+echo "export digital_filters_DIR=\"`pwd`\"" >> ~/.bashrc
 ```
 
 
@@ -247,11 +247,11 @@ copied target. This implies that:
 
 To use the Python interface to control the pendulum, you need to make the pendule_pi module available to the Python ecosystem. One way to do so is to extend the `PYTHONPATH` environment variable. One way to do so is:
 ```
-echo "export PYTHONPATH=\"PYTHONPATH:`pwd`/../src/python/\"" >> ~/.bashrc
+echo "export PYTHONPATH=\"$PYTHONPATH:`pwd`/../src/python/\"" >> ~/.bashrc
 ```
 This will append one line to your `.bashrc`. The command assumes that you are in the build folder and that the build folder is located in the root directory of pendule_pi. If this is not the case, just insert manually the line
 ```
-export PYTHONPATH="PYTHONPATH:/path/to/pendule_pi/src/python/"
+export PYTHONPATH="$PYTHONPATH:/path/to/pendule_pi/src/python/"
 ```
 to your `.bashrc`.
 
@@ -290,6 +290,6 @@ From the root of pendule_pi run:
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build .
-echo "export PYTHONPATH=\"PYTHONPATH:`pwd`/../src/python/\"" >> ~/.bashrc
+echo "export PYTHONPATH=\"$PYTHONPATH:`pwd`/../src/python/\"" >> ~/.bashrc
 echo "export pendule_pi_DIR=\"`pwd`\"" >> ~/.bashrc
 ```
