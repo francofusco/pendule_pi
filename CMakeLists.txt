@@ -28,6 +28,7 @@ set(ALL_DEPENDENCIES_FOUND TRUE)
 message(STATUS "Looking for build dependencies")
 find_package_custom(pigpio)
 find_package_custom(digital_filters)
+find_package_custom(yaml-cpp)
 
 # warn the user if code will not be built
 if(NOT ${ALL_DEPENDENCIES_FOUND})
@@ -98,12 +99,12 @@ add_executable(demo src/bin/demo.cpp)
 target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
 
 # TEMP
-add_executable(simple_server src/bin/simple_server.cpp)
-target_link_libraries(simple_server zmq zmqpp)
+add_executable(demo_zmq src/bin/demo_zmq.cpp)
+target_link_libraries(demo_zmq ${PROJECT_NAME} digital_filters::digital_filters zmq zmqpp yaml-cpp)
 
 # TEMP
-add_executable(demo_zmq src/bin/demo_zmq.cpp)
-target_link_libraries(demo_zmq ${PROJECT_NAME} digital_filters::digital_filters zmq zmqpp)
+add_executable(yaml_test src/bin/yaml_test.cpp)
+target_link_libraries(yaml_test yaml-cpp)
 
 
 ###########

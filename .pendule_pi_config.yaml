@@ -1,0 +1,21 @@
+# Conversion coefficents for the encoders.
+meters_per_step: 3.990566037735849e-05  # 0.846/21200
+radians_per_step: 0.006283185307179587  # 2*M_PI/1000
+
+# Safety distances to stop the pendulum.
+safety_thresholds:
+  hard: 0.05  # minimum allowed distance from the switches (if violated, the interfaces shuts-down)
+  soft: 0.1  # minimum allowed distance from the hard safety distance (if violated, commands are zeroed)
+
+# Offsets to be applied to pwm commands.
+pwm_offsets:
+  low: 13
+  high: 17
+
+# Control period in milliseconds.
+period_ms: 20
+
+# Used in filtering. It should be less than half the sampling frequency.
+cutoff_frequency: 12.5
+
+# TODO: TCP ports configuration!
