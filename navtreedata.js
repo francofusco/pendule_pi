@@ -45,6 +45,7 @@ var NAVTREE =
         [ "DoxyGen configuration file", "md_doc_extra_Troubleshooting.html#autotoc_md13", null ]
       ] ]
     ] ],
+    [ "Tutorials", "Tutorials.html", "Tutorials" ],
     [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -78,8 +79,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"namespacepigpio.html"
+"Tutorials.html",
+"namespacemembers_func.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

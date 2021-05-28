@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['troubleshooting_2emd_267',['Troubleshooting.md',['../Troubleshooting_8md.html',1,'']]]
+  ['switch_2ecpp_275',['switch.cpp',['../switch_8cpp.html',1,'']]],
+  ['switch_2ehpp_276',['switch.hpp',['../switch_8hpp.html',1,'']]]
 ];

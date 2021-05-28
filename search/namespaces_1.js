@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lqr_240',['lqr',['../namespacelqr.html',1,'']]]
+  ['lqr_247',['lqr',['../namespacelqr.html',1,'']]]
 ];

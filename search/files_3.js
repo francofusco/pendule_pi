@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['joystick_2ecpp_250',['joystick.cpp',['../joystick_8cpp.html',1,'']]],
-  ['joystick_2ehpp_251',['joystick.hpp',['../joystick_8hpp.html',1,'']]]
+  ['installation_2emd_257',['Installation.md',['../Installation_8md.html',1,'']]]
 ];

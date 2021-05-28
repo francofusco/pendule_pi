@@ -145,7 +145,7 @@ Digital Filters</h2>
 <div class="line">cd digital_filters/build</div>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build .</div>
-<div class="line">echo &quot;export digital_filters_DIR=&quot;`pwd`&quot; &gt;&gt; ~/.bashrc</div>
+<div class="line">echo &quot;export digital_filters_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
 ZeroMQ</h2>
 <p>ZeroMQ is the library used here for inter-process communications. You will need to install this library and several other components.</p>
@@ -234,8 +234,8 @@ Building the code</h2>
 <h2><a class="anchor" id="autotoc_md10"></a>
 Configure pendule_pi for external usage</h2>
 <h3>Python</h3>
-<p>To use the Python interface to control the pendulum, you need to make the <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> module available to the Python ecosystem. One way to do so is to extend the <code>PYTHONPATH</code> environment variable. One way to do so is: </p><div class="fragment"><div class="line">echo &quot;export PYTHONPATH=\&quot;PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
-</div><!-- fragment --><p>This will append one line to your <code>.bashrc</code>. The command assumes that you are in the build folder and that the build folder is located in the root directory of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>. If this is not the case, just insert manually the line </p><div class="fragment"><div class="line">export PYTHONPATH=&quot;PYTHONPATH:/path/to/pendule_pi/src/python/&quot;</div>
+<p>To use the Python interface to control the pendulum, you need to make the <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> module available to the Python ecosystem. One way to do so is to extend the <code>PYTHONPATH</code> environment variable. One way to do so is: </p><div class="fragment"><div class="line">echo &quot;export PYTHONPATH=\&quot;$PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+</div><!-- fragment --><p>This will append one line to your <code>.bashrc</code>. The command assumes that you are in the build folder and that the build folder is located in the root directory of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>. If this is not the case, just insert manually the line </p><div class="fragment"><div class="line">export PYTHONPATH=&quot;$PYTHONPATH:/path/to/pendule_pi/src/python/&quot;</div>
 </div><!-- fragment --><p>to your <code>.bashrc</code>.</p>
 <h3>C++</h3>
 <p>To use the C++ libraries provided by <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> in other executables, you firstly need to make the project "discoverable" by CMake. This can be done in two ways: either install the project as discussed above or set an environment variable as follows: </p><div class="fragment"><div class="line">echo &quot;export pendule_pi_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
@@ -252,7 +252,7 @@ TL;DR</h2>
 <p>From the root of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> run: </p><div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build .</div>
-<div class="line">echo &quot;export PYTHONPATH=\&quot;PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
+<div class="line">echo &quot;export PYTHONPATH=\&quot;$PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
 <div class="line">echo &quot;export pendule_pi_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
