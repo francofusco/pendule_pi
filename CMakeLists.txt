@@ -78,6 +78,27 @@ endif()
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 
+# C++ bridge to the low-level interface
+add_library(pendule_cpp src/pendule_pi/pendule_cpp.cpp)
+
+target_include_directories(pendule_cpp
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(pendule_cpp zmq zmqpp)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  target_compile_options(pendule_cpp PRIVATE -O0)
+  target_compile_options(pendule_cpp PRIVATE -Wall)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  target_compile_options(pendule_cpp PRIVATE -O2)
+endif()
+
+target_compile_features(pendule_cpp PUBLIC cxx_std_17)
+
+
 ############
 # BINARIES #
 ############
@@ -123,9 +144,11 @@ install(
   DESTINATION bin
 )
 
-# Installing the library
+# Installing the libraries
 install(
-  TARGETS ${PROJECT_NAME}
+  TARGETS
+    ${PROJECT_NAME}
+    pendule_cpp
   DESTINATION lib
   EXPORT ${PROJECT_NAME}Targets
 )

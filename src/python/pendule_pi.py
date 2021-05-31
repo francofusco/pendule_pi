@@ -57,29 +57,29 @@ class PendulePy:
         elapsed += 1
       # Did we exit due to a received message? If not, throw!
       if elapsed >= wait:
-        raise RuntimeError("Pendule: failed to establish a connection with the low-level interface within the allotted time.")
+        raise RuntimeError("PendulePy: failed to establish a connection with the low-level interface within the allotted time.")
 
-  ## Allow to access the current time of the pendulum.
+  ## Allows to access the current time of the pendulum.
   @property
   def time(self):
     return self._time
 
-  ## Allow to access the current position of the pendulum.
+  ## Allows to access the current position of the pendulum.
   @property
   def position(self):
     return self._position
 
-  ## Allow to access the current angle of the pendulum.
+  ## Allows to access the current angle of the pendulum.
   @property
   def angle(self):
     return self._angle
 
-  ## Allow to access the current linear velocity of the pendulum.
+  ## Allows to access the current linear velocity of the pendulum.
   @property
   def linvel(self):
     return self._linvel
 
-  ## Allow to access the current angular velocity of the pendulum.
+  ## Allows to access the current angular velocity of the pendulum.
   @property
   def angvel(self):
     return self._angvel
@@ -107,8 +107,8 @@ class PendulePy:
     # Split the string message into parts. Each part should be a float.
     parts = msg.split(" ")
     # Check that the number of parts is correct, and throw otherwise.
-    if len(parts) != Pendule.N_STATES:
-      raise RuntimeError(f"Malformed state message received. Expected {Pendule.N_STATES} values, got {len(parts)}. Message: {msg}")
+    if len(parts) != PendulePy.N_STATES:
+      raise RuntimeError(f"Malformed state message received. Expected {PendulePy.N_STATES} values, got {len(parts)}. Message: {msg}")
     # Convert each part (which is still a string) into a float.
     self._time, self._position, self._angle, self._linvel, self._angvel = map(float, parts)
     # State read successfully.

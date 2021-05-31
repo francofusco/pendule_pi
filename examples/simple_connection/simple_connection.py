@@ -17,3 +17,4 @@ if __name__ == '__main__':
       pendulum.sendCommand(pwm)
   except KeyboardInterrupt:
     pendulum.sendCommand(0)
+    time.sleep(1)
