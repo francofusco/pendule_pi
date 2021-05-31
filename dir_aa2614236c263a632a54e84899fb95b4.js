@@ -17,6 +17,9 @@ var dir_aa2614236c263a632a54e84899fb95b4 =
       [ "CalibrationFailed", "classpendule__pi_1_1Pendule_1_1CalibrationFailed.html", "classpendule__pi_1_1Pendule_1_1CalibrationFailed" ],
       [ "EmergencyStop", "classpendule__pi_1_1Pendule_1_1EmergencyStop.html", "classpendule__pi_1_1Pendule_1_1EmergencyStop" ]
     ] ],
+    [ "pendule_cpp.hpp", "pendule__cpp_8hpp.html", [
+      [ "PenduleCpp", "classpendule__pi_1_1PenduleCpp.html", "classpendule__pi_1_1PenduleCpp" ]
+    ] ],
     [ "pigpio.hpp", "pigpio_8hpp.html", "pigpio_8hpp" ],
     [ "switch.hpp", "switch_8hpp.html", [
       [ "Switch", "classpendule__pi_1_1Switch.html", "classpendule__pi_1_1Switch" ],

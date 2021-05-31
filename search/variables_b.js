@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['n_5fstates_423',['N_STATES',['../classpendule__pi_1_1PendulePy.html#ad5ac1b03fd7b36239bc72b98fe4e69bf',1,'pendule_pi::PendulePy']]],
-  ['normally_5fdown_424',['NORMALLY_DOWN',['../classpendule__pi_1_1Switch.html#a67938c71df93454ed562690fe07a468b',1,'pendule_pi::Switch']]],
-  ['normally_5fup_425',['NORMALLY_UP',['../classpendule__pi_1_1Switch.html#aa22f2c3178d92679ddc2279d57c04a75',1,'pendule_pi::Switch']]]
+  ['offset_5fdown_5f_425',['offset_down_',['../classpendule__pi_1_1Pendule.html#a17862f3687cc692277a15224c4d0ad25',1,'pendule_pi::Pendule']]],
+  ['offset_5fstatic_5f_426',['offset_static_',['../classpendule__pi_1_1Pendule.html#a15ea0bc8cf1d040b847fb1e57f4511f6',1,'pendule_pi::Pendule']]],
+  ['offset_5fup_5f_427',['offset_up_',['../classpendule__pi_1_1Pendule.html#a9d66d81d873b07372786eeb64d3c767b',1,'pendule_pi::Pendule']]]
 ];

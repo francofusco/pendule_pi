@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['radians_5fper_5fstep_5f_442',['radians_per_step_',['../classpendule__pi_1_1Pendule.html#a2ced1f0ca5eee1381d6585409c1133ee',1,'pendule_pi::Pendule']]],
-  ['rest_5fangle_5f_443',['rest_angle_',['../classpendule__pi_1_1Pendule.html#a564a42dc7896438fe1879f81c25e0e6d',1,'pendule_pi::Pendule']]],
-  ['right_5fswitch_444',['right_switch',['../structpendule__pi_1_1Pendule_1_1Pins.html#aeb6e57f8fffbbc6c55294714d6500d5d',1,'pendule_pi::Pendule::Pins']]],
-  ['right_5fswitch_5f_445',['right_switch_',['../classpendule__pi_1_1Pendule.html#a4e9cfcbb3d6149b6e8fdde5c7a2c297e',1,'pendule_pi::Pendule']]]
+  ['soft_5fminmax_5fposition_5fmeters_5f_443',['soft_minmax_position_meters_',['../classpendule__pi_1_1Pendule.html#a75a2969a92230cf877e13fd797ec9e4f',1,'pendule_pi::Pendule']]],
+  ['state_5fsub_5f_444',['state_sub_',['../classpendule__pi_1_1PenduleCpp.html#a0687e1580b9fd9e00f02d95c4046ceb2',1,'pendule_pi::PenduleCpp']]],
+  ['steps_5f_445',['steps_',['../classpendule__pi_1_1Encoder.html#a26a30c201716f1763b7d97448437d220',1,'pendule_pi::Encoder']]]
 ];
