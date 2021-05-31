@@ -12,6 +12,7 @@ void sigintHandler(int signo) {
 
 int main() {
   std::signal(SIGINT, sigintHandler);
+
   pendule_pi::PenduleCpp pendulum(5);
 
   int pwm = 25;
