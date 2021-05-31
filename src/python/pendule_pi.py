@@ -59,27 +59,27 @@ class PendulePy:
       if elapsed >= wait:
         raise RuntimeError("Pendule: failed to establish a connection with the low-level interface within the allotted time.")
 
-  ## Allow to access the current time of the pendulum.
+  ## Allows to access the current time of the pendulum.
   @property
   def time(self):
     return self._time
 
-  ## Allow to access the current position of the pendulum.
+  ## Allows to access the current position of the pendulum.
   @property
   def position(self):
     return self._position
 
-  ## Allow to access the current angle of the pendulum.
+  ## Allows to access the current angle of the pendulum.
   @property
   def angle(self):
     return self._angle
 
-  ## Allow to access the current linear velocity of the pendulum.
+  ## Allows to access the current linear velocity of the pendulum.
   @property
   def linvel(self):
     return self._linvel
 
-  ## Allow to access the current angular velocity of the pendulum.
+  ## Allows to access the current angular velocity of the pendulum.
   @property
   def angvel(self):
     return self._angvel
