@@ -52,7 +52,7 @@ PenduleCpp::PenduleCpp(
       elapsed += 1;
       // Did we exit due to a received message? If not, throw!
       if(elapsed >= wait) {
-        throw std::runtime_error("Pendule: failed to establish a connection "
+        throw std::runtime_error("PenduleCpp: failed to establish a connection "
           "with the low-level interface within the allotted time.");
       }
     }

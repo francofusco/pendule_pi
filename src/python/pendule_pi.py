@@ -57,7 +57,7 @@ class PendulePy:
         elapsed += 1
       # Did we exit due to a received message? If not, throw!
       if elapsed >= wait:
-        raise RuntimeError("Pendule: failed to establish a connection with the low-level interface within the allotted time.")
+        raise RuntimeError("PendulePy: failed to establish a connection with the low-level interface within the allotted time.")
 
   ## Allows to access the current time of the pendulum.
   @property
@@ -107,8 +107,8 @@ class PendulePy:
     # Split the string message into parts. Each part should be a float.
     parts = msg.split(" ")
     # Check that the number of parts is correct, and throw otherwise.
-    if len(parts) != Pendule.N_STATES:
-      raise RuntimeError(f"Malformed state message received. Expected {Pendule.N_STATES} values, got {len(parts)}. Message: {msg}")
+    if len(parts) != PendulePy.N_STATES:
+      raise RuntimeError(f"Malformed state message received. Expected {PendulePy.N_STATES} values, got {len(parts)}. Message: {msg}")
     # Convert each part (which is still a string) into a float.
     self._time, self._position, self._angle, self._linvel, self._angvel = map(float, parts)
     # State read successfully.
