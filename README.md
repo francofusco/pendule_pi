@@ -20,5 +20,5 @@ You can find the first installation instructions [here](https://francofusco.gith
 - [ ] Use YAML files to pass parameters.
 - [ ] Remove jupyter notebooks and use vanilla python scripts instead.
 - [ ] Instructions to build the pendulum (not the code, **the** pendulum!).
-- [ ] C++ classes to send / receive data over sockets.
-- [ ] Test multi-machine communication (and give instructions).
+- [X] C++ classes to send / receive data over sockets.
+- [X] Test multi-machine communication.
