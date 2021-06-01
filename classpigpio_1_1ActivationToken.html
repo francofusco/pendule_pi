@@ -155,7 +155,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility class that activates and deactivates the pigpio library. </p>
-<p>This class helps to initialize and terminate the pigpio library. Upon construction, this class calls gpioInitialise(), while upon destruction it calls gpioTerminate(). This allows to write codes such as the following, which should ensure that the library is "closed" even if an exception happens: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code" href="demo_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>() {</div>
+<p>This class helps to initialize and terminate the pigpio library. Upon construction, this class calls gpioInitialise(), while upon destruction it calls gpioTerminate(). This allows to write codes such as the following, which should ensure that the library is "closed" even if an exception happens: </p><div class="fragment"><div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// code that does not need pigpio</span></div>
 <div class="line">  <span class="keywordflow">try</span> {</div>
 <div class="line">    <a class="code" href="classpigpio_1_1ActivationToken.html">pigpio::ActivationToken</a> token;</div>
@@ -347,7 +347,6 @@ Static Private Attributes</h2></td></tr>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclasspigpio_1_1ActivationToken_html"><div class="ttname"><a href="classpigpio_1_1ActivationToken.html">pigpio::ActivationToken</a></div><div class="ttdoc">Utility class that activates and deactivates the pigpio library.</div><div class="ttdef"><b>Definition:</b> pigpio.hpp:102</div></div>
-<div class="ttc" id="ademo_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="demo_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> demo.cpp:59</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

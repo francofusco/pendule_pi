@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['emergency_5fstopped_5f_401',['emergency_stopped_',['../classpendule__pi_1_1Pendule.html#a2a1fa4ad95d936208fa00c42287605b5',1,'pendule_pi::Pendule']]],
-  ['encoder_5ftable_402',['ENCODER_TABLE',['../classpendule__pi_1_1Encoder.html#ad7384cab030301c0768d2fd65cce9ba8',1,'pendule_pi::Encoder']]],
-  ['error_5fcodes_403',['ERROR_CODES',['../classpigpio_1_1Exception.html#a676bfcb24511e1f9d3efd1f516788a72',1,'pigpio::Exception']]]
+  ['has_5ftriggered_5f_331',['has_triggered_',['../classpendule__pi_1_1Switch.html#afa16d9edcb4bcdf34f6b2c104785f3dc',1,'pendule_pi::Switch']]]
 ];

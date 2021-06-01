@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['reset_5fgpio_2ecpp_272',['reset_gpio.cpp',['../reset__gpio_8cpp.html',1,'']]]
+  ['switch_2ecpp_225',['switch.cpp',['../switch_8cpp.html',1,'']]],
+  ['switch_2ehpp_226',['switch.hpp',['../switch_8hpp.html',1,'']]]
 ];

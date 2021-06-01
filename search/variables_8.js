@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['last_5ftick_5f_408',['last_tick_',['../classpendule__pi_1_1Switch.html#a79c5d818ffeff2eca3c80dfba8f4d939',1,'pendule_pi::Switch']]],
-  ['left_5fswitch_409',['left_switch',['../structpendule__pi_1_1Pendule_1_1Pins.html#a8e3f8bdb31910073d4a1318cb539bdf0',1,'pendule_pi::Pendule::Pins']]],
-  ['left_5fswitch_5f_410',['left_switch_',['../classpendule__pi_1_1Pendule.html#a46d7e47fd909b33a94fde4022655f2b5',1,'pendule_pi::Pendule']]],
-  ['linvel_5f_411',['linvel_',['../classpendule__pi_1_1Pendule.html#aeab733c10b4c736b8c4c9db6cd42e9fb',1,'pendule_pi::Pendule::linvel_()'],['../classpendule__pi_1_1PenduleCpp.html#ab4ab8e8bbf01c370577daf076c845491',1,'pendule_pi::PenduleCpp::linvel_()']]],
-  ['lower_5fcb_5f_412',['lower_cb_',['../classpendule__pi_1_1Encoder.html#ac49e68749aa2d9d255a1d49be2bb98e9',1,'pendule_pi::Encoder']]],
-  ['lower_5fthreshold_5f_413',['lower_threshold_',['../classpendule__pi_1_1Encoder.html#a132ef23f5b589683d363e5ba81850caf',1,'pendule_pi::Encoder']]]
+  ['max_5fposition_5fsteps_5f_341',['max_position_steps_',['../classpendule__pi_1_1Pendule.html#ac8ecf9932a2825340c9117ed5c1dbb1a',1,'pendule_pi::Pendule']]],
+  ['meters_5fper_5fstep_5f_342',['meters_per_step_',['../classpendule__pi_1_1Pendule.html#ab8564d9266c9fc4bda7bafe859a1dcb0',1,'pendule_pi::Pendule']]],
+  ['mid_5fposition_5fsteps_5f_343',['mid_position_steps_',['../classpendule__pi_1_1Pendule.html#a7eef5f9ef229f9f40d114db40d5c5622',1,'pendule_pi::Pendule']]],
+  ['min_5fposition_5fsteps_5f_344',['min_position_steps_',['../classpendule__pi_1_1Pendule.html#a2e24ff3a7b32091f974cb3ce0cc996e0',1,'pendule_pi::Pendule']]],
+  ['motor_5f_345',['motor_',['../classpendule__pi_1_1Pendule.html#aae69513da955f189bd25a309043d3c9e',1,'pendule_pi::Pendule']]],
+  ['motor_5fdir_346',['motor_dir',['../structpendule__pi_1_1Pendule_1_1Pins.html#aba8982849de4060f7c7de8c2430b3a1b',1,'pendule_pi::Pendule::Pins']]],
+  ['motor_5fpwm_347',['motor_pwm',['../structpendule__pi_1_1Pendule_1_1Pins.html#a313383a5a36e268e43c9eda6eec3ccb3',1,'pendule_pi::Pendule::Pins']]]
 ];

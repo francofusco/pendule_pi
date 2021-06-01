@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['debounce_5fus_5f_395',['debounce_us_',['../classpendule__pi_1_1Switch.html#afa1ae848be964bbb0d1addfb9c7a50a3',1,'pendule_pi::Switch']]],
-  ['default_5fcommand_5fport_396',['DEFAULT_COMMAND_PORT',['../classpendule__pi_1_1PenduleCpp.html#abce9b5b76aa3e7c8bdb8f309ea14794e',1,'pendule_pi::PenduleCpp']]],
-  ['default_5fhost_397',['DEFAULT_HOST',['../classpendule__pi_1_1PenduleCpp.html#a1fa70851eac487b9508b1cada46dda67',1,'pendule_pi::PenduleCpp']]],
-  ['default_5fstate_5fport_398',['DEFAULT_STATE_PORT',['../classpendule__pi_1_1PenduleCpp.html#aa8d1ce35d3692a68339781fea46400a8',1,'pendule_pi::PenduleCpp']]],
-  ['dir_5fpin_5f_399',['dir_pin_',['../classpendule__pi_1_1Motor.html#a8dd293ca762164aa132995ff95192b46',1,'pendule_pi::Motor']]],
-  ['direction_5f_400',['direction_',['../classpendule__pi_1_1Encoder.html#aeec3d938c4a301134548047f567a5844',1,'pendule_pi::Encoder']]]
+  ['emergency_5fstopped_5f_328',['emergency_stopped_',['../classpendule__pi_1_1Pendule.html#a2a1fa4ad95d936208fa00c42287605b5',1,'pendule_pi::Pendule']]],
+  ['encoder_5ftable_329',['ENCODER_TABLE',['../classpendule__pi_1_1Encoder.html#ad7384cab030301c0768d2fd65cce9ba8',1,'pendule_pi::Encoder']]],
+  ['error_5fcodes_330',['ERROR_CODES',['../classpigpio_1_1Exception.html#a676bfcb24511e1f9d3efd1f516788a72',1,'pigpio::Exception']]]
 ];

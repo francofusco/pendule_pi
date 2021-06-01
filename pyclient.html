@@ -93,8 +93,64 @@ $(document).ready(function(){initNavTree('pyclient.html',''); initResizable(); }
 <div class="title">Writing a Python client </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><b>TODO</b>: describe how to do LQR control and other funny stuff. </p>
-</div></div><!-- contents -->
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#autotoc_md17">Introduction</a></li>
+<li class="level1"><a href="#autotoc_md18">Complete Code</a></li>
+<li class="level1"><a href="#autotoc_md19">Detailed Explanation</a></li>
+</ul>
+</div>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md17"></a>
+Introduction</h1>
+<p>This tutorial shows how to establish a connection with the low-level interface using the class <code>PenduleCpp</code>. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.</p>
+<h1><a class="anchor" id="autotoc_md18"></a>
+Complete Code</h1>
+<p>The code for this tutorial is available in <code>examples/simple_connection/simple_connection.py</code>.</p>
+<div class="fragment"><div class="line"><span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><span class="keyword">import</span> pendule_pi</div>
+<div class="line"><span class="keyword">import</span> time</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line">  pendulum = pendule_pi.PendulePy(wait=5)</div>
+<div class="line"> </div>
+<div class="line">  pwm = 25</div>
+<div class="line">  switch_pos = 0.2</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">try</span>:</div>
+<div class="line">    <span class="keywordflow">while</span> <span class="keyword">True</span>:</div>
+<div class="line">      pendulum.readState(blocking=<span class="keyword">True</span>)</div>
+<div class="line">      <span class="keywordflow">if</span> (pendulum.position &gt; switch_pos <span class="keywordflow">and</span> pwm &gt; 0) <span class="keywordflow">or</span> (pendulum.position &lt; -switch_pos <span class="keywordflow">and</span> pwm &lt; 0):</div>
+<div class="line">        pwm *= -1</div>
+<div class="line">      pendulum.sendCommand(pwm)</div>
+<div class="line">  <span class="keywordflow">except</span> KeyboardInterrupt:</div>
+<div class="line">    pendulum.sendCommand(0)</div>
+<div class="line">    time.sleep(1)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md19"></a>
+Detailed Explanation</h1>
+<p></p>
+<p>The program starts by importing the relevant modules:</p>
+<div class="fragment"><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">import</span> pendule_pi</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> time</div>
+</div><!-- fragment --><p>In particular, the first one provides the class <code>PendulePy</code> that allows one to connect to the low-level interface via sockets. An instance of this class is created in the "main":</p>
+<div class="fragment"><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;  pendulum = pendule_pi.PendulePy(wait=5)</div>
+</div><!-- fragment --><p>Upon construction, the object will connect to the low level interface using default addresses (see <code>PendulePy</code>). You will see in a future tutorial how to change these default settings. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is <code>-1</code>) in which case the <code>PendulePy</code> constructor will wait indefinitely for the low-level interface to show up.</p>
+<p>We proceed by declaring two variables:</p>
+<div class="fragment"><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;  pwm = 25</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;  switch_pos = 0.2</div>
+</div><!-- fragment --><p>The first one represents the intensity of the PWM command that we will send to the low-level interface (only its sign will be changed), while the second one corresponds to the distance from the center at which we want to invert the direction of the base.</p>
+<p>We then enter a try-catch statement (needed to handle CTRL-C keyboard presses) and then the main loop, which is a <code>while</code> block that keeps running indefinitely. The code inside the loop is quite simple. We begin with the instruction</p>
+<div class="fragment"><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;      pendulum.readState(blocking=<span class="keyword">True</span>)</div>
+</div><!-- fragment --><p>which attempts to read a message sent from the low-level interface to update a couple of internal variables that store the current state of the pendulum. Since we pass <code>blocking=True</code> as parameter, the function will block execution until the message is received. If <code>blocking=False</code> was passed instead, the function would have firstly checked if a message was available and immediately returned <code>False</code> if no information was ready.</p>
+<p>After the state has been updated, we can evaluate the "control":</p>
+<div class="fragment"><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;      <span class="keywordflow">if</span> (pendulum.position &gt; switch_pos <span class="keywordflow">and</span> pwm &gt; 0) <span class="keywordflow">or</span> (pendulum.position &lt; -switch_pos <span class="keywordflow">and</span> pwm &lt; 0):</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        pwm *= -1</div>
+</div><!-- fragment --><p>The logic is really simple: if the pendulum is more than <code>switch_pos</code> meters to the right, and the current PWM command is positive (which pushes the base to the right) then we want to invert the command so that now the base moves leftwards. Similarly, if the base is more than <code>switch_pos</code> meters to the left and currently moving leftwards, then change the sign of <code>pwm</code> to invert the motion of the actuator.</p>
+<p>Once the command has been evaluated, we just need to send it to the hardware interface:</p>
+<div class="fragment"><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;      pendulum.sendCommand(pwm)</div>
+</div><!-- fragment --><p>After the while loop, we conclude the program by adding a catch block that intercepts <code>KeyboardInterrupt</code> exceptions (fired when you press CTRL-C). The block sends a null PWM to the low-level interface to stop the motion and sleeps for one second (just to make sure that the socket connection is not closed before the message is sent):</p>
+<div class="fragment"><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keywordflow">except</span> KeyboardInterrupt:</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    pendulum.sendCommand(0)</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    time.sleep(1)</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

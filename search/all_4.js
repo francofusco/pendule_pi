@@ -1,15 +1,16 @@
 var searchData=
 [
-  ['debounce_5fus_5f_45',['debounce_us_',['../classpendule__pi_1_1Switch.html#afa1ae848be964bbb0d1addfb9c7a50a3',1,'pendule_pi::Switch']]],
-  ['debug_2ehpp_46',['debug.hpp',['../debug_8hpp.html',1,'']]],
-  ['default_5fcommand_5fport_47',['DEFAULT_COMMAND_PORT',['../classpendule__pi_1_1PenduleCpp.html#abce9b5b76aa3e7c8bdb8f309ea14794e',1,'pendule_pi::PenduleCpp']]],
-  ['default_5fhost_48',['DEFAULT_HOST',['../classpendule__pi_1_1PenduleCpp.html#a1fa70851eac487b9508b1cada46dda67',1,'pendule_pi::PenduleCpp']]],
-  ['default_5fstate_5fport_49',['DEFAULT_STATE_PORT',['../classpendule__pi_1_1PenduleCpp.html#aa8d1ce35d3692a68339781fea46400a8',1,'pendule_pi::PenduleCpp']]],
-  ['demo_2ecpp_50',['demo.cpp',['../demo_8cpp.html',1,'']]],
-  ['demo_5fzmq_2ecpp_51',['demo_zmq.cpp',['../demo__zmq_8cpp.html',1,'']]],
-  ['dir_5fpin_5f_52',['dir_pin_',['../classpendule__pi_1_1Motor.html#a8dd293ca762164aa132995ff95192b46',1,'pendule_pi::Motor']]],
-  ['direction_53',['direction',['../classpendule__pi_1_1Encoder.html#a1a96e74ba0a1647ee6e03ae3bc54f6b6',1,'pendule_pi::Encoder']]],
-  ['direction_5f_54',['direction_',['../classpendule__pi_1_1Encoder.html#aeec3d938c4a301134548047f567a5844',1,'pendule_pi::Encoder']]],
-  ['disableinterrupts_55',['disableInterrupts',['../classpendule__pi_1_1Switch.html#a30f98814117d528f07d4cc86ea7d07e0',1,'pendule_pi::Switch']]],
-  ['down_56',['down',['../classCachedButton.html#afefcab3bfb889d1b211fbc2883198d7f',1,'CachedButton']]]
+  ['emergency_5fstopped_5f_41',['emergency_stopped_',['../classpendule__pi_1_1Pendule.html#a2a1fa4ad95d936208fa00c42287605b5',1,'pendule_pi::Pendule']]],
+  ['emergencystop_42',['EmergencyStop',['../classpendule__pi_1_1Pendule_1_1EmergencyStop.html',1,'pendule_pi::Pendule::EmergencyStop'],['../classpendule__pi_1_1Pendule_1_1EmergencyStop.html#af814c87fdc29a6f0afc1510e54b155f5',1,'pendule_pi::Pendule::EmergencyStop::EmergencyStop()']]],
+  ['enableinterrupts_43',['enableInterrupts',['../classpendule__pi_1_1Switch.html#a510f62b866890e79250f0b06ea878d07',1,'pendule_pi::Switch']]],
+  ['encode_44',['encode',['../classpendule__pi_1_1Encoder.html#a003b4d7fa90827348e233f4bad1341e8',1,'pendule_pi::Encoder']]],
+  ['encoder_45',['Encoder',['../classpendule__pi_1_1Encoder.html',1,'pendule_pi::Encoder'],['../classpendule__pi_1_1Encoder.html#a1ef586c1a776878689c89362dce68208',1,'pendule_pi::Encoder::Encoder(int gpioA, int gpioB)'],['../classpendule__pi_1_1Encoder.html#aa6c93885cc0d264ceaefde102d5653d9',1,'pendule_pi::Encoder::Encoder(const Encoder &amp;)=delete']]],
+  ['encoder_2ecpp_46',['encoder.cpp',['../encoder_8cpp.html',1,'']]],
+  ['encoder_2ehpp_47',['encoder.hpp',['../encoder_8hpp.html',1,'']]],
+  ['encoder_5ftable_48',['ENCODER_TABLE',['../classpendule__pi_1_1Encoder.html#ad7384cab030301c0768d2fd65cce9ba8',1,'pendule_pi::Encoder']]],
+  ['error2msg_49',['error2msg',['../classpigpio_1_1Exception.html#abbb1692d270425c9ec859b13e105601e',1,'pigpio::Exception']]],
+  ['error_5fcodes_50',['ERROR_CODES',['../classpigpio_1_1Exception.html#a676bfcb24511e1f9d3efd1f516788a72',1,'pigpio::Exception']]],
+  ['estop_51',['eStop',['../classpendule__pi_1_1Pendule.html#ac139d7af8f82166122391dfd2a2b871c',1,'pendule_pi::Pendule']]],
+  ['exception_52',['Exception',['../classpigpio_1_1Exception.html',1,'pigpio::Exception'],['../classpigpio_1_1Exception.html#a65b8cb873c06dd88cead0addd6a9fc99',1,'pigpio::Exception::Exception()']]],
+  ['expired_53',['expired',['../classpigpio_1_1Timer.html#ae229a8c150f06461aaad0e121953297c',1,'pigpio::Timer']]]
 ];

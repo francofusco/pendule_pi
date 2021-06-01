@@ -5,6 +5,5 @@ var namespacependule__pi =
     [ "Motor", "classpendule__pi_1_1Motor.html", "classpendule__pi_1_1Motor" ],
     [ "Pendule", "classpendule__pi_1_1Pendule.html", "classpendule__pi_1_1Pendule" ],
     [ "PenduleCpp", "classpendule__pi_1_1PenduleCpp.html", "classpendule__pi_1_1PenduleCpp" ],
-    [ "PendulePy", "classpendule__pi_1_1PendulePy.html", "classpendule__pi_1_1PendulePy" ],
     [ "Switch", "classpendule__pi_1_1Switch.html", "classpendule__pi_1_1Switch" ]
 ];

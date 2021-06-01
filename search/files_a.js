@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['switch_2ecpp_273',['switch.cpp',['../switch_8cpp.html',1,'']]],
-  ['switch_2ehpp_274',['switch.hpp',['../switch_8hpp.html',1,'']]]
+  ['troubleshooting_2emd_227',['Troubleshooting.md',['../Troubleshooting_8md.html',1,'']]],
+  ['tutorials_2emd_228',['tutorials.md',['../tutorials_8md.html',1,'']]]
 ];
