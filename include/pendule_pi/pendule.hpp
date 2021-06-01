@@ -13,14 +13,14 @@ class Pendule {
 public:
   /// Internal struct that can be passed to specify pin connections.
   struct Pins {
-    const int motor_pwm; ///< Pin used to send the PWM signal to the motor.
-    const int motor_dir; ///< Pin used to change the motor direction.
-    const int left_switch; ///< Pin used to read the state of the left switch.
-    const int right_switch; ///< Pin used to read the state of the right switch.
-    const int position_encoder_a; ///< First phase of the encoder used to measure the position of the base.
-    const int position_encoder_b; ///< Second phase of the encoder used to measure the position of the base.
-    const int angle_encoder_a; ///< First phase of the encoder used to measure the angle of the pendulum.
-    const int angle_encoder_b; ///< Second phase of the encoder used to measure the angle of the pendulum.
+    int motor_pwm; ///< Pin used to send the PWM signal to the motor.
+    int motor_dir; ///< Pin used to change the motor direction.
+    int left_switch; ///< Pin used to read the state of the left switch.
+    int right_switch; ///< Pin used to read the state of the right switch.
+    int position_encoder_a; ///< First phase of the encoder used to measure the position of the base.
+    int position_encoder_b; ///< Second phase of the encoder used to measure the position of the base.
+    int angle_encoder_a; ///< First phase of the encoder used to measure the angle of the pendulum.
+    int angle_encoder_b; ///< Second phase of the encoder used to measure the angle of the pendulum.
     /// Initialize the pins to a default.
     Pins();
   };

@@ -40,11 +40,10 @@ endif()
 
 if(${ALL_DEPENDENCIES_FOUND})
 
-#############
-# LIBRARIES #
-#############
+##############
+# pendule_pi #
+##############
 
-# Main library
 add_library(${PROJECT_NAME}
   src/pendule_pi/joystick.cpp
   src/pendule_pi/pigpio.cpp
@@ -68,7 +67,7 @@ target_link_libraries(${PROJECT_NAME}
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
   target_compile_options(${PROJECT_NAME} PRIVATE -O0)
   target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE PENDULE_PI_DEBUG_ENABLED)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC PENDULE_PI_DEBUG_ENABLED)
 elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
   target_compile_options(${PROJECT_NAME} PRIVATE -O2)
   # If and when Eigen will be used :P
@@ -76,27 +75,6 @@ elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 endif()
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-
-
-# C++ bridge to the low-level interface
-add_library(pendule_cpp src/pendule_pi/pendule_cpp.cpp)
-
-target_include_directories(pendule_cpp
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
-
-target_link_libraries(pendule_cpp zmq zmqpp)
-
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  target_compile_options(pendule_cpp PRIVATE -O0)
-  target_compile_options(pendule_cpp PRIVATE -Wall)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  target_compile_options(pendule_cpp PRIVATE -O2)
-endif()
-
-target_compile_features(pendule_cpp PUBLIC cxx_std_17)
 
 
 ############
@@ -127,6 +105,42 @@ target_link_libraries(demo_zmq ${PROJECT_NAME} digital_filters::digital_filters 
 add_executable(yaml_test src/bin/yaml_test.cpp)
 target_link_libraries(yaml_test yaml-cpp)
 
+add_executable(low_level_interface src/bin/low_level_interface.cpp)
+target_link_libraries(low_level_interface
+  ${PROJECT_NAME}
+  digital_filters::digital_filters
+  zmq
+  zmqpp
+  yaml-cpp
+)
+
+endif(${ALL_DEPENDENCIES_FOUND})
+
+
+##############
+# C++ bridge #
+##############
+
+# C++ bridge to the low-level interface
+add_library(pendule_cpp src/pendule_pi/pendule_cpp.cpp)
+
+target_include_directories(pendule_cpp
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(pendule_cpp zmq zmqpp)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  target_compile_options(pendule_cpp PRIVATE -O0)
+  target_compile_options(pendule_cpp PRIVATE -Wall)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  target_compile_options(pendule_cpp PRIVATE -O2)
+endif()
+
+target_compile_features(pendule_cpp PUBLIC cxx_std_17)
+
 
 ###########
 # INSTALL #
@@ -135,20 +149,25 @@ target_link_libraries(yaml_test yaml-cpp)
 include(GNUInstallDirs)
 
 # Install binaries
-install(
-  TARGETS
-    reset_gpio
-    log_motion
-    log_rotation
-    demo
-  DESTINATION bin
-)
+if(${ALL_DEPENDENCIES_FOUND})
+  install(
+    TARGETS
+      reset_gpio
+      log_motion
+      log_rotation
+      demo
+    DESTINATION bin
+  )
+endif(${ALL_DEPENDENCIES_FOUND})
 
-# Installing the libraries
+# Install the libraries
+set(LIBS_TO_INSTALL pendule_cpp)
+if(${ALL_DEPENDENCIES_FOUND})
+  list(APPEND LIBS_TO_INSTALL ${PROJECT_NAME})
+endif(${ALL_DEPENDENCIES_FOUND})
+
 install(
-  TARGETS
-    ${PROJECT_NAME}
-    pendule_cpp
+  TARGETS ${LIBS_TO_INSTALL}
   DESTINATION lib
   EXPORT ${PROJECT_NAME}Targets
 )
@@ -210,7 +229,6 @@ configure_file(
 )
 add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake")
 
-endif(${ALL_DEPENDENCIES_FOUND})
 
 
 #########################

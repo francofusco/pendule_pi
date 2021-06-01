@@ -17,6 +17,10 @@ You can find the first installation instructions [here](https://francofusco.gith
 ### TODO
 
 - [ ] Usage instructions (tutorials).
+  - [ ] Low-level interface.
+  - [X] `PendulePy`
+  - [X] `PenduleCpp`
+  - [ ] Calibration, LQR.
 - [ ] Use YAML files to pass parameters.
 - [ ] Remove jupyter notebooks and use vanilla python scripts instead.
 - [ ] Instructions to build the pendulum (not the code, **the** pendulum!).
