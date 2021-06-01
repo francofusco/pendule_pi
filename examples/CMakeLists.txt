@@ -10,3 +10,4 @@ endfunction()
 
 add_example(simple_connection)
 add_example(lqr)
+add_example(multi_machine)
