@@ -6,6 +6,7 @@ var hierarchy =
     [ "pendule_pi::Motor", "classpendule__pi_1_1Motor.html", null ],
     [ "pendule_pi::Pendule", "classpendule__pi_1_1Pendule.html", null ],
     [ "pendule_pi::PenduleCpp", "classpendule__pi_1_1PenduleCpp.html", null ],
+    [ "pendule_pi.PendulePy", "classpendule__pi_1_1PendulePy.html", null ],
     [ "pendule_pi::Pendule::Pins", "structpendule__pi_1_1Pendule_1_1Pins.html", null ],
     [ "pigpio::Rate", "classpigpio_1_1Rate.html", null ],
     [ "runtime_error", null, [

@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['joy_5fevent_5f_60',['joy_event_',['../classpendule__pi_1_1Joystick.html#aab7a50a9f61b5dbaacb8e2e14e4783cd',1,'pendule_pi::Joystick']]],
-  ['joy_5ffile_5fdescriptor_5f_61',['joy_file_descriptor_',['../classpendule__pi_1_1Joystick.html#a6301171e273b22d319d9f9e8d231f857',1,'pendule_pi::Joystick']]],
-  ['joy_5fname_5f_62',['joy_name_',['../classpendule__pi_1_1Joystick.html#a451716f45073408aa550753d1f96f7e4',1,'pendule_pi::Joystick']]],
-  ['joystick_63',['Joystick',['../classpendule__pi_1_1Joystick.html',1,'pendule_pi::Joystick'],['../classpendule__pi_1_1Joystick.html#a887474982ce71dbf7e7eb5240eb63cef',1,'pendule_pi::Joystick::Joystick()']]],
-  ['joystick_2ecpp_64',['joystick.cpp',['../joystick_8cpp.html',1,'']]],
-  ['joystick_2ehpp_65',['joystick.hpp',['../joystick_8hpp.html',1,'']]]
+  ['installation_67',['Installation',['../installation.html',1,'']]],
+  ['installation_2emd_68',['installation.md',['../installation_8md.html',1,'']]],
+  ['interruptsaredisabled_69',['InterruptsAreDisabled',['../classpendule__pi_1_1Switch_1_1InterruptsAreDisabled.html',1,'pendule_pi::Switch::InterruptsAreDisabled'],['../classpendule__pi_1_1Switch_1_1InterruptsAreDisabled.html#a49cf82048c4a5c106b3169636549d8fd',1,'pendule_pi::Switch::InterruptsAreDisabled::InterruptsAreDisabled()']]],
+  ['iscalibrated_70',['isCalibrated',['../classpendule__pi_1_1Pendule.html#a03e34abda82a35ebe2f5307370813221',1,'pendule_pi::Pendule']]]
 ];

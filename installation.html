@@ -70,7 +70,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('md_doc_extra_Installation.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('installation.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -94,23 +94,24 @@ $(document).ready(function(){initNavTree('md_doc_extra_Installation.html',''); i
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md0">Dependencies</a><ul><li class="level2"><a href="#autotoc_md1">CMake</a></li>
-<li class="level2"><a href="#autotoc_md2">Python3</a></li>
-<li class="level2"><a href="#autotoc_md3">pigpio</a></li>
-<li class="level2"><a href="#autotoc_md4">Digital Filters</a></li>
-<li class="level2"><a href="#autotoc_md5">ZeroMQ</a></li>
-<li class="level2"><a href="#autotoc_md6">yaml-cpp</a></li>
-<li class="level2"><a href="#autotoc_md7">DoxyGen (optional)</a></li>
+<ul><li class="level1"><a href="#autotoc_md5">Dependencies</a><ul><li class="level2"><a href="#install_cmake">CMake</a></li>
+<li class="level2"><a href="#install_python3">Python3</a></li>
+<li class="level2"><a href="#install_pigpio">pigpio</a></li>
+<li class="level2"><a href="#install_digital_filters">Digital Filters</a></li>
+<li class="level2"><a href="#install_zeromq">ZeroMQ</a></li>
+<li class="level2"><a href="#install_yamlcpp">yaml-cpp</a></li>
+<li class="level2"><a href="#install_doxygen">DoxyGen (optional)</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md8">pendule_pi</a><ul><li class="level2"><a href="#autotoc_md9">Building the code</a></li>
-<li class="level2"><a href="#autotoc_md10">Configure pendule_pi for external usage</a></li>
-<li class="level2"><a href="#autotoc_md11">TL;DR</a></li>
+<li class="level1"><a href="#autotoc_md6">pendule_pi</a><ul><li class="level2"><a href="#build_pendule_pi">Building the code</a></li>
+<li class="level2"><a href="#export_pendule_pi">Configure pendule_pi for external usage</a></li>
+<li class="level2"><a href="#autotoc_md7">Testing your installation</a></li>
+<li class="level2"><a href="#install_pendule_pi_tldr">TL;DR</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md5"></a>
 Dependencies</h1>
 <p>In the following you will find a list of all software dependencies needed to compile <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>. Most of them will be built from source, which generally requires three steps:</p>
 <ol type="1">
@@ -119,16 +120,16 @@ Dependencies</h1>
 <li>Install headers and libraries.</li>
 </ol>
 <p>While you are absolutely free to do as you please, we recommend to create a folder <code>programs</code> in your home and to move there whenever you need to download the sources of a dependency.</p>
-<h2><a class="anchor" id="autotoc_md1"></a>
+<h2><a class="anchor" id="install_cmake"></a>
 CMake</h2>
 <p>This project requires <a href="https://cmake.org/">CMake</a>. To obtain the latest version of CMake, you can follow the <a href="https://cmake.org/install/">official instructions</a>. Alternatively, you can install CMake from <code>apt</code> using</p>
 <div class="fragment"><div class="line">sudo apt install cmake</div>
 </div><!-- fragment --><p>Note that we built and tested the project using version 3.19.4 and thus we specified it as the minimum required version. However, it is very likely that earlier versions will work as well. Feel free to just change the required version passed to <code>cmake_minimum_required</code> in <code>CMakeLists.txt</code> and report the result to us.</p>
-<h2><a class="anchor" id="autotoc_md2"></a>
+<h2><a class="anchor" id="install_python3"></a>
 Python3</h2>
 <p>Python3 should be already installed on Raspberry Pi running Raspbian. Nonetheless, you can manually install it using:</p>
 <div class="fragment"><div class="line">sudo apt install python3 python3-dev python3-pip</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h2><a class="anchor" id="install_pigpio"></a>
 pigpio</h2>
 <p>To build the code of this repository, you need the <a href="https://github.com/joan2937/pigpio">pigpio</a> library. Its documentation is available <a href="http://abyz.me.uk/rpi/pigpio/index.html">here</a>. The following is a summary of what you need to write in a console to build pigpio using CMake:</p>
 <div class="fragment"><div class="line">git clone https://github.com/joan2937/pigpio.git</div>
@@ -137,7 +138,7 @@ pigpio</h2>
 <div class="line">cmake ..</div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h2><a class="anchor" id="install_digital_filters"></a>
 Digital Filters</h2>
 <p>The <a href="https://github.com/francofusco/digital_filters">digital_filters repository</a> can be installed by following the instructions contained inside the README:</p>
 <div class="fragment"><div class="line">git clone https://github.com/francofusco/digital_filters.git</div>
@@ -146,7 +147,7 @@ Digital Filters</h2>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>
 <div class="line">cmake --build .</div>
 <div class="line">echo &quot;export digital_filters_DIR=\&quot;`pwd`\&quot;&quot; &gt;&gt; ~/.bashrc</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="install_zeromq"></a>
 ZeroMQ</h2>
 <p>ZeroMQ is the library used here for inter-process communications. You will need to install this library and several other components.</p>
 <h3>libsodium</h3>
@@ -182,7 +183,7 @@ ZeroMQ</h2>
 <p>The Python module <code>zmq</code> can be installed very easily via <code>pip</code>:</p>
 <div class="fragment"><div class="line">pip3 install pyzmq</div>
 </div><!-- fragment --><p>The command above should install it for the current user only. To install it for all users, prepend <code>sudo</code> in front of the command.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="install_yamlcpp"></a>
 yaml-cpp</h2>
 <p>This library allows to parse YAML files in C++. In this way, parameters can be passed to executables in a more efficient way.</p>
 <p>At the time of writing there was a <a href="https://github.com/jbeder/yaml-cpp/issues/774">small issue</a> in the original yaml-cpp repository. We thus created a fork containing a workaround that (at least for us) solved the problem. The instructions below use our fork rather than the original repository.</p>
@@ -192,18 +193,19 @@ yaml-cpp</h2>
 <div class="line">cmake ..</div>
 <div class="line">cmake --build .</div>
 <div class="line">sudo cmake --install .</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h2><a class="anchor" id="install_doxygen"></a>
 DoxyGen (optional)</h2>
 <p><a href="https://www.doxygen.nl/index.html">DoxyGen</a> can be used to generate a local copy of this documentation. If you do not have this tool installed yet, you can do it via:</p>
 <div class="fragment"><div class="line">sudo apt install doxygen graphviz</div>
 </div><!-- fragment --><p>Additionally, you can consider installing the packages <code>doxygen-gui</code> and/or <code>doxygen-latex</code>.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>It seems better to install DoxyGen from source since it provides more functionalities. I should test that and eventually write here the instructions.</dd></dl>
+<h1><a class="anchor" id="autotoc_md6"></a>
 pendule_pi</h1>
 <p>The project can be build using CMake. First, create the build directory and move inside it. Assuming that you are in the root directory of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>, run: </p><div class="fragment"><div class="line">mkdir build</div>
 <div class="line">cd build</div>
 </div><!-- fragment --><p>From now on, all commands are to be run from there.</p>
 <p>Note that the following is a detailed description of the steps required to configure, build and install <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a>'s library and executables. For a quick summary of the required steps, refer to the <b>TL;DR</b> section below.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="build_pendule_pi"></a>
 Building the code</h2>
 <h3>Configuring the build</h3>
 <p>Let's start with the configuration step: </p><div class="fragment"><div class="line">cmake ..</div>
@@ -231,7 +233,7 @@ Building the code</h2>
 <li>Folders are not removed, but left empty. If you want to remove them, you have to do so manually.</li>
 <li>Since the script reads <code>install_manifest.txt</code>, if you remove the build folder and/or change the installed products, the script might not correctly and completely remove all installed targets.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="export_pendule_pi"></a>
 Configure pendule_pi for external usage</h2>
 <h3>Python</h3>
 <p>To use the Python interface to control the pendulum, you need to make the <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> module available to the Python ecosystem. One way to do so is to extend the <code>PYTHONPATH</code> environment variable. One way to do so is: </p><div class="fragment"><div class="line">echo &quot;export PYTHONPATH=\&quot;$PYTHONPATH:`pwd`/../src/python/\&quot;&quot; &gt;&gt; ~/.bashrc</div>
@@ -242,12 +244,15 @@ Configure pendule_pi for external usage</h2>
 </div><!-- fragment --><p>The libraries can now be used in other CMake-based projects by adding one of the following </p><div class="fragment"><div class="line">find_package(pendule_pi)</div>
 <div class="line">find_package(pendule_pi QUIET)</div>
 <div class="line">find_package(pendule_pi REQUIRED)</div>
-</div><!-- fragment --><p>in their <code>CMakeLists.txt</code>. Then, just link the <code>pendule_pi::pendule_pi</code> library to your targets, <em>e.g.</em>, </p><div class="fragment"><div class="line">add_executable(your_program your_source.cpp)</div>
-<div class="line">target_link_libraries(your_program pendule_pi::pendule_pi)</div>
+</div><!-- fragment --><p>in their <code>CMakeLists.txt</code>. Then, just link the <code>pendule_pi::pendule_pi</code> or <code>pendule_pi::pendule_cpp</code> libraries to your targets, <em>e.g.</em>, </p><div class="fragment"><div class="line">add_executable(your_program your_source.cpp)</div>
+<div class="line">target_link_libraries(your_program pendule_pi::pendule_cpp)</div>
 </div><!-- fragment --><p>Note that headers are "automatically" made visible to your executable, and there is thus no need for any of the following </p><div class="fragment"><div class="line">include_directories(${pendule_pi_INCLUDE_DIRS})</div>
 <div class="line">target_include_directories(your_program ${pendule_pi_INCLUDE_DIRS})</div>
 </div><!-- fragment --><p>Indeed, when you call <code>find_package</code>, no <code>pendule_pi_INCLUDE_DIRS</code> is populated at all!</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Testing your installation</h2>
+<p>The easiest way to test your installation is to move into the <code>examples</code> folder and compile the examples there, as discussed in the <a class="el" href="tutorials.html">Tutorials page</a>. Indeed, separating the compilation of the examples from the compilation of the main library gives you a quick way to test if the installation was successful and to us (the authors) a chance to verify if our instructions are complete!</p>
+<h2><a class="anchor" id="install_pendule_pi_tldr"></a>
 TL;DR</h2>
 <p>From the root of <a class="el" href="namespacependule__pi.html" title="Main namespace containing (almost) all provided classes.">pendule_pi</a> run: </p><div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
 <div class="line">cmake .. -DCMAKE_BUILD_TYPE=Release</div>

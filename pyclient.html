@@ -94,45 +94,45 @@ $(document).ready(function(){initNavTree('pyclient.html',''); initResizable(); }
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md17">Introduction</a></li>
-<li class="level1"><a href="#autotoc_md18">Complete Code</a></li>
-<li class="level1"><a href="#autotoc_md19">Detailed Explanation</a></li>
+<ul><li class="level1"><a href="#autotoc_md24">Introduction</a></li>
+<li class="level1"><a href="#autotoc_md25">Complete Code</a></li>
+<li class="level1"><a href="#autotoc_md26">Detailed Explanation</a></li>
+<li class="level1"><a href="#autotoc_md27">Running the code</a></li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md17"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md24"></a>
 Introduction</h1>
 <p>This tutorial shows how to establish a connection with the low-level interface using the class <code>PenduleCpp</code>. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.</p>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md25"></a>
 Complete Code</h1>
 <p>The code for this tutorial is available in <code>examples/simple_connection/simple_connection.py</code>.</p>
-<div class="fragment"><div class="line"><span class="comment">#!/usr/bin/env python3</span></div>
-<div class="line"><span class="keyword">import</span> pendule_pi</div>
-<div class="line"><span class="keyword">import</span> time</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
-<div class="line">  pendulum = pendule_pi.PendulePy(wait=5)</div>
-<div class="line"> </div>
-<div class="line">  pwm = 25</div>
-<div class="line">  switch_pos = 0.2</div>
-<div class="line"> </div>
-<div class="line">  <span class="keywordflow">try</span>:</div>
-<div class="line">    <span class="keywordflow">while</span> <span class="keyword">True</span>:</div>
-<div class="line">      pendulum.readState(blocking=<span class="keyword">True</span>)</div>
-<div class="line">      <span class="keywordflow">if</span> (pendulum.position &gt; switch_pos <span class="keywordflow">and</span> pwm &gt; 0) <span class="keywordflow">or</span> (pendulum.position &lt; -switch_pos <span class="keywordflow">and</span> pwm &lt; 0):</div>
-<div class="line">        pwm *= -1</div>
-<div class="line">      pendulum.sendCommand(pwm)</div>
-<div class="line">  <span class="keywordflow">except</span> KeyboardInterrupt:</div>
-<div class="line">    pendulum.sendCommand(0)</div>
-<div class="line">    time.sleep(1)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md19"></a>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">#!/usr/bin/env python3</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">import</span> pendule_pi</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> time</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keywordflow">if</span> __name__ == <span class="stringliteral">&#39;__main__&#39;</span>:</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;  pendulum = <a class="code" href="classpendule__pi_1_1PendulePy.html">pendule_pi.PendulePy</a>(wait=5)</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;  pwm = 25</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;  switch_pos = 0.2</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;  <span class="keywordflow">try</span>:</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">while</span> <span class="keyword">True</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;      pendulum.readState(blocking=<span class="keyword">True</span>)</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;      <span class="keywordflow">if</span> (pendulum.position &gt; switch_pos <span class="keywordflow">and</span> pwm &gt; 0) <span class="keywordflow">or</span> (pendulum.position &lt; -switch_pos <span class="keywordflow">and</span> pwm &lt; 0):</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        pwm *= -1</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;      pendulum.sendCommand(pwm)</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  <span class="keywordflow">except</span> KeyboardInterrupt:</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    pendulum.sendCommand(0)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    time.sleep(1)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md26"></a>
 Detailed Explanation</h1>
-<p></p>
 <p>The program starts by importing the relevant modules:</p>
 <div class="fragment"><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">import</span> pendule_pi</div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> time</div>
 </div><!-- fragment --><p>In particular, the first one provides the class <code>PendulePy</code> that allows one to connect to the low-level interface via sockets. An instance of this class is created in the "main":</p>
-<div class="fragment"><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;  pendulum = pendule_pi.PendulePy(wait=5)</div>
-</div><!-- fragment --><p>Upon construction, the object will connect to the low level interface using default addresses (see <code>PendulePy</code>). You will see in a future tutorial how to change these default settings. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is <code>-1</code>) in which case the <code>PendulePy</code> constructor will wait indefinitely for the low-level interface to show up.</p>
+<div class="fragment"><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;  pendulum = <a class="code" href="classpendule__pi_1_1PendulePy.html">pendule_pi.PendulePy</a>(wait=5)</div>
+</div><!-- fragment --><p>Upon construction, the object will connect to the low level interface using default addresses (see <a class="el" href="classpendule__pi_1_1PendulePy.html#a88da1bf1cc5011ccb78e024a10e9c517">PendulePy's constructor</a>). Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is <code>-1</code>) in which case the <code>PendulePy</code> constructor will wait indefinitely for the low-level interface to show up.</p>
 <p>We proceed by declaring two variables:</p>
 <div class="fragment"><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;  pwm = 25</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;  switch_pos = 0.2</div>
@@ -150,13 +150,17 @@ Detailed Explanation</h1>
 <div class="fragment"><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keywordflow">except</span> KeyboardInterrupt:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    pendulum.sendCommand(0)</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    time.sleep(1)</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md27"></a>
+Running the code</h1>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Explain how to run this code. </dd></dl>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
+<div class="ttc" id="aclasspendule__pi_1_1PendulePy_html"><div class="ttname"><a href="classpendule__pi_1_1PendulePy.html">pendule_pi.PendulePy</a></div><div class="ttdoc">Python class that provides a bridge to the low-level interface.</div><div class="ttdef"><b>Definition:</b> pendule_pi.py:10</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="Tutorials.html">Tutorials</a></li>
+    <li class="navelem"><a class="el" href="tutorials.html">Tutorials</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

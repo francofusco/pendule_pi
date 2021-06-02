@@ -1,6 +1,10 @@
 var searchData=
 [
-  ['naxes_264',['nAxes',['../classpendule__pi_1_1Joystick.html#a188326dd341b66a72a8257c7bc82b0b8',1,'pendule_pi::Joystick']]],
-  ['nbuttons_265',['nButtons',['../classpendule__pi_1_1Joystick.html#a100f28ebb3e08e2f1b52fdd8a3616f01',1,'pendule_pi::Joystick']]],
-  ['notcalibrated_266',['NotCalibrated',['../classpendule__pi_1_1Pendule_1_1NotCalibrated.html#a7b882aed4d4227807be01439d725dff0',1,'pendule_pi::Pendule::NotCalibrated::NotCalibrated()'],['../classpendule__pi_1_1Pendule_1_1NotCalibrated.html#ad4b63d65108ebad553a01f2840eca300',1,'pendule_pi::Pendule::NotCalibrated::NotCalibrated(const std::string &amp;src)']]]
+  ['makedefaultswitch_279',['makeDefaultSwitch',['../classpendule__pi_1_1Pendule.html#a1a17a7f6729c87043f05ee3810c0ac4c',1,'pendule_pi::Pendule']]],
+  ['makemessage_280',['makeMessage',['../classpigpio_1_1Exception.html#a651cab5a7e35e5e726ea21090b092fa3',1,'pigpio::Exception']]],
+  ['maxpositionsteps_281',['maxPositionSteps',['../classpendule__pi_1_1Pendule.html#a6d57676bf37975d46c8e40d4a02d8b45',1,'pendule_pi::Pendule']]],
+  ['midpositionsteps_282',['midPositionSteps',['../classpendule__pi_1_1Pendule.html#abaeb2647302623dc34233daf5be204aa',1,'pendule_pi::Pendule']]],
+  ['minpositionsteps_283',['minPositionSteps',['../classpendule__pi_1_1Pendule.html#a993d322b5470bf8d052d3f27fe1d8727',1,'pendule_pi::Pendule']]],
+  ['motor_284',['Motor',['../classpendule__pi_1_1Motor.html#ace182b91af830f1bcadf2abfcf7691b2',1,'pendule_pi::Motor::Motor(int pwm_pin, int direction_pin)'],['../classpendule__pi_1_1Motor.html#aa66f19dd6bc032bb6acae12e0f3ad60e',1,'pendule_pi::Motor::Motor(const Motor &amp;)=delete']]],
+  ['multpletokenscreated_285',['MultpleTokensCreated',['../classpigpio_1_1ActivationToken_1_1MultpleTokensCreated.html#a0a1e4f6a9a8bc4cf1f5bc96cb3601942',1,'pigpio::ActivationToken::MultpleTokensCreated']]]
 ];

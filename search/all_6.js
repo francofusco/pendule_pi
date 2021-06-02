@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['has_5ftriggered_5f_55',['has_triggered_',['../classpendule__pi_1_1Switch.html#afa16d9edcb4bcdf34f6b2c104785f3dc',1,'pendule_pi::Switch']]]
+  ['getpwm_65',['getPWM',['../classpendule__pi_1_1Motor.html#a1cc8b9346e2bf7d08b59a89bad477d9e',1,'pendule_pi::Motor']]]
 ];

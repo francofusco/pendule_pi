@@ -24,28 +24,36 @@ var NAVTREE =
 [
   [ "pendule_pi", "index.html", [
     [ "Main Page", "index.html", null ],
-    [ "Installation", "md_doc_extra_Installation.html", [
-      [ "Dependencies", "md_doc_extra_Installation.html#autotoc_md0", [
-        [ "CMake", "md_doc_extra_Installation.html#autotoc_md1", null ],
-        [ "Python3", "md_doc_extra_Installation.html#autotoc_md2", null ],
-        [ "pigpio", "md_doc_extra_Installation.html#autotoc_md3", null ],
-        [ "Digital Filters", "md_doc_extra_Installation.html#autotoc_md4", null ],
-        [ "ZeroMQ", "md_doc_extra_Installation.html#autotoc_md5", null ],
-        [ "yaml-cpp", "md_doc_extra_Installation.html#autotoc_md6", null ],
-        [ "DoxyGen (optional)", "md_doc_extra_Installation.html#autotoc_md7", null ]
+    [ "Build the Pendulum", "build_pendulum.html", [
+      [ "Introduction", "build_pendulum.html#autotoc_md0", null ],
+      [ "Components", "build_pendulum.html#autotoc_md1", null ],
+      [ "3D printing", "build_pendulum.html#autotoc_md2", null ],
+      [ "Assemble the parts", "build_pendulum.html#autotoc_md3", null ],
+      [ "Wiring", "build_pendulum.html#autotoc_md4", null ]
+    ] ],
+    [ "Installation", "installation.html", [
+      [ "Dependencies", "installation.html#autotoc_md5", [
+        [ "CMake", "installation.html#install_cmake", null ],
+        [ "Python3", "installation.html#install_python3", null ],
+        [ "pigpio", "installation.html#install_pigpio", null ],
+        [ "Digital Filters", "installation.html#install_digital_filters", null ],
+        [ "ZeroMQ", "installation.html#install_zeromq", null ],
+        [ "yaml-cpp", "installation.html#install_yamlcpp", null ],
+        [ "DoxyGen (optional)", "installation.html#install_doxygen", null ]
       ] ],
-      [ "pendule_pi", "md_doc_extra_Installation.html#autotoc_md8", [
-        [ "Building the code", "md_doc_extra_Installation.html#autotoc_md9", null ],
-        [ "Configure pendule_pi for external usage", "md_doc_extra_Installation.html#autotoc_md10", null ],
-        [ "TL;DR", "md_doc_extra_Installation.html#autotoc_md11", null ]
+      [ "pendule_pi", "installation.html#autotoc_md6", [
+        [ "Building the code", "installation.html#build_pendule_pi", null ],
+        [ "Configure pendule_pi for external usage", "installation.html#export_pendule_pi", null ],
+        [ "Testing your installation", "installation.html#autotoc_md7", null ],
+        [ "TL;DR", "installation.html#install_pendule_pi_tldr", null ]
       ] ]
     ] ],
-    [ "Troubleshooting", "md_doc_extra_Troubleshooting.html", [
-      [ "General Warnings", "md_doc_extra_Troubleshooting.html#autotoc_md12", [
-        [ "DoxyGen configuration file", "md_doc_extra_Troubleshooting.html#autotoc_md13", null ]
+    [ "Troubleshooting", "troubleshooting.html", [
+      [ "General Warnings", "troubleshooting.html#autotoc_md8", [
+        [ "DoxyGen configuration file", "troubleshooting.html#autotoc_md9", null ]
       ] ]
     ] ],
-    [ "Tutorials", "Tutorials.html", "Tutorials" ],
+    [ "Tutorials", "tutorials.html", "tutorials" ],
     [ "Todo List", "todo.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ]
@@ -72,7 +80,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Tutorials.html"
+"annotated.html",
+"pendule_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

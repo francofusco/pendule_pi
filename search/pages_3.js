@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['troubleshooting_387',['Troubleshooting',['../md_doc_extra_Troubleshooting.html',1,'']]],
-  ['todo_20list_388',['Todo List',['../todo.html',1,'']]]
+  ['main_20page_418',['Main Page',['../index.html',1,'']]],
+  ['multi_2dmachine_20setup_419',['Multi-machine setup',['../multimachine.html',1,'tutorials']]]
 ];

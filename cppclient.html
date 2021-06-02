@@ -94,90 +94,92 @@ $(document).ready(function(){initNavTree('cppclient.html',''); initResizable(); 
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#autotoc_md14">Introduction</a></li>
-<li class="level1"><a href="#autotoc_md15">Complete Code</a></li>
-<li class="level1"><a href="#autotoc_md16">Detailed Explanation</a></li>
+<ul><li class="level1"><a href="#autotoc_md10">Introduction</a></li>
+<li class="level1"><a href="#autotoc_md11">Complete Code</a></li>
+<li class="level1"><a href="#autotoc_md12">Detailed Explanation</a></li>
+<li class="level1"><a href="#autotoc_md13">Running the code</a></li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="autotoc_md14"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md10"></a>
 Introduction</h1>
 <p>This tutorial shows how to establish a connection with the low-level interface using the class <code>PenduleCpp</code>. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.</p>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Complete Code</h1>
 <p>The code for this tutorial is available in <code>examples/simple_connection/simple_connection.cpp</code>.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="pendule__cpp_8hpp.html">pendule_pi/pendule_cpp.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;csignal&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">bool</span> ok{<span class="keyword">true</span>};</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> sigintHandler(<span class="keywordtype">int</span> signo) {</div>
-<div class="line">  ok = <span class="keyword">false</span>;</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">  std::signal(SIGINT, sigintHandler);</div>
-<div class="line"> </div>
-<div class="line">  <a class="code" href="classpendule__pi_1_1PenduleCpp.html">pendule_pi::PenduleCpp</a> pendulum(5);</div>
-<div class="line"> </div>
-<div class="line">  <span class="keywordtype">int</span> pwm = 25;</div>
-<div class="line">  <span class="keywordtype">double</span> switch_pos = 0.2;</div>
-<div class="line"> </div>
-<div class="line">  <span class="keywordflow">while</span>(ok) {</div>
-<div class="line">    pendulum.readState(pendulum.BLOCKING);</div>
-<div class="line">    <span class="keywordflow">if</span>((pendulum.position() &gt; switch_pos &amp;&amp; pwm &gt; 0) || (pendulum.position() &lt; -switch_pos &amp;&amp; pwm &lt; 0))</div>
-<div class="line">      pwm *= -1;</div>
-<div class="line">    pendulum.sendCommand(pwm);</div>
-<div class="line">  }</div>
-<div class="line"> </div>
-<div class="line">  pendulum.sendCommand(0);</div>
-<div class="line"> </div>
-<div class="line">  std::this_thread::sleep_for(std::chrono::milliseconds(1000));</div>
-<div class="line"> </div>
-<div class="line">  <span class="keywordflow">return</span> EXIT_SUCCESS;</div>
-<div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md16"></a>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pendule__cpp_8hpp.html">pendule_pi/pendule_cpp.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;csignal&gt;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keywordtype">bool</span> ok{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keywordtype">void</span> sigintHandler(<span class="keywordtype">int</span> signo) {</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;  ok = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;}</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">int</span> main() {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  std::signal(SIGINT, sigintHandler);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  <a class="code" href="classpendule__pi_1_1PenduleCpp.html">pendule_pi::PenduleCpp</a> pendulum(5);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keywordtype">int</span> pwm = 25;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keywordtype">double</span> switch_pos = 0.2;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordflow">while</span>(ok) {</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    pendulum.readState(pendulum.BLOCKING);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordflow">if</span>((pendulum.position() &gt; switch_pos &amp;&amp; pwm &gt; 0) || (pendulum.position() &lt; -switch_pos &amp;&amp; pwm &lt; 0))</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      pwm *= -1;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    pendulum.sendCommand(pwm);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  }</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  pendulum.sendCommand(0);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  std::this_thread::sleep_for(std::chrono::milliseconds(1000));</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  <span class="keywordflow">return</span> EXIT_SUCCESS;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md12"></a>
 Detailed Explanation</h1>
-<p></p>
 <p>The program starts by including the relevant headers:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="pendule__cpp_8hpp.html">pendule_pi/pendule_cpp.hpp</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;csignal&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;thread&gt;</span></div>
+<div class="fragment"><div class="line"><a name="l00000"></a><span class="lineno">    0</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pendule__cpp_8hpp.html">pendule_pi/pendule_cpp.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#include &lt;csignal&gt;</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#include &lt;thread&gt;</span></div>
 </div><!-- fragment --><p>The first one provides the class <code>PenduleCpp</code>, while the other two allow to use <code>std::signal</code> and <code>std::this_thread_::sleep_for</code> (which will be used to gracefully shutdown the program).</p>
 <p>Next come some lines that are used to handle the signal interruption:</p>
-<div class="fragment"><div class="line"><span class="keywordtype">bool</span> ok{<span class="keyword">true</span>};</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> sigintHandler(<span class="keywordtype">int</span> signo) {</div>
-<div class="line">  ok = <span class="keyword">false</span>;</div>
-<div class="line">}</div>
+<div class="fragment"><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keywordtype">bool</span> ok{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keywordtype">void</span> sigintHandler(<span class="keywordtype">int</span> signo) {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;  ok = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;}</div>
 </div><!-- fragment --><p>(Yes, I know, I know. Globals. &#x1f644;) First we define a global variable <code>ok</code> whose initial value is <code>true</code> and then the function <code>sigintHandler</code> which simply changes <code>ok</code> into <code>false</code>. The reason for this is simple: in our code we will keep executing some actions as long as <code>ok</code> is <code>true</code>. To automatically execute <code>sigintHandler</code>, we register it as handler for <code>SIGINT</code> as the first instruction of our <code>main</code>:</p>
-<div class="fragment"><div class="line">  std::signal(SIGINT, sigintHandler);</div>
+<div class="fragment"><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;  std::signal(SIGINT, sigintHandler);</div>
 </div><!-- fragment --><p>We then create an instance of <code>PenduleCpp</code>:</p>
-<div class="fragment"><div class="line">  <a class="code" href="classpendule__pi_1_1PenduleCpp.html">pendule_pi::PenduleCpp</a> pendulum(5);</div>
-</div><!-- fragment --><p>Upon construction, the object will connect to the low level interface using default addresses defined by the parameters <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#a1fa70851eac487b9508b1cada46dda67">pendule_pi::PenduleCpp::DEFAULT_HOST</a></code>, <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#aa8d1ce35d3692a68339781fea46400a8">pendule_pi::PenduleCpp::DEFAULT_STATE_PORT</a></code> and <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#abce9b5b76aa3e7c8bdb8f309ea14794e">pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT</a></code>. You will see in a future tutorial how to change these default settings. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is <code>-1</code>) in which case the <code>PenduleCpp</code> constructor will wait indefinitely for the low-level interface to show up.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Write a tutorial about multi-machine setup.</dd></dl>
+<div class="fragment"><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  <a class="code" href="classpendule__pi_1_1PenduleCpp.html">pendule_pi::PenduleCpp</a> pendulum(5);</div>
+</div><!-- fragment --><p>Upon construction, the object will connect to the low level interface using default addresses defined by the parameters <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#a1fa70851eac487b9508b1cada46dda67">pendule_pi::PenduleCpp::DEFAULT_HOST</a></code>, <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#aa8d1ce35d3692a68339781fea46400a8">pendule_pi::PenduleCpp::DEFAULT_STATE_PORT</a></code> and <code><a class="el" href="classpendule__pi_1_1PenduleCpp.html#abce9b5b76aa3e7c8bdb8f309ea14794e">pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT</a></code>. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is <code>-1</code>) in which case the <code>PenduleCpp</code> constructor will wait indefinitely for the low-level interface to show up.</p>
 <p>We proceed by declaring two variables:</p>
-<div class="fragment"><div class="line">  <span class="keywordtype">int</span> pwm = 25;</div>
-<div class="line">  <span class="keywordtype">double</span> switch_pos = 0.2;</div>
+<div class="fragment"><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keywordtype">int</span> pwm = 25;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keywordtype">double</span> switch_pos = 0.2;</div>
 </div><!-- fragment --><p>The first one represents the intensity of the PWM command that we will send to the low-level interface (only its sign will be changed), while the second one corresponds to the distance from the center at which we want to invert the direction of the base.</p>
 <p>We then enter the main loop, which is a <code>while</code> block that keeps running as long as <code>ok</code> is <code>ŧrue</code>, <em>i.e.</em>, until CTRL-C is pressed on the keyboard:</p>
-<div class="fragment"><div class="line">  <span class="keywordflow">while</span>(ok) {</div>
+<div class="fragment"><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keywordflow">while</span>(ok) {</div>
 </div><!-- fragment --><p>The code inside the loop is quite simple. We begin with the instruction</p>
-<div class="fragment"><div class="line">    pendulum.readState(pendulum.BLOCKING);</div>
+<div class="fragment"><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    pendulum.readState(pendulum.BLOCKING);</div>
 </div><!-- fragment --><p>which attempts to read a message sent from the low-level interface to update a couple of internal variables that store the current state of the pendulum. Since we pass <code>pendulum.BLOCKING</code> as parameter, the function will block execution until the message is received. If <code>pendulum.NON_BLOCKING</code> was passed instead, the function would have firstly checked if a message was available and immediately returned <code>false</code> if no information was ready.</p>
 <p>After the state has been updated, we can evaluate the "control":</p>
-<div class="fragment"><div class="line">    <span class="keywordflow">if</span>((pendulum.position() &gt; switch_pos &amp;&amp; pwm &gt; 0) || (pendulum.position() &lt; -switch_pos &amp;&amp; pwm &lt; 0))</div>
-<div class="line">      pwm *= -1;</div>
+<div class="fragment"><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">if</span>((pendulum.position() &gt; switch_pos &amp;&amp; pwm &gt; 0) || (pendulum.position() &lt; -switch_pos &amp;&amp; pwm &lt; 0))</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;      pwm *= -1;</div>
 </div><!-- fragment --><p>The logic is really simple: if the pendulum is more than <code>switch_pos</code> meters to the right, and the current PWM command is positive (which pushes the base to the right) then we want to invert the command so that now the base moves leftwards. Similarly, if the base is more than <code>switch_pos</code> meters to the left and currently moving leftwards, then change the sign of <code>pwm</code> to invert the motion of the actuator.</p>
 <p>Once the command has been evaluated, we just need to send it to the hardware interface:</p>
-<div class="fragment"><div class="line">    pendulum.sendCommand(pwm);</div>
+<div class="fragment"><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    pendulum.sendCommand(pwm);</div>
 </div><!-- fragment --><p>After closing the while loop, we conclude the program by sending a null PWM to the low-level interface to stop the motion and sleep for one second (just to make sure that the socket connection is not closed before the message is sent):</p>
-<div class="fragment"><div class="line">  pendulum.sendCommand(0);</div>
-<div class="line"> </div>
-<div class="line">  std::this_thread::sleep_for(std::chrono::milliseconds(1000));</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+<div class="fragment"><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  pendulum.sendCommand(0);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  std::this_thread::sleep_for(std::chrono::milliseconds(1000));</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md13"></a>
+Running the code</h1>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Explain how to build and run this code. </dd></dl>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <div class="ttc" id="apendule__cpp_8hpp_html"><div class="ttname"><a href="pendule__cpp_8hpp.html">pendule_cpp.hpp</a></div></div>
@@ -185,7 +187,7 @@ Detailed Explanation</h1>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="Tutorials.html">Tutorials</a></li>
+    <li class="navelem"><a class="el" href="tutorials.html">Tutorials</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>

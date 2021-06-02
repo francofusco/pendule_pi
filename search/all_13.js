@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['_7eactivationtoken_181',['~ActivationToken',['../classpigpio_1_1ActivationToken.html#a3fbb896517447869994bea601394fcb7',1,'pigpio::ActivationToken']]],
-  ['_7eencoder_182',['~Encoder',['../classpendule__pi_1_1Encoder.html#a39b4ba63d2fb91ca7158d5bd527e8388',1,'pendule_pi::Encoder']]],
-  ['_7ejoystick_183',['~Joystick',['../classpendule__pi_1_1Joystick.html#a4ccd25aa13cceea59ad719a9e3eaccdb',1,'pendule_pi::Joystick']]],
-  ['_7emotor_184',['~Motor',['../classpendule__pi_1_1Motor.html#ad43e414bb1da1d32367fa8034bb67eb4',1,'pendule_pi::Motor']]],
-  ['_7ependulecpp_185',['~PenduleCpp',['../classpendule__pi_1_1PenduleCpp.html#ac1df044d99c69b0ac60f94ac46562ecb',1,'pendule_pi::PenduleCpp']]],
-  ['_7eswitch_186',['~Switch',['../classpendule__pi_1_1Switch.html#a91e6f14f437d20e8499e4ffbe6b0c5d1',1,'pendule_pi::Switch']]]
+  ['writing_20a_20c_2b_2b_20client_193',['Writing a C++ client',['../cppclient.html',1,'tutorials']]],
+  ['writing_20a_20python_20client_194',['Writing a Python client',['../pyclient.html',1,'tutorials']]],
+  ['with_5finterrupts_5f_195',['with_interrupts_',['../classpendule__pi_1_1Switch.html#aa4a9aa9da376ef0176c1e03d2884d09e',1,'pendule_pi::Switch']]],
+  ['with_5fpull_5fresistor_196',['WITH_PULL_RESISTOR',['../classpendule__pi_1_1Switch.html#aaf4773ecf66e5a033e3e2863fd6d060c',1,'pendule_pi::Switch']]],
+  ['without_5fpull_5fresistor_197',['WITHOUT_PULL_RESISTOR',['../classpendule__pi_1_1Switch.html#a6ace6ef7a4d11b1561c4b3bb2bc6f49c',1,'pendule_pi::Switch']]]
 ];
