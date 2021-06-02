@@ -1,8 +1,10 @@
 @PACKAGE_INIT@
 
 # dependencies
-include(CMakeFindDependencyMacro)
-find_dependency(digital_filters REQUIRED)
-find_dependency(pigpio REQUIRED)
+if(@ALL_DEPENDENCIES_FOUND@)
+  include(CMakeFindDependencyMacro)
+  find_dependency(digital_filters REQUIRED)
+  find_dependency(pigpio REQUIRED)
+endif(@ALL_DEPENDENCIES_FOUND@)
 
 include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")

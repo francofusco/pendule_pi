@@ -1,3 +1,5 @@
+@page installation Installation
+
 [TOC]
 
 # Dependencies
@@ -11,7 +13,7 @@ In the following you will find a list of all software dependencies needed to com
 While you are absolutely free to do as you please, we recommend to create a folder `programs` in your home and to move there whenever you need to download the sources of a dependency.
 
 
-## CMake
+## CMake {#install_cmake}
 
 This project requires [CMake](https://cmake.org/). To obtain the latest version of CMake, you can follow the [official instructions](https://cmake.org/install/). Alternatively, you can install CMake from `apt` using
 
@@ -22,7 +24,7 @@ sudo apt install cmake
 Note that we built and tested the project using version 3.19.4 and thus we specified it as the minimum required version. However, it is very likely that earlier versions will work as well. Feel free to just change the required version passed to `cmake_minimum_required` in `CMakeLists.txt` and report the result to us.
 
 
-## Python3
+## Python3 {#install_python3}
 
 Python3 should be already installed on Raspberry Pi running Raspbian. Nonetheless, you can manually install it using:
 
@@ -31,7 +33,7 @@ sudo apt install python3 python3-dev python3-pip
 ```
 
 
-## pigpio
+## pigpio {#install_pigpio}
 
 To build the code of this repository, you need the [pigpio](https://github.com/joan2937/pigpio) library. Its documentation is available [here](http://abyz.me.uk/rpi/pigpio/index.html). The following is a summary of what you need to write in a console to build pigpio using CMake:
 
@@ -45,7 +47,7 @@ sudo make install
 ```
 
 
-## Digital Filters
+## Digital Filters {#install_digital_filters}
 
 The [digital_filters repository](https://github.com/francofusco/digital_filters) can be installed by following the instructions contained inside the README:
 
@@ -59,7 +61,7 @@ echo "export digital_filters_DIR=\"`pwd`\"" >> ~/.bashrc
 ```
 
 
-## ZeroMQ
+## ZeroMQ {#install_zeromq}
 
 ZeroMQ is the library used here for inter-process communications. You will need to install this library and several other components.
 
@@ -126,7 +128,7 @@ pip3 install pyzmq
 The command above should install it for the current user only. To install it for all users, prepend `sudo` in front of the command.
 
 
-## yaml-cpp
+## yaml-cpp {#install_yamlcpp}
 
 This library allows to parse YAML files in C++. In this way, parameters can be passed to executables in a more efficient way.
 
@@ -142,7 +144,7 @@ sudo cmake --install .
 ```
 
 
-## DoxyGen (optional)
+## DoxyGen (optional) {#install_doxygen}
 
 [DoxyGen](https://www.doxygen.nl/index.html) can be used to generate a local copy of this documentation. If you do not have this tool installed yet, you can do it via:
 
@@ -152,6 +154,7 @@ sudo apt install doxygen graphviz
 
 Additionally, you can consider installing the packages `doxygen-gui` and/or `doxygen-latex`.
 
+@todo It seems better to install DoxyGen from source since it provides more functionalities. I should test that and eventually write here the instructions.
 
 
 # pendule_pi
@@ -165,7 +168,7 @@ From now on, all commands are to be run from there.
 
 Note that the following is a detailed description of the steps required to configure, build and install pendule_pi's library and executables. For a quick summary of the required steps, refer to the **TL;DR** section below.
 
-## Building the code
+## Building the code {#build_pendule_pi}
 
 ### Configuring the build
 
@@ -241,7 +244,7 @@ copied target. This implies that:
   completely remove all installed targets.
 
 
-## Configure pendule_pi for external usage
+## Configure pendule_pi for external usage {#export_pendule_pi}
 
 ### Python
 
@@ -269,10 +272,10 @@ find_package(pendule_pi)
 find_package(pendule_pi QUIET)
 find_package(pendule_pi REQUIRED)
 ```
-in their `CMakeLists.txt`. Then, just link the `pendule_pi::pendule_pi` library to your targets, *e.g.*,
+in their `CMakeLists.txt`. Then, just link the `pendule_pi::pendule_pi` or `pendule_pi::pendule_cpp` libraries to your targets, *e.g.*,
 ```cmake
 add_executable(your_program your_source.cpp)
-target_link_libraries(your_program pendule_pi::pendule_pi)
+target_link_libraries(your_program pendule_pi::pendule_cpp)
 ```
 Note that headers are "automatically" made visible to your executable, and
 there is thus no need for any of the following
@@ -283,7 +286,12 @@ target_include_directories(your_program ${pendule_pi_INCLUDE_DIRS})
 Indeed, when you call `find_package`, no `pendule_pi_INCLUDE_DIRS` is populated at all!
 
 
-## TL;DR
+## Testing your installation
+
+The easiest way to test your installation is to move into the `examples` folder and compile the examples there, as discussed in the @ref tutorials "Tutorials page". Indeed, separating the compilation of the examples from the compilation of the main library gives you a quick way to test if the installation was successful and to us (the authors) a chance to verify if our instructions are complete!
+
+
+## TL;DR {#install_pendule_pi_tldr}
 
 From the root of pendule_pi run:
 ```

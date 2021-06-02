@@ -17,5 +17,3 @@ period_ms: 20
 
 # Used in filtering. It should be less than half the sampling frequency.
 cutoff_frequency: 12.5
-
-# TODO: TCP ports configuration!
