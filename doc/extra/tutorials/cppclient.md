@@ -12,12 +12,12 @@ This tutorial shows how to establish a connection with the low-level interface u
 
 The code for this tutorial is available in `examples/simple_connection/simple_connection.cpp`.
 
-@include simple_connection.cpp
+@include{lineno} simple_connection.cpp
 
 
 # Detailed Explanation
 
-@dontinclude simple_connection.cpp
+@dontinclude{lineno} simple_connection.cpp
 
 The program starts by including the relevant headers:
 
@@ -38,9 +38,7 @@ We then create an instance of `PenduleCpp`:
 
 @skipline PenduleCpp
 
-Upon construction, the object will connect to the low level interface using default addresses defined by the parameters `pendule_pi::PenduleCpp::DEFAULT_HOST`, `pendule_pi::PenduleCpp::DEFAULT_STATE_PORT` and `pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT`. You will see in a future tutorial how to change these default settings. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PenduleCpp` constructor will wait indefinitely for the low-level interface to show up.
-
-@todo Write a tutorial about multi-machine setup.
+Upon construction, the object will connect to the low level interface using default addresses defined by the parameters `pendule_pi::PenduleCpp::DEFAULT_HOST`, `pendule_pi::PenduleCpp::DEFAULT_STATE_PORT` and `pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT`. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PenduleCpp` constructor will wait indefinitely for the low-level interface to show up.
 
 We proceed by declaring two variables:
 
@@ -74,3 +72,8 @@ After closing the while loop, we conclude the program by sending a null PWM to t
 
 @skip sendCommand
 @until sleep_for
+
+
+# Running the code
+
+@todo Explain how to build and run this code.

@@ -12,12 +12,12 @@ This tutorial shows how to establish a connection with the low-level interface u
 
 The code for this tutorial is available in `examples/simple_connection/simple_connection.py`.
 
-@include simple_connection.py
+@include{lineno} simple_connection.py
 
 
 # Detailed Explanation
 
-@dontinclude simple_connection.py
+@dontinclude{lineno} simple_connection.py
 
 The program starts by importing the relevant modules:
 
@@ -28,7 +28,7 @@ In particular, the first one provides the class `PendulePy` that allows one to c
 
 @skipline PendulePy
 
-Upon construction, the object will connect to the low level interface using default addresses (see `PendulePy`). You will see in a future tutorial how to change these default settings. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PendulePy` constructor will wait indefinitely for the low-level interface to show up.
+Upon construction, the object will connect to the low level interface using default addresses (see @ref pendule_pi.PendulePy.__init__ "PendulePy's constructor"). Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PendulePy` constructor will wait indefinitely for the low-level interface to show up.
 
 We proceed by declaring two variables:
 
@@ -58,3 +58,8 @@ After the while loop, we conclude the program by adding a catch block that inter
 
 @skip except
 @until sleep
+
+
+# Running the code
+
+@todo Explain how to run this code.

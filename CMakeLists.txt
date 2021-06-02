@@ -32,7 +32,7 @@ find_package_custom(yaml-cpp)
 
 # warn the user if code will not be built
 if(NOT ${ALL_DEPENDENCIES_FOUND})
-  message(STATUS "${Yellow}Some dependecies were not found. Source code will not be built${ColourReset}")
+  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp will be built!${ColourReset}")
 endif()
 
 
