@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
     double target_pos = 0;
     const double target_angle = M_PI;
     // control gains for the swingup phase
-    const double kswing = 100.0;
+    const double kswing = 70.0;
     const double ksx = 0.0;
     // control gains for the lqr phase
     const double kp = -127.45880662905581;
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
     double filtered_linvel;
     double filtered_angvel;
     double e_pos, e_theta, e_linvel, e_angvel;
-    const double ANGLE_ERROR_THRESHOLD = 0.15;
+    const double ANGLE_ERROR_THRESHOLD = 0.25;
 
     // Some logging information
     std::cout << "  MODE     POSITION        ANGLE       LIN.VEL.      ANG.VEL.     PWM" << std::endl;
@@ -180,8 +180,9 @@ int main(int argc, char** argv) {
           }
           else {
             // Swingup
+            auto ks = kswing * ( 0.1 + 0.9 * 0.5 * (1-std::cos(e_theta)) );
             pwm = static_cast<int>(
-              + kswing * (1-std::cos(e_theta)) * sign(filtered_angvel * std::cos(e_theta))
+              + ks * (1-std::cos(e_theta)) * sign(filtered_angvel * std::cos(e_theta))
               - ksx * filtered_position
             );
           }
