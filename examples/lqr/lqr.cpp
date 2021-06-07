@@ -22,7 +22,18 @@ double normalize(double angle) {
 
 int main() {
   std::signal(SIGINT, sigintHandler);
-  pendule_pi::PenduleCpp pendulum(5);
+
+  if(argc != 2) {
+    std::cout << "Usage: " << argv[0] << " host-name" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  pendule_pi::PenduleCpp pendulum(
+    argv[1],
+    pendule_pi::PenduleCpp::DEFAULT_STATE_PORT,
+    pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT,
+    5
+  );
 
   int pwm = 0;
   const double MAX_ANGLE = 0.1;
