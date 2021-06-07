@@ -12,11 +12,9 @@ It is assumed here that you were able to compile and install pendule_pi on the R
 
 # Setup
 
-Before showing the code for the tutorial, let's ensure that your machine is properly configured.
+Before showing the code for the tutorial, make sure that your machine is properly configured. The main requirement is that you are able to ping the Raspberry from your machine, either via an IP address or by a name.
 
-@todo Instructions to make sure that you can locate and ping the Raspberry.
-
-Now, let's make sure that you can compile and run the code on your local machine. For the rest of the tutorial *unless specified otherwise* commands are to be run on a "regular" terminal on your PC, *i.e.*, do not use ssh and do not work on the Raspberry.
+After having checked that you can ping the board, ensure that you can compile and run the code on your local machine. For the rest of the tutorial *unless specified otherwise* commands are to be run on a "regular" terminal on your PC, *i.e.*, do not use ssh and do not work on the Raspberry.
 
 The required steps are just a subset of the installation instructions. In particular, you should should firstly ensure to have the following libraries installed (once again: on your PC, not on the Raspberry!):
 

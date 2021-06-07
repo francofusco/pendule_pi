@@ -2,6 +2,9 @@
 meters_per_step: 3.990566037735849e-05  # 0.846/21200
 radians_per_step: 0.006283185307179587  # 2*M_PI/1000
 
+# Angle at which the pendulum results to be stable with respect to the upward position
+angle_offset: 0.0
+
 # Safety distances to stop the pendulum.
 safety_thresholds:
   hard: 0.05  # minimum allowed distance from the switches (if violated, the interfaces shuts-down)
@@ -17,3 +20,9 @@ period_ms: 20
 
 # Used in filtering. It should be less than half the sampling frequency.
 cutoff_frequency: 12.5
+
+# Configuration of the sockets used to exchange information.
+sockets:
+  host: *
+  state_port: 10001
+  command_port: 10002
