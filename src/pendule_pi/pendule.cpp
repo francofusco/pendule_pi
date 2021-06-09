@@ -189,6 +189,14 @@ void Pendule::calibrate(
       "pahses? You could simply swap the pins in the constructor."
     );
   }
+  else if(min_position_steps_ == max_position_steps_) {
+    throw CalibrationFailed(
+      "the minimum step position is equal to the maximum one. If you detached "
+      "the transmission belt and manually triggered the switches to check that "
+      "you setup the hardware correctly, please go ahead champ! Otherwise, "
+      "something veeeery weird is happening..."
+    );
+  }
   mid_position_steps_ = (max_position_steps_ + min_position_steps_) / 2;
   // Go to the central position
   right_switch_->disableInterrupts();
@@ -207,8 +215,8 @@ void Pendule::calibrate(
   position_encoder_->setSafetyCallbacks(
     soft_min,
     soft_max,
-    [&](){ eStop("soft minimum position limit reached"); },
-    [&](){ eStop("soft maximum position limit reached"); }
+    [&](){ eStop("Software-imposed minimum position limit reached"); },
+    [&](){ eStop("Software-imposed maximum position limit reached"); }
   );
   soft_minmax_position_meters_ = std::fabs(steps2meters(soft_max));
   calibrated_ = true;
