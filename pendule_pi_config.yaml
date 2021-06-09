@@ -41,7 +41,7 @@ cutoff_frequency: 12.5
 # Configuration of the sockets used to exchange information.
 sockets:
   # Host to bind the connections. Optional, defaults to "*".
-  host: *
+  host: "*"
   # Port to send the state to client applications. Optional, defaults to 10001.
   state_port: 10001
   # Port to receive commands from clients. Optional, defaults to 10002.
