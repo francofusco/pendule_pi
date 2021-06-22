@@ -5,7 +5,7 @@
 
 # Introduction
 
-This tutorial shows how to establish a connection with the low-level interface using the class `PenduleCpp`. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.
+This tutorial shows how to establish a connection with the low-level interface using the class `PenduleCppClient`. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.
 
 
 # Complete Code
@@ -24,11 +24,11 @@ The program starts by importing the relevant modules:
 @skip import
 @until time
 
-In particular, the first one provides the class `PendulePy` that allows one to connect to the low-level interface via sockets. An instance of this class is created in the "main":
+In particular, the first one provides the class `PendulePyClient` that allows one to connect to the low-level interface via sockets. An instance of this class is created in the "main":
 
-@skipline PendulePy
+@skipline PendulePyClient
 
-Upon construction, the object will connect to the low level interface using default addresses (see @ref pendule_pi.PendulePy.__init__ "PendulePy's constructor"). Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PendulePy` constructor will wait indefinitely for the low-level interface to show up.
+Upon construction, the object will connect to the low level interface using default addresses (see @ref pendule_pi.PendulePyClient.__init__ "PendulePyClient's constructor"). Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PendulePyClient` constructor will wait indefinitely for the low-level interface to show up.
 
 We proceed by declaring two variables:
 

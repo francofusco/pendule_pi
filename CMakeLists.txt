@@ -32,7 +32,7 @@ find_package_custom(yaml-cpp)
 
 # warn the user if code will not be built
 if(NOT ${ALL_DEPENDENCIES_FOUND})
-  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp will be built!${ColourReset}")
+  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp_client will be built!${ColourReset}")
 endif()
 
 
@@ -122,24 +122,24 @@ endif(${ALL_DEPENDENCIES_FOUND})
 ##############
 
 # C++ bridge to the low-level interface
-add_library(pendule_cpp src/pendule_pi/pendule_cpp.cpp)
+add_library(pendule_cpp_client src/pendule_pi/pendule_cpp_client.cpp)
 
-target_include_directories(pendule_cpp
+target_include_directories(pendule_cpp_client
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(pendule_cpp zmq zmqpp)
+target_link_libraries(pendule_cpp_client zmq zmqpp)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  target_compile_options(pendule_cpp PRIVATE -O0)
-  target_compile_options(pendule_cpp PRIVATE -Wall)
+  target_compile_options(pendule_cpp_client PRIVATE -O0)
+  target_compile_options(pendule_cpp_client PRIVATE -Wall)
 elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  target_compile_options(pendule_cpp PRIVATE -O2)
+  target_compile_options(pendule_cpp_client PRIVATE -O2)
 endif()
 
-target_compile_features(pendule_cpp PUBLIC cxx_std_17)
+target_compile_features(pendule_cpp_client PUBLIC cxx_std_17)
 
 
 ###########
@@ -161,7 +161,7 @@ if(${ALL_DEPENDENCIES_FOUND})
 endif(${ALL_DEPENDENCIES_FOUND})
 
 # Install the libraries
-set(LIBS_TO_INSTALL pendule_cpp)
+set(LIBS_TO_INSTALL pendule_cpp_client)
 if(${ALL_DEPENDENCIES_FOUND})
   list(APPEND LIBS_TO_INSTALL ${PROJECT_NAME})
 endif(${ALL_DEPENDENCIES_FOUND})

@@ -22,7 +22,7 @@ The required steps are just a subset of the installation instructions. In partic
 - @ref install_python3
 - @ref install_zeromq
 
-Once these dependencies are installed, you can clone pendule_pi on your machine and build it. Since we know that you are a good person and have already read the build instructions thoroughly, you can jump to the @ref install_pendule_pi_tldr section and just run the instructions listed there. Note that, unless your machine is another Raspberry and you have installed also pigpio and digital_filters, your PC will not build the `pendule_pi` library. Instead, it will build the target `pendule_cpp`, which is the library that contains the code for the `PenduleCpp` class. This is absolutely fine since on your PC you need nothing more than this to talk with the low-level interface @emoji :relaxed:
+Once these dependencies are installed, you can clone pendule_pi on your machine and build it. Since we know that you are a good person and have already read the build instructions thoroughly, you can jump to the @ref install_pendule_pi_tldr section and just run the instructions listed there. Note that, unless your machine is another Raspberry and you have installed also pigpio and digital_filters, your PC will not build the `pendule_pi` library. Instead, it will build the target `pendule_cpp_client`, which is the library that contains the code for the `PenduleCppClient` class. This is absolutely fine since on your PC you need nothing more than this to talk with the low-level interface @emoji :relaxed:
 
 You can check your setup by moving inside the `examples` directory and by compiling them on your PC (see the @ref tutorials "Tutorials page"). If no error is given and the code compiles fine, you can move to one of the next sections, which show how to connect to the low-level interface using either Python or C++.
 
@@ -54,9 +54,9 @@ This executable assumes that one runs it as:
 ```
 python3 multi_machine.py some_host
 ```
-where `some_host` identifies the Raspberry that is running the low-level interface. This host is then passed to the @ref pendule_pi.PendulePy.__init__ "constructor of PendulePy":
+where `some_host` identifies the Raspberry that is running the low-level interface. This host is then passed to the @ref pendule_pi.PendulePyClient.__init__ "constructor of PendulePyClient":
 
-@skipline PendulePy
+@skipline PendulePyClient
 
 States can now be read from the address `tcp://some_host:10001` and commands can be sent to `tcp://some_host:10002`. If `some_host` properly identifies the Raspberry, then the rest of the script will be able to move the base of the pendulum around!
 
@@ -101,9 +101,9 @@ This executable assumes that one runs it as:
 ```
 ./multi_machine some_host
 ```
-where `some_host` identifies the Raspberry that is running the low-level interface. This host is then passed to the @ref pendule_pi::PenduleCpp::PenduleCpp "constructor of PenduleCpp":
+where `some_host` identifies the Raspberry that is running the low-level interface. This host is then passed to the @ref pendule_pi::PenduleCppClient::PenduleCppClient "constructor of PenduleCppClient":
 
-@skip PenduleCpp
+@skip PenduleCppClient
 @until )
 
 States can now be read from the address `tcp://some_host:10001` and commands can be sent to `tcp://some_host:10002`. If `some_host` properly identifies the Raspberry, then the rest of the script will be able to move the base of the pendulum around!

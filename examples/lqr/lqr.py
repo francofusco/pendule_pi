@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from pendule_pi import PendulePy
+from pendule_pi import PendulePyClient
 import math
 import time
 import sys
@@ -16,7 +16,7 @@ if __name__ == '__main__':
   if len(sys.argv) != 2:
     print("Usage:", sys.argv[0], "host-name")
     sys.exit(0)
-  pendulum = pendule_pi.PendulePy(wait=5, host=sys.argv[1])
+  pendulum = PendulePyClient(wait=5, host=sys.argv[1])
 
   MAX_ANGLE = 0.1
   kp = -127.45880662905581

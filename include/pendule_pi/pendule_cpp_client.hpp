@@ -6,21 +6,21 @@
 namespace pendule_pi {
 
 /// Bridge to the low-level interface.
-class PenduleCpp {
+class PenduleCppClient {
 public:
   static auto constexpr DEFAULT_HOST = "localhost";
   static auto constexpr DEFAULT_STATE_PORT = "10001";
   static auto constexpr DEFAULT_COMMAND_PORT = "10002";
 
-  /// Named option to be passed to PenduleCpp::readState.
-  /** @see PenduleCpp::readState */
+  /// Named option to be passed to PenduleCppClient::readState.
+  /** @see PenduleCppClient::readState */
   static auto constexpr BLOCKING = true;
-  /// Named option to be passed to PenduleCpp::readState.
-  /** @see PenduleCpp::readState */
+  /// Named option to be passed to PenduleCppClient::readState.
+  /** @see PenduleCppClient::readState */
   static auto constexpr NON_BLOCKING = false;
 
   /// Connects to a socket using some default parameters.
-  PenduleCpp(int wait=-1);
+  PenduleCppClient(int wait=-1);
 
   /// Constructor, initializes socket connections.
   /** Connections are established at `tcp://[host]:[port]`. The
@@ -35,7 +35,7 @@ public:
     *   If no message is received within the allotted time, an exception will be
     *   thrown.
     */
-  PenduleCpp(
+  PenduleCppClient(
     const std::string& host,
     const std::string& state_port,
     const std::string& command_port,
@@ -43,7 +43,7 @@ public:
   );
 
   /// Deallocates the memory for the sockets.
-  ~PenduleCpp();
+  ~PenduleCppClient();
 
   /// Allows to access the current time of the pendulum.
   inline const double& time() const { return time_; }
@@ -66,9 +66,9 @@ public:
     *   `NON_BLOCKING` have been defined. You are encouraged to call this
     *   method as, *e.g*.:
     *   @code{.c++}
-    *   PenduleCpp pendulum;
-    *   pendulum.readState(PenduleCpp.BLOCKING);
-    *   pendulum.readState(PenduleCpp.NON_BLOCKING);
+    *   PenduleCppClient pendulum;
+    *   pendulum.readState(PenduleCppClient.BLOCKING);
+    *   pendulum.readState(PenduleCppClient.NON_BLOCKING);
     *   @endcode
     */
   bool readState(bool blocking);
