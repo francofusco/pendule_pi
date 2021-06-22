@@ -45,6 +45,7 @@ if(${ALL_DEPENDENCIES_FOUND})
 ##############
 
 add_library(${PROJECT_NAME}
+  src/pendule_pi/config.cpp
   src/pendule_pi/joystick.cpp
   src/pendule_pi/pigpio.cpp
   src/pendule_pi/switch.cpp
@@ -84,6 +85,10 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 # Reset all pins in high impedance mode
 add_executable(reset_gpio src/bin/reset_gpio.cpp)
 target_link_libraries(reset_gpio ${PROJECT_NAME})
+
+# Executable that can help to setup the pendulum.
+add_executable(pendule_pi_assistant src/bin/pendule_pi_assistant.cpp)
+target_link_libraries(pendule_pi_assistant ${PROJECT_NAME})
 
 # Record linear motions (useful for identification)
 add_executable(log_motion src/bin/log_motion.cpp)
@@ -156,6 +161,7 @@ if(${ALL_DEPENDENCIES_FOUND})
       log_motion
       log_rotation
       demo
+      pendule_pi_assistant
     DESTINATION bin
   )
 endif(${ALL_DEPENDENCIES_FOUND})
