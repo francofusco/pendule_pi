@@ -63,6 +63,9 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC pigpio::pigpio
   PUBLIC pthread
+  PUBLIC zmq
+  PUBLIC zmqpp
+  PUBLIC yaml-cpp
 )
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -90,34 +93,23 @@ target_link_libraries(reset_gpio ${PROJECT_NAME})
 add_executable(pendule_pi_assistant src/bin/pendule_pi_assistant.cpp)
 target_link_libraries(pendule_pi_assistant ${PROJECT_NAME})
 
-# Record linear motions (useful for identification)
-add_executable(log_motion src/bin/log_motion.cpp)
-target_link_libraries(log_motion ${PROJECT_NAME})
+# # Record linear motions (useful for identification)
+# add_executable(log_motion src/bin/log_motion.cpp)
+# target_link_libraries(log_motion ${PROJECT_NAME})
+#
+# # Record angular motions (useful for identification)
+# add_executable(log_rotation src/bin/log_rotation.cpp)
+# target_link_libraries(log_rotation ${PROJECT_NAME})
 
-# Record angular motions (useful for identification)
-add_executable(log_rotation src/bin/log_rotation.cpp)
-target_link_libraries(log_rotation ${PROJECT_NAME})
-
-# Swingup + linearized control
-add_executable(demo src/bin/demo.cpp)
-target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
-
-# TEMP
-add_executable(demo_zmq src/bin/demo_zmq.cpp)
-target_link_libraries(demo_zmq ${PROJECT_NAME} digital_filters::digital_filters zmq zmqpp yaml-cpp)
-
-# TEMP
-add_executable(yaml_test src/bin/yaml_test.cpp)
-target_link_libraries(yaml_test yaml-cpp)
-
-add_executable(low_level_interface src/bin/low_level_interface.cpp)
-target_link_libraries(low_level_interface
-  ${PROJECT_NAME}
-  digital_filters::digital_filters
-  zmq
-  zmqpp
-  yaml-cpp
-)
+# # Swingup + linearized control
+# add_executable(demo src/bin/demo.cpp)
+# target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
+#
+# add_executable(low_level_interface src/bin/low_level_interface.cpp)
+# target_link_libraries(low_level_interface
+#   ${PROJECT_NAME}
+#   digital_filters::digital_filters
+# )
 
 endif(${ALL_DEPENDENCIES_FOUND})
 
@@ -158,9 +150,10 @@ if(${ALL_DEPENDENCIES_FOUND})
   install(
     TARGETS
       reset_gpio
-      log_motion
-      log_rotation
-      demo
+      # log_motion
+      # log_rotation
+      # demo
+      # low_level_interface
       pendule_pi_assistant
     DESTINATION bin
   )

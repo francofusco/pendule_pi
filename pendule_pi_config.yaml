@@ -1,16 +1,54 @@
-# Conversion coefficents for the encoders. This parameter is mandatory.
-meters_per_step: 3.990566037735849e-05  # 0.846/21200
-radians_per_step: 0.006283185307179587  # 2*M_PI/1000
+# Configuration of the left switch (encoder side)
+left_switch:
+  # GPIO pin used to read the state of the switch.
+  pin: 17
+  # If true, then the pin should read 'high' when at rest.
+  normally_up: true
+  # If true, then the internal pull-up or pull-down resistor is activated.
+  use_internal_pull_resistor: true
+
+# Configuration of the right switch (motor side).
+right_switch:
+  # GPIO pin used to read the state of the switch.
+  pin: 18
+  # If true, then the pin should read 'high' when at rest.
+  normally_up: true
+  # If true, then the internal pull-up or pull-down resistor is activated.
+  use_internal_pull_resistor: true
+
+# Configuration of the position encoder (the one connected to
+# the transmission belt).
+position_encoder:
+  # Pins corresponding to the two phases of the encoder.
+  pin_a: 20
+  pin_b: 21
+
+# Configuration of the angle encoder (the one that acts as
+# the pivot for the rod).
+angle_encoder:
+  # Pins corresponding to the two phases of the encoder.
+  pin_a: 19
+  pin_b: 26
+
+# Configuration of the motor.
+motor:
+  # Pin used to send PWM signals to the motor controller.
+  pwm_pin: 24
+  # Pin used to invert the rotation direction of the motor.
+  direction_pin: 16
+
+# Conversion coefficents for the encoders.
+meters_per_step: 9.992676761711276e-06  # 0.846/84662
+radians_per_step: 0.0015707963267948967  # 2*M_PI/1000
 
 # By default, the pendulum should read zero when in the downward position and PI
 # when pointing upward. However, you might prefer a different convention, or
 # simply ensure that the pendulum really stays at PI when it is manually
 # balanced in the upward position. To achieve such result, the low level
-# interface will subtract angle_offset from the "raw" reading. The parameter
-# is optional and defaults to zero.
+# interface will subtract angle_offset from the "raw" reading.
 angle_offset: 0.0
 
-# Safety distances to stop the pendulum, in meters. Both are mandatory.
+# Safety distances to stop the pendulum, in meters.
 safety_thresholds:
   # Minimum allowed distance from the switches. If violated, the interface
   # shuts-down. It should be positive. Negative values will be inverted.
@@ -21,8 +59,7 @@ safety_thresholds:
   # soft threshold (only the hard one will remain active).
   soft: 0.1
 
-# Offsets to be applied to pwm commands. Both are mandatory and should be
-# integers.
+# Offsets to be applied to pwm commands. Both should be integers.
 pwm_offsets:
   # When a negative pwm is requested, actually apply pwm-low. If low is
   # negative, zero is used instead.
@@ -35,38 +72,14 @@ pwm_offsets:
 period_ms: 20
 
 # Cutoff frequency, in Hz, used in filtering. It should be less than half the
-# sampling frequency.
+# sampling frequency. You can disable filtering by giving a negative value.
 cutoff_frequency: 12.5
 
 # Configuration of the sockets used to exchange information.
 sockets:
-  # Host to bind the connections. Optional, defaults to "*".
+  # Host to bind the connections.
   host: "*"
-  # Port to send the state to client applications. Optional, defaults to 10001.
+  # Port to send the state to client applications.
   state_port: 10001
-  # Port to receive commands from clients. Optional, defaults to 10002.
+  # Port to receive commands from clients.
   command_port: 10002
-
-# Configuration of GPIO pins for the different components. All pins are
-# optional, with default values that corresponds to the connection layout
-# illustrated in the documentation.
-pins:
-  motor:
-    # Pin used to send PWM signals to the motor controller.
-    pwm: 24
-    # Pin used to invert the rotation direction of the motor.
-    direction: 16
-  # Pin used to detect if the left switch (encoder side) has been hit.
-  left_switch: 17
-  # Pin used to detect if the right switch (motor side) has been hit.
-  right_switch: 18
-  # Pins corresponding to the phases of the position encoder (the one connected
-  # to the transmission belt).
-  position_encoder:
-    a: 20
-    b: 21
-  # Pins corresponding to the phases of the angle encoder (the one that act as
-  # the pivot for the rod).
-  angle_encoder:
-    a: 19
-    b: 26
