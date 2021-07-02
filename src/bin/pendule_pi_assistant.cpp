@@ -1,7 +1,9 @@
 #include <pendule_pi/config.hpp>
 #include <pendule_pi/pigpio.hpp>
+#include "utils.hpp"
 #include <functional>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <chrono>
 #include <thread>
@@ -93,6 +95,20 @@ bool measureRail(
 );
 
 
+/// Action to log angular motions (for identification purposes).
+bool logRotation(
+  const std::vector<std::string>& args,
+  std::string& err
+);
+
+
+/// Action to log linear motions (for identification purposes).
+bool logMotion(
+  const std::vector<std::string>& args,
+  std::string& err
+);
+
+
 int main(int argc, char** argv) {
 
   SimpleArgParser parser;
@@ -148,6 +164,25 @@ int main(int argc, char** argv) {
     "path to the configuration file (to setup GPIO connections with the "
     "hardware) and a pwm value that can be used to move the pendulum around. "
     "Lower values should lead to more accurate measures, but longer runtimes."
+  );
+
+  // Log angular pendulum motions to identify dynamic parameters.
+  parser.addArgument(
+    "log-rotation",
+    logRotation,
+    "config-file output-csv-file|||Allows to record angular motions from the "
+    "pendulum. Data is stored in the given csv file. To log motions, you "
+    "should manually give the rod some initial velocity so that it starts "
+    "swinging back and forth. You can then press any switch to start logging "
+    "the given motion. Repeat as many times as needed."
+  );
+
+  // Log angular pendulum motions to identify dynamic parameters.
+  parser.addArgument(
+    "log-motion",
+    logMotion,
+    "config-file output-csv-file|||Allows to record linear motions from the "
+    "pendulum. Data is stored in the given csv file."
   );
 
   try {
@@ -537,6 +572,233 @@ bool measureRail(
   while(true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     std::cout << "\rLEN: " << rail_len << "   STD.DEV.: " << rail_len_variance << "    " << std::flush;
+  }
+
+  return true;
+}
+
+
+bool logRotation(
+  const std::vector<std::string>& args,
+  std::string& err
+)
+{
+  if(args.size() == 0) {
+    err = "Missing configuration file and output csv file.";
+    return false;
+  }
+  else if(args.size() == 1) {
+    err = "Missing output csv file.";
+    return false;
+  }
+
+  // Logging settings
+  const unsigned int PERIOD_US = 5000;
+  const unsigned int DATA_PACKET_SIZE = 1000;
+  unsigned int packet_id = 0;
+
+  // Open the log file and write the header
+  const std::string data_file_name = args[1];
+  std::ofstream data_file(data_file_name, std::ios::out);
+  if(!data_file.is_open()) {
+    err = "Could not open file '" + data_file_name + "'";
+    return false;
+  }
+  data_file << "packet, time_us, angle" << std::endl;
+  data_file.close();
+
+  // Hardware configuration.
+  pp::Config config(args[0]);
+
+  // Physical devices used for the logging process
+  auto encoder = config.getAngleEncoder();
+  auto left_switch = config.getLeftSwitch();
+  auto right_switch = config.getRightSwitch();
+
+  // Check that the pendulum stays at zero
+  const unsigned int wait_seconds = 2;
+  const unsigned int wait_us = wait_seconds * 1000000;
+  const unsigned int t0 = gpioTick();
+  while(gpioTick() - t0 < wait_us) {
+    if(encoder->steps() != 0) {
+      err = "The encoder is moving!";
+      return false;
+    }
+  }
+
+  // Rate used for logging
+  pigpio::Rate rate(PERIOD_US);
+
+  // Main loop
+  while(true) {
+    // Prepare the data
+    std::vector<unsigned int> times;
+    std::vector<int> angles;
+    times.reserve(DATA_PACKET_SIZE);
+    angles.reserve(DATA_PACKET_SIZE);
+
+    // Wait for a switch to be pressed
+    std::cout << "Press any switch to start logging! (CTRL+C to exit)" << std::endl;
+    while(left_switch->atRest() && right_switch->atRest())
+      /* do nothing ;) */;
+    std::cout << "Logging, please wait... " << std::flush;
+
+    // Record data
+    unsigned int tnow = 0;
+    while(times.size() < DATA_PACKET_SIZE) {
+      // Wait for the clock to advance
+      tnow = rate.sleep();
+      // Do logging
+      angles.push_back(encoder->steps());
+      times.push_back(tnow);
+    }
+    std::cout << "Done!" << std::endl;
+
+    // Store data inside the file
+    std::cout << "Writing data, DO NOT EXIT! " << std::flush;
+    data_file.open(data_file_name, std::ofstream::out | std::ofstream::app);
+    if(!data_file.is_open()) {
+      err = "Could not open file '" + data_file_name + "'";
+      return false;
+    }
+    for(unsigned int i=0; i<DATA_PACKET_SIZE; i++) {
+      data_file << packet_id << ", " << times[i] << ", " << angles[i] << std::endl;
+    }
+    data_file.close();
+    std::cout << "Thanks for your patience :)" << std::endl;
+    packet_id++;
+  }
+
+  return true;
+}
+
+
+bool logMotion(
+  const std::vector<std::string>& args,
+  std::string& err
+)
+{
+  if(args.size() == 0) {
+    err = "Missing configuration file and output csv file.";
+    return false;
+  }
+  else if(args.size() == 1) {
+    err = "Missing output csv file.";
+    return false;
+  }
+
+  // Logging settings
+  const unsigned int PERIOD_US = 5000;
+  const unsigned int PERIOD_SEC = PERIOD_US / 1000000.;
+  const unsigned int DATA_PACKET_SIZE = 1000;
+  unsigned int packet_id = 0;
+
+  // Open the log file and write the header
+  const std::string data_file_name = args[1];
+  std::ofstream data_file(data_file_name, std::ios::out);
+  if(!data_file.is_open()) {
+    err = "Could not open file '" + data_file_name + "'";
+    return false;
+  }
+  data_file << "pwm, time_us, position" << std::endl;
+  data_file.close();
+
+  // Hardware configuration.
+  pp::Config config(args[0]);
+
+  // Physical devices used for the logging process
+  auto pendule = config.getPendule();
+  std::cout << "Calibrating pendulum" << std::endl;
+  pendule->calibrate(config.getCalibrationPWM());
+  std::cout << "Calibration completed!" << std::endl;
+  double MAX_POSITION = pendule->softMinMaxPosition() - config.getSoftSafetyThreshold();
+
+
+  // Rate used for logging
+  pigpio::Rate rate(PERIOD_US);
+
+  // Go to the left
+  pendule->setCommand(-config.getCalibrationPWM());
+  do {
+    rate.sleep();
+    pendule->update(PERIOD_SEC);
+  }
+  while(pendule->position() > -MAX_POSITION);
+  pendule->setCommand(0);
+
+  const int ESTIM_DATA = static_cast<int>(20 * 1000000 / PERIOD_US);
+  std::vector<int> commands = range(config.getCalibrationPWM(), 250, 10);
+  unsigned int t;
+
+  for(const auto& pwm : commands) {
+    // Prepare the data
+    std::vector<unsigned int> times;
+    std::vector<double> positions;
+    times.reserve(ESTIM_DATA);
+    positions.reserve(ESTIM_DATA);
+
+    std::cout << "Current PWM command: " << pwm << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    // move to the right
+    pendule->setCommand(pwm);
+    do {
+      t = rate.sleep();
+      pendule->update(PERIOD_SEC);
+      times.push_back(t);
+      positions.push_back(pendule->position());
+    }
+    while(pendule->position() < MAX_POSITION);
+    pendule->setCommand(0);
+
+    // Store data inside the file
+    std::cout << "Writing data, DO NOT EXIT! " << std::flush;
+    data_file.open(data_file_name, std::ofstream::out | std::ofstream::app);
+    if(!data_file.is_open()) {
+      err = "Could not open file '" + data_file_name + "'";
+      return false;
+    }
+    for(unsigned int i=0; i<times.size(); i++) {
+      data_file << pwm << ", " << times[i] << ", " << positions[i] << std::endl;
+    }
+    data_file.close();
+    std::cout << "Written " << times.size() << " samples" << std::endl;
+    std::cout << "Thanks for your patience :)" << std::endl;
+
+    // reset buffers
+    times.clear();
+    positions.clear();
+    times.reserve(ESTIM_DATA);
+    positions.reserve(ESTIM_DATA);
+
+    std::cout << "Current PWM command: " << -pwm << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+    // move to the left
+    pendule->setCommand(-pwm);
+    do {
+      t = rate.sleep();
+      pendule->update(PERIOD_SEC);
+      times.push_back(t);
+      positions.push_back(pendule->position());
+    }
+    while(pendule->position() > -MAX_POSITION);
+    pendule->setCommand(0);
+
+    // Store data inside the file
+    std::cout << "Writing data, DO NOT EXIT! " << std::flush;
+    data_file.open(data_file_name, std::ofstream::out | std::ofstream::app);
+    if(!data_file.is_open()) {
+      err = "Could not open file '" + data_file_name + "'";
+      return false;
+    }
+    for(unsigned int i=0; i<times.size(); i++) {
+      data_file << -pwm << ", " << times[i] << ", " << positions[i] << std::endl;
+    }
+    data_file.close();
+    std::cout << "Written " << times.size() << " samples" << std::endl;
+    std::cout << "Thanks for your patience :)" << std::endl;
+
   }
 
   return true;
