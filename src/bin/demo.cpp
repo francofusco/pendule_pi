@@ -1,13 +1,16 @@
+#include <pendule_pi/pendule_cpp_client.hpp>
 #include <pendule_pi/pigpio.hpp>
-#include <pendule_pi/pendule.hpp>
 #include <pendule_pi/joystick.hpp>
-#include <digital_filters/filters.hpp>
+#include <yaml-cpp/yaml.h>
 #include <iostream>
-#include <iomanip>
-#include <chrono>
-#include <thread>
-#include <cmath>
 #include "utils.hpp"
+
+
+bool ok{true};
+
+void sigintHandler(int signo) {
+  ok = false;
+}
 
 enum class ControlMode {
   Manual,
@@ -55,180 +58,183 @@ private:
 };
 
 
-
 int main(int argc, char** argv) {
   namespace pp = pendule_pi;
 
-  // TODO: allow to change the axis!
-  const int AXIS_PWM = 0;
-  const int BTN_EXIT = 0;
-  const int BTN_SWITCH = 1;
-  const int BTN_PERMISSION = 4;
 
-  try {
-    // Let the token manage the pigpio library!
-    pigpio::ActivationToken token;
-    // Create the joystick device to be used for controlling the demo.
-    pp::Joystick joy;
-    // Create the pendulum instance and perform the calibration.
-    pp::Pendule pendule(0.846/21200, 2*M_PI/1000, 0.0);
-    std::cout << "Calibrating pendulum" << std::endl;
-    pendule.calibrate(0.05);
-    pendule.setPwmOffsets(13, 17);
-    std::cout << "Calibration completed!" << std::endl;
-    // Define soft limits for the pendulum.
-    const double MAX_POSITION = pendule.softMinMaxPosition() - 0.1;
-    // Create the timer used for enforcing a stable control rate.
-    const int SLEEP_MS = 20;
-    const double SLEEP_SEC = SLEEP_MS/1000.0;
-    pigpio::Rate rate(SLEEP_MS*1000);
-    // Create the timer used to print some information on the screen
-    const int COUT_MS = 100;
-    pigpio::Timer cout_timer(COUT_MS*1000, true);
-    // Timer used to update the joystick at a slightly lower rate
-    const int JOY_MS = 100;
-    pigpio::Timer joy_timer(JOY_MS*1000, true);
-    // Used to allow the user to detect when buttons are released or pressed
-    CachedButton btn_switch;
-    // Variables used to perform control and filtering
-    int pwm = 0;
-    ControlMode control_mode(ControlMode::Manual);
-    // Filters
-    double Fs = 1.0/SLEEP_SEC; // sampling frequency
-    double Fc = Fs/4; // cutoff frequency
-    auto filter_position = digital_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_angle = digital_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_linvel = digital_filters::butterworth<double,double>(4, Fc, Fs);
-    auto filter_angvel = digital_filters::butterworth<double,double>(4, Fc, Fs);
-    filter_position.initInput(pendule.position());
-    filter_position.initOutput(pendule.position());
-    filter_angle.initInput(pendule.angle());
-    filter_angle.initOutput(pendule.angle());
-    filter_linvel.initInput(0.0);
-    filter_linvel.initOutput(0.0);
-    filter_angvel.initInput(0.0);
-    filter_angvel.initOutput(0.0);
-    auto filter_target_position = digital_filters::butterworth<double,double>(2, Fs/20, Fs);
-    // Target position
-    double target_pos = 0;
-    const double target_angle = M_PI;
-    // control gains for the swingup phase
-    const double kswing = 70.0;
-    const double ksx = 0.0;
-    // control gains for the lqr phase
-    const double kp = -127.45880662905581;
-    const double kpd = -822.638944546691;
-    const double kt = 2234.654627319883;
-    const double ktd = 437.1177135919267;
-    // process variables
-    double filtered_position;
-    double filtered_angle;
-    double filtered_linvel;
-    double filtered_angvel;
-    double e_pos, e_theta, e_linvel, e_angvel;
-    const double ANGLE_ERROR_THRESHOLD = 0.25;
 
-    // Some logging information
-    std::cout << "  MODE     POSITION        ANGLE       LIN.VEL.      ANG.VEL.     PWM" << std::endl;
-                //SWINGUP  +000000.0000  +000000.0000  +000000.0000  +000000.0000  +000
-    std::cout << std::setfill('0') << std::internal << std::showpos << std::fixed << std::setprecision(4);
-    // sleep a little bit before starting with the main loop
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    // Main loop!
-    while(true) {
-      // Sleep and update the state of the pendulum
-      rate.sleep();
-      pendule.update(SLEEP_SEC);
-      // perform state filtering
-      filtered_position = filter_position.filter(pendule.position());
-      filtered_angle = filter_angle.filter(pendule.angle());
-      filtered_linvel = filter_linvel.filter(pendule.linearVelocity());
-      filtered_angvel = filter_angvel.filter(pendule.angularVelocity());
+  if(argc >= 2 && (argv[1] == std::string("help") || argv[1] == std::string("-h") || argv[1] == std::string("--help"))) {
+    YAML::Emitter out;
+    out << YAML::BeginMap;
+      out << YAML::Key << "sockets";
+      out << YAML::Value << YAML::BeginMap;
+        out << YAML::Key << "host";
+        out << YAML::Value << "localhost";
+        out << YAML::Key << "state_port";
+        out << YAML::Value << "10001";
+        out << YAML::Key << "command_port";
+        out << YAML::Value << "10002";
+      out << YAML::EndMap;
+      out << YAML::Key << "gains";
+      out << YAML::Value << YAML::BeginMap;
+        out << YAML::Key << "position";
+        out << YAML::Value << -127.45880662905581;
+        out << YAML::Key << "linvel";
+        out << YAML::Value << -822.638944546691;
+        out << YAML::Key << "angle";
+        out << YAML::Value << 2234.654627319883;
+        out << YAML::Key << "angvel";
+        out << YAML::Value << 437.1177135919267;
+      out << YAML::EndMap;
+      out << YAML::Key << "swingup";
+      out << YAML::Value << YAML::BeginMap;
+        out << YAML::Key << "k";
+        out << YAML::Value << 70;
+        out << YAML::Key << "kx";
+        out << YAML::Value << 0;
+      out << YAML::EndMap;
+      out << YAML::Key << "joystick";
+      out << YAML::Value << YAML::BeginMap;
+        out << YAML::Key << "device";
+        out << YAML::Value << "/dev/input/js0";
+        out << YAML::Key << "axis_pwm";
+        out << YAML::Value << 0;
+        out << YAML::Key << "btn_exit";
+        out << YAML::Value << 0;
+        out << YAML::Key << "btn_switch";
+        out << YAML::Value << 1;
+        out << YAML::Key << "btn_permission";
+        out << YAML::Value << 4;
+      out << YAML::EndMap;
+    out << YAML::EndMap;
+    std::cout << "Usage: " << argv[0] << " config.yaml" << std::endl;
+    std::cout << "Example of configuration file to be given:" << std::endl;
+    std::cout << out.c_str() << std::endl;
+    return EXIT_SUCCESS;
+  }
 
-      // update the joystick when needed
-      if(joy_timer.expired()) {
-        joy.update();
-        // should we exit?
-        if(joy.button(BTN_EXIT)) {
-          std::cout << std::endl << "Qutting!" << std::endl;
-          throw pigpio::ActivationToken::PleaseStop();
-        }
-        // should we switch control mode?
-        btn_switch.update(joy.button(BTN_SWITCH));
-        if(btn_switch.pressed()) {
-          control_mode = next(control_mode);
-        }
-      }
+  // Load the configuration for this demo.
+  YAML::Node yaml;
+  if(argc > 1)
+    yaml = YAML::LoadFile(argv[1]);
+  // Conect to the low-level interface.
+  pp::PenduleCppClient pendulum(
+    yaml["socket"]["host"].as<std::string>("localhost"),
+    yaml["socket"]["state_port"].as<std::string>("10001"),
+    yaml["socket"]["command_port"].as<std::string>("10002"),
+    5
+  );
+  // Create the joystick device to be used for controlling the demo.
+  pp::Joystick joy(yaml["joystick"]["device"].as<std::string>("/dev/input/js0"));
+  // Joystick buttons.
+  const int AXIS_PWM = yaml["axis_pwm"].as<int>(0);
+  const int BTN_EXIT = yaml["btn_exit"].as<int>(0);
+  const int BTN_SWITCH = yaml["btn_switch"].as<int>(1);
+  const int BTN_PERMISSION = yaml["btn_permission"].as<int>(4);
+  // Counters used to update the joystick at a slightly lower rate.
+  unsigned int JOY_UPDATE_MAX = 5;
+  unsigned int joy_update_counter = 0;
+  // Used to allow the user to detect when buttons are released or pressed.
+  CachedButton btn_switch;
+  // Variables used to perform control.
+  int pwm = 0;
+  ControlMode control_mode(ControlMode::Manual);
+  double target_pos = 0;
+  double e_pos, e_theta, e_linvel, e_angvel;
+  const double target_angle = M_PI;
+  const double ANGLE_ERROR_THRESHOLD = 0.25;
+  // control gains for the swingup phase
+  const double kswing = yaml["swingup"]["k"].as<double>(70.0);
+  const double ksx = yaml["swingup"]["kx"].as<double>(0.0);
+  // control gains for the lqr phase
+  const double kp = yaml["gains"]["position"].as<double>(-127.45880662905581);
+  const double kpd = yaml["gains"]["linvel"].as<double>(-822.638944546691);
+  const double kt = yaml["gains"]["angle"].as<double>(2234.654627319883);
+  const double ktd = yaml["gains"]["angvel"].as<double>(437.1177135919267);
 
-      if(control_mode == ControlMode::Manual) {
-        int ref = joy.axis(AXIS_PWM);
-        ref = robustZero(ref, 2500);
-        pwm = static_cast<int>(ref*250./32768.);
-      }
-      else if(control_mode == ControlMode::LQR || control_mode == ControlMode::Swingup) {
-        // Errors (into [-pi,+pi] for the angle)
-        target_pos = filter_target_position.filter( clip(joy.axis(AXIS_PWM), 2500) * 0.2 / 32768.);
-        e_pos = filtered_position - target_pos;
-        e_theta = shiftInCircle(filtered_angle - target_angle);
-        e_linvel = filtered_linvel;
-        e_angvel = filtered_angvel;
+  // Custom signal handler.
+  std::signal(SIGINT, sigintHandler);
 
-        if(std::fabs(e_theta) > ANGLE_ERROR_THRESHOLD) {
-          // not in LQR range: the command depends on the current mode
-          if(control_mode == ControlMode::LQR) {
-            pwm = 0;
-          }
-          else {
-            // Swingup
-            auto ks = kswing * ( 0.1 + 0.9 * 0.5 * (1-std::cos(e_theta)) );
-            pwm = static_cast<int>(
-              + ks * (1-std::cos(e_theta)) * sign(filtered_angvel * std::cos(e_theta))
-              - ksx * filtered_position
-            );
-          }
+  std::cout << "  MODE" << std::endl;
+  std::cout << to_string(control_mode) << std::flush;
+
+  // Main loop!
+  while(ok) {
+
+    // Retrieve the current state of the pendulum.
+    pendulum.readState(pendulum.BLOCKING);
+
+    // Do control!
+    if(control_mode == ControlMode::Manual) {
+      // Get the command from the joystick.
+      int ref = joy.axis(AXIS_PWM);
+      ref = robustZero(ref, 2500);
+      pwm = static_cast<int>(ref*250./32768.);
+    }
+    else if(control_mode == ControlMode::LQR || control_mode == ControlMode::Swingup) {
+      // Errors (into [-pi,+pi] for the angle)
+      target_pos = clip(joy.axis(AXIS_PWM), 2500) * 0.2 / 32768.;
+      e_pos = pendulum.position() - target_pos;
+      e_theta = shiftInCircle(pendulum.angle() - target_angle);
+      e_linvel = pendulum.linvel();
+      e_angvel = pendulum.angvel();
+
+      if(std::fabs(e_theta) > ANGLE_ERROR_THRESHOLD) {
+        // Not in LQR range: the command depends on the current mode.
+        if(control_mode == ControlMode::LQR) {
+          pwm = 0;
         }
         else {
-          // in LQR range: do it!
+          // Swingup
+          auto ks = kswing * ( 0.1 + 0.9 * 0.5 * (1-std::cos(e_theta)) );
           pwm = static_cast<int>(
-            - kp * e_pos
-            - kpd * e_linvel
-            - kt * e_theta
-            - ktd * e_angvel
+            + ks * (1-std::cos(e_theta)) * sign(pendulum.angvel() * std::cos(e_theta))
+            - ksx * pendulum.position()
           );
-        }
-
-        // override command if the permission button is not down ;)
-        if(!joy.button(BTN_PERMISSION)) {
-          pwm = 0;
         }
       }
       else {
-        std::cout << std::endl << "ERROR: " << to_string(control_mode) << " mode not implemented yet" << std::endl;
-        throw pigpio::ActivationToken::PleaseStop();
+        // in LQR range: do it!
+        pwm = static_cast<int>(
+          - kp * e_pos
+          - kpd * e_linvel
+          - kt * e_theta
+          - ktd * e_angvel
+        );
       }
 
-      // Enforce soft safety limits, then send the command.
-      if(pendule.position() > MAX_POSITION && pwm > 0)
+      // override command if the permission button is not down ;)
+      if(!joy.button(BTN_PERMISSION)) {
         pwm = 0;
-      else if(pendule.position() < -MAX_POSITION && pwm < 0)
-        pwm = 0;
-      pendule.setCommand(pwm);
+      }
+    }
+    else {
+      std::cout << std::endl << "ERROR: " << to_string(control_mode) << " mode not implemented yet";
+      break;
+    }
 
-      // print on screen once in a while
-      if(cout_timer.expired()) {
-        std::cout << "\r";
-        std::cout << to_string(control_mode);
-        std::cout << "  " << std::setw(12) << pendule.position();
-        std::cout << "  " << std::setw(12) << pendule.angle();
-        std::cout << "  " << std::setw(12) << pendule.linearVelocity();
-        std::cout << "  " << std::setw(12) << pendule.angularVelocity();
-        std::cout << "  " << std::setw(4) << pwm;
-        std::cout << "   " << std::flush;
+    pendulum.sendCommand(pwm);
+
+    // update the joystick when needed
+    joy_update_counter = (joy_update_counter + 1) % JOY_UPDATE_MAX;
+    if(joy_update_counter == 0) {
+      joy.update();
+      // should we exit?
+      if(joy.button(BTN_EXIT)) {
+        std::cout << std::endl << "Qutting!";
+        break;
+      }
+      // should we switch control mode?
+      btn_switch.update(joy.button(BTN_SWITCH));
+      if(btn_switch.pressed()) {
+        control_mode = next(control_mode);
+        std::cout << "\r" << to_string(control_mode) << std::flush;
       }
     }
   }
-  catch(const pigpio::ActivationToken::PleaseStop&) { }
-  catch(...) { throw; }
 
-  return 0;
+  pendulum.sendCommand(0);
+  std::cout << std::endl;
+
+  return EXIT_SUCCESS;
 }
