@@ -32,60 +32,11 @@ find_package_custom(yaml-cpp)
 
 # warn the user if code will not be built
 if(NOT ${ALL_DEPENDENCIES_FOUND})
-  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp_client will be built!${ColourReset}")
+  message(STATUS "${Yellow}Some dependecies were not found. Only C++ bridges will be built!${ColourReset}")
 endif()
 
-
-
 ##############
-# pendule_pi #
-##############
-
-if(${ALL_DEPENDENCIES_FOUND})
-
-  add_library(${PROJECT_NAME}
-    src/pendule_pi/config.cpp
-    src/pendule_pi/joystick.cpp
-    src/pendule_pi/pigpio.cpp
-    src/pendule_pi/switch.cpp
-    src/pendule_pi/motor.cpp
-    src/pendule_pi/encoder.cpp
-    src/pendule_pi/pendule.cpp
-    src/pendule_pi/pendule_cpp_server.cpp
-  )
-
-  target_include_directories(${PROJECT_NAME}
-    PUBLIC
-      $<INSTALL_INTERFACE:include>
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  )
-
-  target_link_libraries(${PROJECT_NAME}
-    PUBLIC pigpio::pigpio
-    PUBLIC pthread
-    PUBLIC zmq
-    PUBLIC zmqpp
-    PUBLIC yaml-cpp
-    PUBLIC digital_filters::digital_filters
-  )
-
-  if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    target_compile_options(${PROJECT_NAME} PRIVATE -O0)
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC PENDULE_PI_DEBUG_ENABLED)
-  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    target_compile_options(${PROJECT_NAME} PRIVATE -O2)
-    # If and when Eigen will be used :P
-    # target_compile_definitions(${PROJECT_NAME} PRIVATE -DEIGEN_NO_DEBUG)
-  endif()
-
-  target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-
-endif(${ALL_DEPENDENCIES_FOUND})
-
-
-##############
-# C++ bridge #
+# C++ client #
 ##############
 
 add_library(pendule_cpp_client src/pendule_pi/pendule_cpp_client.cpp)
@@ -106,6 +57,75 @@ elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 endif()
 
 target_compile_features(pendule_cpp_client PUBLIC cxx_std_17)
+
+##############
+# C++ server #
+##############
+
+add_library(pendule_cpp_server src/pendule_pi/pendule_cpp_server.cpp)
+
+target_include_directories(pendule_cpp_server
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
+
+target_link_libraries(pendule_cpp_server zmq zmqpp)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+  target_compile_options(pendule_cpp_server PRIVATE -O0)
+  target_compile_options(pendule_cpp_server PRIVATE -Wall)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  target_compile_options(pendule_cpp_server PRIVATE -O2)
+endif()
+
+target_compile_features(pendule_cpp_server PUBLIC cxx_std_17)
+
+##############
+# pendule_pi #
+##############
+
+if(${ALL_DEPENDENCIES_FOUND})
+
+  add_library(${PROJECT_NAME}
+    src/pendule_pi/config.cpp
+    src/pendule_pi/joystick.cpp
+    src/pendule_pi/pigpio.cpp
+    src/pendule_pi/switch.cpp
+    src/pendule_pi/motor.cpp
+    src/pendule_pi/encoder.cpp
+    src/pendule_pi/pendule.cpp
+  )
+
+  target_include_directories(${PROJECT_NAME}
+    PUBLIC
+      $<INSTALL_INTERFACE:include>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  )
+
+  target_link_libraries(${PROJECT_NAME}
+    PUBLIC pigpio::pigpio
+    PUBLIC pthread
+    PUBLIC zmq
+    PUBLIC zmqpp
+    PUBLIC yaml-cpp
+    PUBLIC digital_filters::digital_filters
+    PUBLIC pendule_cpp_server
+  )
+
+  if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O0)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC PENDULE_PI_DEBUG_ENABLED)
+  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O2)
+    # If and when Eigen will be used :P
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE -DEIGEN_NO_DEBUG)
+  endif()
+
+  target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+endif(${ALL_DEPENDENCIES_FOUND})
 
 
 ############
@@ -132,6 +152,21 @@ if(${ALL_DEPENDENCIES_FOUND})
 endif(${ALL_DEPENDENCIES_FOUND})
 
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/piksel")
+  message(STATUS "piksel: ${Green}found${ColourReset} (building simulator as well).")
+  add_subdirectory(piksel)
+
+  add_executable(simulator src/bin/simulator.cpp)
+  target_include_directories(simulator PUBLIC piksel/src)
+  target_link_libraries(simulator
+    PUBLIC piksel
+    PUBLIC pendule_cpp_server
+  )
+else()
+  message(STATUS "piksel: ${Yellow}not found${ColourReset} (the simulator will not be built).")
+endif()
+
+
 ###########
 # INSTALL #
 ###########
@@ -143,17 +178,14 @@ if(${ALL_DEPENDENCIES_FOUND})
   install(
     TARGETS
       reset_gpio
-      # log_motion
-      # log_rotation
-      # demo
-      # low_level_interface
       pendule_pi_assistant
+      demo
     DESTINATION bin
   )
 endif(${ALL_DEPENDENCIES_FOUND})
 
 # Install the libraries
-set(LIBS_TO_INSTALL pendule_cpp_client)
+set(LIBS_TO_INSTALL pendule_cpp_client pendule_cpp_server)
 if(${ALL_DEPENDENCIES_FOUND})
   list(APPEND LIBS_TO_INSTALL ${PROJECT_NAME})
 endif(${ALL_DEPENDENCIES_FOUND})
@@ -210,16 +242,17 @@ export(
 )
 
 
-# add the possibility tu run 'make uninstall' to remove files added via 'make install'
+# Add the possibility tu run 'make uninstall_pendule_pi' to remove files added
+# via 'make install'.
 # NOTE: this will remove files only, and not their parent directories.
-# WARNING: this will work only if you do not play around the installed targets manually,
-# and if you do not change the install destination.
+# WARNING: this will work only if you do not play around the installed
+# targets manually, and if you do not change the install destination.
 configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall_${PROJECT_NAME}.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/uninstall_${PROJECT_NAME}.cmake
   IMMEDIATE @ONLY
 )
-add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake")
+add_custom_target(uninstall_${PROJECT_NAME} COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/uninstall_${PROJECT_NAME}.cmake")
 
 
 

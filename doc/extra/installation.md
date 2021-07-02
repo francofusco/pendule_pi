@@ -228,10 +228,10 @@ provided CMake script. In particular, after installing the project, move into
 the build location and run:
 
 ```bash
-cmake -P uninstall.cmake
+cmake -P uninstall_pendule_pi.cmake
 ```
 
-**Beware of the following limitations!** The `uninstall.cmake` script
+**Beware of the following limitations!** The `uninstall_pendule_pi.cmake` script
 is very simple and limited. It reads the `install_manifest.txt` that is
 generated during the install step and attempts to remove, one by one, each
 copied target. This implies that:
