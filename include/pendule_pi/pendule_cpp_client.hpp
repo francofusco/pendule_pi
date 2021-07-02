@@ -85,7 +85,6 @@ private:
   double angle_{0}; ///< Current angle of the pendulum.
   double linvel_{0}; ///< Current linear velocity of the pendulum.
   double angvel_{0}; ///< Current angular velocity of the pendulum.
-
   std::unique_ptr<zmqpp::context> context_; ///< ZeroMQ context used to create TCP connections.
   std::unique_ptr<zmqpp::socket> state_sub_; ///< Socket to read the current state of the pendulum.
   std::unique_ptr<zmqpp::socket> command_pub_; ///< Socket to send commands to the low-level interface.

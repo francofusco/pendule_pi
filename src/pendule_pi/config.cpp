@@ -1,4 +1,5 @@
 #include <pendule_pi/config.hpp>
+#include <digital_filters/filters.hpp>
 #include <fstream>
 
 #define THROW_IF_MISSING_1(x) { if(!yaml_[x]) throw MissingParameter(x); }
@@ -100,7 +101,7 @@ std::string Config::getTemplate() {
 "  high: 10\n"
 "\n"
 "# PWM command to be used when performing calibration.\n"
-"calibration_pwm: 40"
+"calibration_pwm: 50\n"
 "\n"
 "# Control period in milliseconds (integer). Optional parameter, defaults to 20.\n"
 "period_ms: 20\n"
@@ -199,6 +200,64 @@ std::unique_ptr<Pendule> Config::getPendule()
     yaml_["pwm_offsets"]["high"].as<int>()
   );
   return pendule;
+}
+
+
+std::unique_ptr<PenduleCppServer> Config::getPenduleServer()
+{
+  THROW_IF_MISSING("sockets");
+  THROW_IF_MISSING("sockets", "host");
+  THROW_IF_MISSING("sockets", "state_port");
+  THROW_IF_MISSING("sockets", "command_port");
+  return std::make_unique<PenduleCppServer>(
+    yaml_["sockets"]["host"].as<std::string>(),
+    yaml_["sockets"]["state_port"].as<std::string>(),
+    yaml_["sockets"]["command_port"].as<std::string>()
+  );
+}
+
+
+int Config::getCalibrationPWM()
+{
+  THROW_IF_MISSING("calibration_pwm");
+  auto pwm = yaml_["calibration_pwm"].as<int>();
+  if(pwm <= 0)
+    throw std::runtime_error("Parameter 'calibration_pwm' should be positive!");
+  return pwm;
+}
+
+
+double Config::getSoftSafetyThreshold()
+{
+  THROW_IF_MISSING("safety_thresholds");
+  THROW_IF_MISSING("safety_thresholds", "soft");
+  return yaml_["safety_thresholds"]["soft"].as<double>();
+}
+
+
+std::unique_ptr<pigpio::Rate> Config::getControlRate()
+{
+  THROW_IF_MISSING("period_ms");
+  auto period_ms = yaml_["period_ms"].as<int>();
+  if(period_ms <= 0)
+    throw std::runtime_error("Parameter 'period_ms' should be positive!");
+  return std::make_unique<pigpio::Rate>(1000*period_ms);
+}
+
+
+std::unique_ptr<digital_filters::Filter<double,double>> Config::getFilter()
+{
+  THROW_IF_MISSING("period_ms");
+  THROW_IF_MISSING("cutoff_frequency");
+  auto period_ms = yaml_["period_ms"].as<int>();
+  auto cutoff_frequency = yaml_["cutoff_frequency"].as<double>();
+  if(period_ms <= 0)
+    throw std::runtime_error("Parameter 'period_ms' should be positive!");
+  if(cutoff_frequency <= 0)
+    throw std::runtime_error("Parameter 'cutoff_frequency' should be positive!");
+  return std::make_unique<digital_filters::Filter<double,double>>(
+    digital_filters::butterworth<double,double>(4, cutoff_frequency, 1000./period_ms)
+  );
 }
 
 } // pendule_pi

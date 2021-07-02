@@ -1,9 +1,12 @@
 #pragma once
 #include <yaml-cpp/yaml.h>
+#include <pendule_pi/pigpio.hpp>
 #include <pendule_pi/switch.hpp>
 #include <pendule_pi/encoder.hpp>
 #include <pendule_pi/motor.hpp>
 #include <pendule_pi/pendule.hpp>
+#include <pendule_pi/pendule_cpp_server.hpp>
+#include <digital_filters/filter.hpp>
 
 
 namespace pendule_pi {
@@ -46,6 +49,16 @@ public:
   /// Returns a Pendule instance, setup according to the configuration file.
   std::unique_ptr<Pendule> getPendule();
 
+  /// Returns a PenduleCppServer instance, setup according to the configuration file.
+  std::unique_ptr<PenduleCppServer> getPenduleServer();
+
+  int getCalibrationPWM();
+
+  double getSoftSafetyThreshold();
+
+  std::unique_ptr<pigpio::Rate> getControlRate();
+
+  std::unique_ptr<digital_filters::Filter<double,double>> getFilter();
 
 private:
   /// Helper function to return a Switch instance.

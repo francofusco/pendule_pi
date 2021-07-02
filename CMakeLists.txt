@@ -52,6 +52,7 @@ add_library(${PROJECT_NAME}
   src/pendule_pi/motor.cpp
   src/pendule_pi/encoder.cpp
   src/pendule_pi/pendule.cpp
+  src/pendule_pi/pendule_cpp_server.cpp
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -66,6 +67,7 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC zmq
   PUBLIC zmqpp
   PUBLIC yaml-cpp
+  PUBLIC digital_filters::digital_filters
 )
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -104,12 +106,11 @@ target_link_libraries(pendule_pi_assistant ${PROJECT_NAME})
 # # Swingup + linearized control
 # add_executable(demo src/bin/demo.cpp)
 # target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
-#
-# add_executable(low_level_interface src/bin/low_level_interface.cpp)
-# target_link_libraries(low_level_interface
-#   ${PROJECT_NAME}
-#   digital_filters::digital_filters
-# )
+
+add_executable(low_level_interface src/bin/low_level_interface.cpp)
+target_link_libraries(low_level_interface
+  ${PROJECT_NAME}
+)
 
 endif(${ALL_DEPENDENCIES_FOUND})
 

@@ -38,8 +38,8 @@ motor:
   direction_pin: 16
 
 # Conversion coefficents for the encoders.
-meters_per_step: 9.992676761711276e-06  # 0.846/84662
-radians_per_step: 0.0015707963267948967  # 2*M_PI/1000
+meters_per_step: 9.992676761711276e-06  # 0.846/84653
+radians_per_step: 0.0015707963267948967  # 2*M_PI/4000
 
 # By default, the pendulum should read zero when in the downward position and PI
 # when pointing upward. However, you might prefer a different convention, or
@@ -67,6 +67,9 @@ pwm_offsets:
   # When a positive pwm is requested, actually apply pwm+high. If high is
   # negative, zero is used instead.
   high: 10
+
+# PWM command to be used when performing calibration.
+calibration_pwm: 60
 
 # Control period in milliseconds (integer). Optional parameter, defaults to 20.
 period_ms: 20
