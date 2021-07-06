@@ -161,6 +161,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/piksel")
   target_link_libraries(simulator
     PUBLIC piksel
     PUBLIC pendule_cpp_server
+    PUBLIC yaml-cpp
   )
 else()
   message(STATUS "piksel: ${Yellow}not found${ColourReset} (the simulator will not be built).")
