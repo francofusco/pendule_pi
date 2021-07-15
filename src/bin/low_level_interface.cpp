@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
       );
 
       // read the current command
-      auto max_wait_time = std::min(0u, 1000*rate->residual() - 1);
+      auto max_wait_time = std::max(rate->residual()/1000, 2u) - 2;
       if(tcp->readCommand(max_wait_time)) {
         pwm = tcp->command();
       }
