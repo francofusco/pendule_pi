@@ -216,10 +216,22 @@ public:
     */
   unsigned int sleep();
 
+  /// Time that remains in the current cycle.
+  /** @return Time in microseconds that the timer would sleep at the next call
+    *   to `sleep()`. It is just an estimation, the actual time might be
+    *   slightly different.
+    */
+  unsigned int residual();
+
   /// Get the last "wake up" time.
   /** @return The last value returned by a call to sleep().
     */
   inline const unsigned int& lastTick() const { return tpast_; }
+
+  /// Get the period of this Rate object.
+  /** @return Period in microseconds as passed to the constructor.
+    */
+  inline const unsigned int& period() const { return period_; }
 private:
   const unsigned int period_; ///< Target period of this Rate.
   unsigned int tnow_; ///< Used inside sleep() to store the current clock time.

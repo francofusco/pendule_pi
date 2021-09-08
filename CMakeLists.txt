@@ -32,87 +32,54 @@ find_package_custom(yaml-cpp)
 
 # warn the user if code will not be built
 if(NOT ${ALL_DEPENDENCIES_FOUND})
-  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp will be built!${ColourReset}")
+  message(STATUS "${Yellow}Some dependecies were not found. Only pendule_cpp_client will be built!${ColourReset}")
 endif()
 
 
-
-
-if(${ALL_DEPENDENCIES_FOUND})
 
 ##############
 # pendule_pi #
 ##############
 
-add_library(${PROJECT_NAME}
-  src/pendule_pi/joystick.cpp
-  src/pendule_pi/pigpio.cpp
-  src/pendule_pi/switch.cpp
-  src/pendule_pi/motor.cpp
-  src/pendule_pi/encoder.cpp
-  src/pendule_pi/pendule.cpp
-)
+if(${ALL_DEPENDENCIES_FOUND})
 
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-)
+  add_library(${PROJECT_NAME}
+    src/pendule_pi/config.cpp
+    src/pendule_pi/joystick.cpp
+    src/pendule_pi/pigpio.cpp
+    src/pendule_pi/switch.cpp
+    src/pendule_pi/motor.cpp
+    src/pendule_pi/encoder.cpp
+    src/pendule_pi/pendule.cpp
+    src/pendule_pi/pendule_cpp_server.cpp
+  )
 
-target_link_libraries(${PROJECT_NAME}
-  PUBLIC pigpio::pigpio
-  PUBLIC pthread
-)
+  target_include_directories(${PROJECT_NAME}
+    PUBLIC
+      $<INSTALL_INTERFACE:include>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  )
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  target_compile_options(${PROJECT_NAME} PRIVATE -O0)
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC PENDULE_PI_DEBUG_ENABLED)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  target_compile_options(${PROJECT_NAME} PRIVATE -O2)
-  # If and when Eigen will be used :P
-  # target_compile_definitions(${PROJECT_NAME} PRIVATE -DEIGEN_NO_DEBUG)
-endif()
+  target_link_libraries(${PROJECT_NAME}
+    PUBLIC pigpio::pigpio
+    PUBLIC pthread
+    PUBLIC zmq
+    PUBLIC zmqpp
+    PUBLIC yaml-cpp
+    PUBLIC digital_filters::digital_filters
+  )
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+  if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O0)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC PENDULE_PI_DEBUG_ENABLED)
+  elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    target_compile_options(${PROJECT_NAME} PRIVATE -O2)
+    # If and when Eigen will be used :P
+    # target_compile_definitions(${PROJECT_NAME} PRIVATE -DEIGEN_NO_DEBUG)
+  endif()
 
-
-############
-# BINARIES #
-############
-
-# Reset all pins in high impedance mode
-add_executable(reset_gpio src/bin/reset_gpio.cpp)
-target_link_libraries(reset_gpio ${PROJECT_NAME})
-
-# Record linear motions (useful for identification)
-add_executable(log_motion src/bin/log_motion.cpp)
-target_link_libraries(log_motion ${PROJECT_NAME})
-
-# Record angular motions (useful for identification)
-add_executable(log_rotation src/bin/log_rotation.cpp)
-target_link_libraries(log_rotation ${PROJECT_NAME})
-
-# Swingup + linearized control
-add_executable(demo src/bin/demo.cpp)
-target_link_libraries(demo ${PROJECT_NAME} digital_filters::digital_filters)
-
-# TEMP
-add_executable(demo_zmq src/bin/demo_zmq.cpp)
-target_link_libraries(demo_zmq ${PROJECT_NAME} digital_filters::digital_filters zmq zmqpp yaml-cpp)
-
-# TEMP
-add_executable(yaml_test src/bin/yaml_test.cpp)
-target_link_libraries(yaml_test yaml-cpp)
-
-add_executable(low_level_interface src/bin/low_level_interface.cpp)
-target_link_libraries(low_level_interface
-  ${PROJECT_NAME}
-  digital_filters::digital_filters
-  zmq
-  zmqpp
-  yaml-cpp
-)
+  target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
 endif(${ALL_DEPENDENCIES_FOUND})
 
@@ -121,25 +88,48 @@ endif(${ALL_DEPENDENCIES_FOUND})
 # C++ bridge #
 ##############
 
-# C++ bridge to the low-level interface
-add_library(pendule_cpp src/pendule_pi/pendule_cpp.cpp)
+add_library(pendule_cpp_client src/pendule_pi/pendule_cpp_client.cpp)
 
-target_include_directories(pendule_cpp
+target_include_directories(pendule_cpp_client
   PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(pendule_cpp zmq zmqpp)
+target_link_libraries(pendule_cpp_client zmq zmqpp)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-  target_compile_options(pendule_cpp PRIVATE -O0)
-  target_compile_options(pendule_cpp PRIVATE -Wall)
+  target_compile_options(pendule_cpp_client PRIVATE -O0)
+  target_compile_options(pendule_cpp_client PRIVATE -Wall)
 elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  target_compile_options(pendule_cpp PRIVATE -O2)
+  target_compile_options(pendule_cpp_client PRIVATE -O2)
 endif()
 
-target_compile_features(pendule_cpp PUBLIC cxx_std_17)
+target_compile_features(pendule_cpp_client PUBLIC cxx_std_17)
+
+
+############
+# BINARIES #
+############
+
+if(${ALL_DEPENDENCIES_FOUND})
+
+  # Reset all pins in high impedance mode
+  add_executable(reset_gpio src/bin/reset_gpio.cpp)
+  target_link_libraries(reset_gpio ${PROJECT_NAME})
+
+  # Executable that can help to setup the pendulum.
+  add_executable(pendule_pi_assistant src/bin/pendule_pi_assistant.cpp)
+  target_link_libraries(pendule_pi_assistant ${PROJECT_NAME})
+
+  # Swingup + linearized control
+  add_executable(demo src/bin/demo.cpp)
+  target_link_libraries(demo ${PROJECT_NAME} pendule_cpp_client)
+
+  add_executable(low_level_interface src/bin/low_level_interface.cpp)
+  target_link_libraries(low_level_interface ${PROJECT_NAME})
+
+endif(${ALL_DEPENDENCIES_FOUND})
 
 
 ###########
@@ -153,15 +143,17 @@ if(${ALL_DEPENDENCIES_FOUND})
   install(
     TARGETS
       reset_gpio
-      log_motion
-      log_rotation
-      demo
+      # log_motion
+      # log_rotation
+      # demo
+      # low_level_interface
+      pendule_pi_assistant
     DESTINATION bin
   )
 endif(${ALL_DEPENDENCIES_FOUND})
 
 # Install the libraries
-set(LIBS_TO_INSTALL pendule_cpp)
+set(LIBS_TO_INSTALL pendule_cpp_client)
 if(${ALL_DEPENDENCIES_FOUND})
   list(APPEND LIBS_TO_INSTALL ${PROJECT_NAME})
 endif(${ALL_DEPENDENCIES_FOUND})

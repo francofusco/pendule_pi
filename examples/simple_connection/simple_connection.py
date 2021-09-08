@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import pendule_pi
+from pendule_pi import PendulePyClient
 import time
 
 if __name__ == '__main__':
-  pendulum = pendule_pi.PendulePy(wait=5)
+  pendulum = PendulePyClient(wait=5)
 
   pwm = 25
   switch_pos = 0.2

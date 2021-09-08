@@ -70,7 +70,7 @@ bool Switch::atRestCached() const
 {
   if(!with_interrupts_)
     throw InterruptsAreDisabled();
-  return at_rest_;
+  return at_rest_now_;
 }
 
 

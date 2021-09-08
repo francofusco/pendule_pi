@@ -128,6 +128,12 @@ unsigned int Rate::sleep() {
 }
 
 
+unsigned int Rate::residual() {
+  auto from_last_tick = gpioTick() - tpast_;
+  return from_last_tick >= period_ ? 0 : period_ - from_last_tick;
+}
+
+
 Timer::Timer(
   unsigned int period_us,
   bool auto_reset
