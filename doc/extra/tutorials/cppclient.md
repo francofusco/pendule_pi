@@ -5,7 +5,7 @@
 
 # Introduction
 
-This tutorial shows how to establish a connection with the low-level interface using the class `PenduleCpp`. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.
+This tutorial shows how to establish a connection with the low-level interface using the class `PenduleCppClient`. The C++ client application will move the pendulum back and forth repeatedly, until CTRL-C is pressed to interrupt execution.
 
 
 # Complete Code
@@ -23,7 +23,7 @@ The program starts by including the relevant headers:
 
 @until thread
 
-The first one provides the class `PenduleCpp`, while the other two allow to use `std::signal` and `std::this_thread_::sleep_for` (which will be used to gracefully shutdown the program).
+The first one provides the class `PenduleCppClient`, while the other two allow to use `std::signal` and `std::this_thread_::sleep_for` (which will be used to gracefully shutdown the program).
 
 Next come some lines that are used to handle the signal interruption:
 
@@ -34,11 +34,11 @@ Next come some lines that are used to handle the signal interruption:
 
 @skipline signal
 
-We then create an instance of `PenduleCpp`:
+We then create an instance of `PenduleCppClient`:
 
-@skipline PenduleCpp
+@skipline PenduleCppClient
 
-Upon construction, the object will connect to the low level interface using default addresses defined by the parameters `pendule_pi::PenduleCpp::DEFAULT_HOST`, `pendule_pi::PenduleCpp::DEFAULT_STATE_PORT` and `pendule_pi::PenduleCpp::DEFAULT_COMMAND_PORT`. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PenduleCpp` constructor will wait indefinitely for the low-level interface to show up.
+Upon construction, the object will connect to the low level interface using default addresses defined by the parameters `pendule_pi::PenduleCppClient::DEFAULT_HOST`, `pendule_pi::PenduleCppClient::DEFAULT_STATE_PORT` and `pendule_pi::PenduleCppClient::DEFAULT_COMMAND_PORT`. Note that we pass a single integer parameter to the constructor. This represents the maximum amount of time to wait for the low-level interface to show up. If no messages are received within this amount of time, an exception will be thrown. You can pass a negative value (the default value is `-1`) in which case the `PenduleCppClient` constructor will wait indefinitely for the low-level interface to show up.
 
 We proceed by declaring two variables:
 

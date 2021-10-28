@@ -7,60 +7,11 @@
 
 namespace pendule_pi {
 
-Pendule::Pins::Pins()
-: motor_pwm(24)
-, motor_dir(16)
-, left_switch(17)
-, right_switch(18)
-, position_encoder_a(20)
-, position_encoder_b(21)
-, angle_encoder_a(19)
-, angle_encoder_b(26)
-{
-  // nothing else to do here
-}
-
 
 Pendule::Pendule(
   double meters_per_step,
   double radians_per_step,
-  double rest_angle
-)
-: Pendule(
-  meters_per_step,
-  radians_per_step,
-  rest_angle,
-  Pins()
-)
-{
-  // nothing else to do here
-}
-
-
-Pendule::Pendule(
-  double meters_per_step,
-  double radians_per_step,
-  double rest_angle,
-  const Pins& pins
-)
-: Pendule(
-  meters_per_step,
-  radians_per_step,
-  rest_angle,
-  std::make_unique<Motor>(pins.motor_pwm, pins.motor_dir),
-  makeDefaultSwitch(pins.left_switch),
-  makeDefaultSwitch(pins.right_switch),
-  std::make_unique<Encoder>(pins.position_encoder_a, pins.position_encoder_b),
-  std::make_unique<Encoder>(pins.angle_encoder_a, pins.angle_encoder_b)
-)
-{
-  // nothing else to do here
-}
-
-
-Pendule::Pendule(
-  double meters_per_step,
-  double radians_per_step,
+  double safety_margin_meters,
   double rest_angle,
   std::unique_ptr<Motor> motor,
   std::unique_ptr<Switch> left_switch,
@@ -70,8 +21,9 @@ Pendule::Pendule(
 )
 : calibrated_(false)
 , emergency_stopped_(false)
-, meters_per_step_(meters_per_step/4)
-, radians_per_step_(radians_per_step/4)
+, meters_per_step_(meters_per_step)
+, radians_per_step_(radians_per_step)
+, safety_margin_meters_(safety_margin_meters)
 , rest_angle_(rest_angle)
 , offset_up_(0)
 , offset_down_(0)
@@ -83,27 +35,22 @@ Pendule::Pendule(
 , angle_encoder_(std::move(angle_encoder))
 {
   PENDULE_PI_DBG("Creating Pendule object");
-  // Default pin connections, in case we need to create any instance here
-  Pins pins;
-  if(motor_ == nullptr)
-    motor_ = std::make_unique<Motor>(pins.motor_pwm, pins.motor_dir);
-  if(left_switch_ == nullptr)
-    left_switch_ = makeDefaultSwitch(pins.left_switch);
-  if(right_switch_ == nullptr)
-    right_switch_ = makeDefaultSwitch(pins.right_switch);
-  if(position_encoder_ == nullptr)
-    position_encoder_ = std::make_unique<Encoder>(pins.position_encoder_a, pins.position_encoder_b);
-  if(angle_encoder_ == nullptr)
-    angle_encoder_ = std::make_unique<Encoder>(pins.angle_encoder_a, pins.angle_encoder_b);
+  // Check that pointers are not nullptr
+  #define THROW_IF_NULL(component) {if(component == nullptr) throw std::runtime_error("While creating Pendule instance: " #component " cannot be nullptr!");}
+  THROW_IF_NULL(motor_);
+  THROW_IF_NULL(left_switch_);
+  THROW_IF_NULL(right_switch_);
+  THROW_IF_NULL(position_encoder_);
+  THROW_IF_NULL(angle_encoder_);
   PENDULE_PI_DBG("Pendule object created");
 }
 
 
 void Pendule::calibrate(
-  double safety_margin_meters
+  int calibration_pwm
 )
 {
-  PENDULE_PI_DBG("Requested calibration via Pendule::calibrate(" << safety_margin_meters << ")");
+  PENDULE_PI_DBG("Requested calibration via Pendule::calibrate(" << calibration_pwm << ")");
   // Reset it no matter what!
   calibrated_ = false;
   // Ensure that we are not in emergency stop
@@ -136,7 +83,6 @@ void Pendule::calibrate(
   // Remove callbacks on the angle encoder
   angle_encoder_->removeSafetyCallbacks();
   // prepare some auxiliary callbacks used to reach the switches
-  const int calibration_pwm = 40;
   bool wrong_switch = false;
   auto switch_cb = [&](){motor_->setPWM(0);};
   auto wrong_switch_cb = [&](){
@@ -189,6 +135,14 @@ void Pendule::calibrate(
       "pahses? You could simply swap the pins in the constructor."
     );
   }
+  else if(min_position_steps_ == max_position_steps_) {
+    throw CalibrationFailed(
+      "the minimum step position is equal to the maximum one. If you detached "
+      "the transmission belt and manually triggered the switches to check that "
+      "you setup the hardware correctly, please go ahead champ! Otherwise, "
+      "something veeeery weird is happening..."
+    );
+  }
   mid_position_steps_ = (max_position_steps_ + min_position_steps_) / 2;
   // Go to the central position
   right_switch_->disableInterrupts();
@@ -201,14 +155,14 @@ void Pendule::calibrate(
   // Ok, we are in the central position!
   left_switch_->enableInterrupts([&](){ eStop("left switch hit"); });
   right_switch_->enableInterrupts([&](){ eStop("right switch hit"); });
-  int safety_margin_steps = static_cast<int>(std::ceil(std::fabs(safety_margin_meters/meters_per_step_)));
+  int safety_margin_steps = static_cast<int>(std::ceil(std::fabs(safety_margin_meters_/meters_per_step_)));
   int soft_min = min_position_steps_ + safety_margin_steps;
   int soft_max = max_position_steps_ - safety_margin_steps;
   position_encoder_->setSafetyCallbacks(
     soft_min,
     soft_max,
-    [&](){ eStop("soft minimum position limit reached"); },
-    [&](){ eStop("soft maximum position limit reached"); }
+    [&](){ eStop("Software-imposed minimum position limit reached"); },
+    [&](){ eStop("Software-imposed maximum position limit reached"); }
   );
   soft_minmax_position_meters_ = std::fabs(steps2meters(soft_max));
   calibrated_ = true;
@@ -216,7 +170,7 @@ void Pendule::calibrate(
   PENDULE_PI_DBG("min steps: " << min_position_steps_ << " (in meters: " << steps2meters(min_position_steps_) << ")");
   PENDULE_PI_DBG("max steps: " << max_position_steps_ << " (in meters: " << steps2meters(max_position_steps_) << ")");
   PENDULE_PI_DBG("middle steps: " << mid_position_steps_ << " (in meters: " << steps2meters(mid_position_steps_) << ")");
-  PENDULE_PI_DBG("safety_margin_steps: " << safety_margin_steps << " (in meters: " << safety_margin_meters << ")");
+  PENDULE_PI_DBG("safety_margin_steps: " << safety_margin_steps << " (in meters: " << safety_margin_meters_ << ")");
   PENDULE_PI_DBG("soft_min: " << soft_min << " (in meters: " << steps2meters(soft_min) << ")");
   PENDULE_PI_DBG("soft_max: " << soft_max << " (in meters: " << steps2meters(soft_max) << ")");
 }

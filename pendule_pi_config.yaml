@@ -1,19 +1,88 @@
+# Configuration of the left switch (encoder side)
+left_switch:
+  # GPIO pin used to read the state of the switch.
+  pin: 17
+  # If true, then the pin should read 'high' when at rest.
+  normally_up: true
+  # If true, then the internal pull-up or pull-down resistor is activated.
+  use_internal_pull_resistor: true
+
+# Configuration of the right switch (motor side).
+right_switch:
+  # GPIO pin used to read the state of the switch.
+  pin: 18
+  # If true, then the pin should read 'high' when at rest.
+  normally_up: true
+  # If true, then the internal pull-up or pull-down resistor is activated.
+  use_internal_pull_resistor: true
+
+# Configuration of the position encoder (the one connected to
+# the transmission belt).
+position_encoder:
+  # Pins corresponding to the two phases of the encoder.
+  pin_a: 20
+  pin_b: 21
+
+# Configuration of the angle encoder (the one that acts as
+# the pivot for the rod).
+angle_encoder:
+  # Pins corresponding to the two phases of the encoder.
+  pin_a: 19
+  pin_b: 26
+
+# Configuration of the motor.
+motor:
+  # Pin used to send PWM signals to the motor controller.
+  pwm_pin: 24
+  # Pin used to invert the rotation direction of the motor.
+  direction_pin: 16
+
 # Conversion coefficents for the encoders.
-meters_per_step: 3.990566037735849e-05  # 0.846/21200
-radians_per_step: 0.006283185307179587  # 2*M_PI/1000
+meters_per_step: 9.992676761711276e-06  # 0.846/84653
+radians_per_step: 0.0015707963267948967  # 2*M_PI/4000
 
-# Safety distances to stop the pendulum.
+# By default, the pendulum should read zero when in the downward position and PI
+# when pointing upward. However, you might prefer a different convention, or
+# simply ensure that the pendulum really stays at PI when it is manually
+# balanced in the upward position. To achieve such result, the low level
+# interface will subtract angle_offset from the "raw" reading.
+angle_offset: 0.0
+
+# Safety distances to stop the pendulum, in meters.
 safety_thresholds:
-  hard: 0.05  # minimum allowed distance from the switches (if violated, the interfaces shuts-down)
-  soft: 0.1  # minimum allowed distance from the hard safety distance (if violated, commands are zeroed)
+  # Minimum allowed distance from the switches. If violated, the interface
+  # shuts-down. It should be positive. Negative values will be inverted.
+  # Passing a zero is not illegal, but very unsafe.
+  hard: 0.05
+  # Minimum allowed distance from the hard safety threshold. If violated,
+  # commands are zeroed. Giving a non-negative value in practice removes the
+  # soft threshold (only the hard one will remain active).
+  soft: 0.1
 
-# Offsets to be applied to pwm commands.
+# Offsets to be applied to pwm commands. Both should be integers.
 pwm_offsets:
-  low: 13
-  high: 17
+  # When a negative pwm is requested, actually apply pwm-low. If low is
+  # negative, zero is used instead.
+  low: 10
+  # When a positive pwm is requested, actually apply pwm+high. If high is
+  # negative, zero is used instead.
+  high: 10
 
-# Control period in milliseconds.
+# PWM command to be used when performing calibration.
+calibration_pwm: 60
+
+# Control period in milliseconds (integer). Optional parameter, defaults to 20.
 period_ms: 20
 
-# Used in filtering. It should be less than half the sampling frequency.
+# Cutoff frequency, in Hz, used in filtering. It should be less than half the
+# sampling frequency. You can disable filtering by giving a negative value.
 cutoff_frequency: 12.5
+
+# Configuration of the sockets used to exchange information.
+sockets:
+  # Host to bind the connections.
+  host: "*"
+  # Port to send the state to client applications.
+  state_port: 10001
+  # Port to receive commands from clients.
+  command_port: 10002
