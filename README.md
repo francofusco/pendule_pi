@@ -23,6 +23,6 @@ You can find the first installation instructions [here](https://francofusco.gith
   - [ ] Calibration, LQR.
 - [ ] Use YAML files to pass parameters.
 - [ ] Remove jupyter notebooks and use vanilla python scripts instead.
-- [ ] Instructions to build the pendulum (not the code, **the** pendulum!).
+- [x] Instructions to build the pendulum (not the code, **the** pendulum!).
 - [X] C++ classes to send / receive data over sockets.
 - [X] Test multi-machine communication.
